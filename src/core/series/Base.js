@@ -3408,10 +3408,10 @@ anychart.core.series.Base.prototype.createPositionProvider = function(position, 
 
 
 //endregion
-//region --- OptimizedProperties
+//region --- Optimized Properties
 //----------------------------------------------------------------------------------------------------------------------
 //
-//  OptimizedProperties
+//  Optimized Properties
 //
 //----------------------------------------------------------------------------------------------------------------------
 /**
