@@ -796,6 +796,21 @@ anychart.core.ChartWithSeries.prototype.invalidateSeriesOfScale = function(scale
 
 
 //endregion
+//region --- Series interaction
+/**
+ * Invalidates SERIES_LABEL for all series that support labels.
+ */
+anychart.core.ChartWithSeries.prototype.invalidateSeriesLabels = function() {
+  for (var i = this.seriesList.length; i--;) {
+    var series = this.seriesList[i];
+    if (series.check(anychart.core.series.Capabilities.SUPPORTS_LABELS)) {
+      series.invalidate(anychart.ConsistencyState.SERIES_LABELS);
+    }
+  }
+};
+
+
+//endregion
 //region --- Palettes
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -927,6 +942,88 @@ anychart.core.ChartWithSeries.prototype.markerPaletteInvalidated_ = function(eve
 anychart.core.ChartWithSeries.prototype.hatchFillPaletteInvalidated_ = function(event) {
   if (event.hasSignal(anychart.Signal.NEEDS_REAPPLICATION)) {
     this.invalidate(anychart.ConsistencyState.SERIES_CHART_HATCH_FILL_PALETTE | anychart.ConsistencyState.CHART_LEGEND, anychart.Signal.NEEDS_REDRAW);
+  }
+};
+
+
+//endregion
+//region --- Labels
+//----------------------------------------------------------------------------------------------------------------------
+//
+//  Labels
+//
+//----------------------------------------------------------------------------------------------------------------------
+/**
+ * Getter/setter for current series data labels.
+ * @param {(Object|boolean|null)=} opt_value Series data labels settings.
+ * @return {!(anychart.core.ui.LabelsFactory|anychart.core.ChartWithSeries)} Labels instance or itself for chaining call.
+ */
+anychart.core.ChartWithSeries.prototype.labels = function(opt_value) {
+  if (!this.labels_) {
+    this.labels_ = new anychart.core.ui.LabelsFactory();
+    this.labels_.setParentEventTarget(this);
+    this.labels_.listenSignals(this.labelsInvalidated_, this);
+  }
+
+  if (goog.isDef(opt_value)) {
+    if (goog.isObject(opt_value) && !('enabled' in opt_value))
+      opt_value['enabled'] = true;
+    this.labels_.setup(opt_value);
+    return this;
+  }
+  return this.labels_;
+};
+
+
+/**
+ * Gets or sets series hover data labels.
+ * @param {(Object|boolean|null)=} opt_value Series data labels settings.
+ * @return {!(anychart.core.ui.LabelsFactory|anychart.core.ChartWithSeries)} Labels instance or itself for chaining call.
+ */
+anychart.core.ChartWithSeries.prototype.hoverLabels = function(opt_value) {
+  if (!this.hoverLabels_) {
+    this.hoverLabels_ = new anychart.core.ui.LabelsFactory();
+  }
+
+  if (goog.isDef(opt_value)) {
+    if (goog.isObject(opt_value) && !('enabled' in opt_value))
+      opt_value['enabled'] = true;
+    this.hoverLabels_.setup(opt_value);
+    return this;
+  }
+  return this.hoverLabels_;
+};
+
+
+/**
+ * Gets or sets series select data labels.
+ * @param {(Object|boolean|null)=} opt_value Series data labels settings.
+ * @return {!(anychart.core.ui.LabelsFactory|anychart.core.ChartWithSeries)} Labels instance or itself for chaining call.
+ */
+anychart.core.ChartWithSeries.prototype.selectLabels = function(opt_value) {
+  if (!this.selectLabels_) {
+    this.selectLabels_ = new anychart.core.ui.LabelsFactory();
+  }
+
+  if (goog.isDef(opt_value)) {
+    if (goog.isObject(opt_value) && !('enabled' in opt_value))
+      opt_value['enabled'] = true;
+    this.selectLabels_.setup(opt_value);
+    return this;
+  }
+  return this.selectLabels_;
+};
+
+
+/**
+ * Listener for labels invalidation.
+ * @param {anychart.SignalEvent} event Invalidation event.
+ * @private
+ */
+anychart.core.ChartWithSeries.prototype.labelsInvalidated_ = function(event) {
+  if (event.hasSignal(anychart.Signal.NEEDS_REDRAW)) {
+    this.invalidateSeriesLabels();
+    this.invalidate(anychart.ConsistencyState.SERIES_CHART_SERIES, anychart.Signal.NEEDS_REDRAW);
   }
 };
 
