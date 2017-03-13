@@ -2475,164 +2475,28 @@ goog.provide('anychart.themes.defaultTheme');
         'zIndex': 2000
       }
     },
+
     // merge with scatter
     'marker': {},
     'bubble': {},
 
+    // merge with chart
     'mosaic': {
-      'defaultSeriesType': 'marker',
-      'legend': {
-        'enabled': false
-      },
-      'defaultSeriesSettings': {
-        'base': {
-          'clip': true,
-          'color': null,
-          'tooltip': {
-            /**
-             * @this {*}
-             * @return {string}
-             */
-            'titleFormatter': function() {
-              return this['seriesName'];
-            },
-            /**
-             * @this {*}
-             * @return {*}
-             */
-            'textFormatter': function() {
-              return 'x: ' + this['x'] + '\ny: ' + this['valuePrefix'] + locNum(this['value']) + this['valuePostfix'];
-            }
-          },
-          'xScale': null,
-          'yScale': null,
-          'a11y': {
-            'enabled': false,
-            'titleFormatter': 'Series named {%SeriesName} with {%SeriesPointsCount} points. Min value is {%SeriesYMin}, max value is {%SeriesYMax}'
-          }
-        },
-        'bubble': {
-          'labels': {
-            'anchor': 'center'
-          },
-          'displayNegative': false,
-          'negativeFill': returnDarkenSourceColor,
-          'hoverNegativeFill': returnDarkenSourceColor,
-          'negativeStroke': returnDarkenSourceColor,
-          'hoverNegativeStroke': returnDarkenSourceColor,
-          'negativeHatchFill': null,
-          'hoverNegativeHatchFill': undefined,
-          'hatchFill': false,
-          'tooltip': {
-            /**
-             * @this {*}
-             * @return {*}
-             */
-            'textFormatter': function() {
-              return 'X: ' + this['x'] + '\nY: ' + this['valuePrefix'] + locNum(this['value']) + this['valuePostfix'] + '\nSize: ' + locNum(this['size']);
-            }
-          }
-        },
-        'line': {
-          'connectMissingPoints': false
-        },
-        'marker': {
-          'size': 5,
-          'hoverSize': 7,
-          'selectSize': 7
-        }
-      },
-      'defaultAnnotationSettings': {},
-      'defaultXAxisSettings': {
-        'orientation': 'bottom',
-        'scale': 0,
-        'title': {
-          'text': 'X-Axis'
-        }
-      },
-      'defaultYAxisSettings': {
-        'orientation': 'left',
-        'scale': 1,
-        'title': {
-          'text': 'Y-Axis'
-        }
-      },
-      'series': [],
-      'grids': [],
-      'minorGrids': [],
+      'defaultSeriesType': 'column',
+      // 'series': [],
       'xAxes': [{}],
       'yAxes': [{}],
-      'lineAxesMarkers': [],
-      'rangeAxesMarkers': [],
-      'textAxesMarkers': [],
       'scales': [
         {
-          'type': 'linear',
-          'maxTicksCount': 1000,
-          'inverted': false,
-          'maximum': null,
-          'minimum': null,
-          'minimumGap': 0.1,
-          'maximumGap': 0.1,
-          'softMinimum': null,
-          'softMaximum': null,
-          'ticks': {
-            'mode': 'linear',
-            'base': 0,
-            'minCount': 4,
-            'maxCount': 6
-          },
-          'minorTicks': {
-            'mode': 'linear',
-            'base': 0,
-            'count': 5
-          },
-          'stackMode': 'none',
-          'stickToZero': true
+          'type': 'ordinal'
         },
         {
           'type': 'linear',
-          'maxTicksCount': 1000,
-          'inverted': false,
-          'maximum': null,
-          'minimum': null,
-          'minimumGap': 0.1,
-          'maximumGap': 0.1,
-          'softMinimum': null,
-          'softMaximum': null,
-          'ticks': {
-            'mode': 'linear',
-            'base': 0,
-            'minCount': 4,
-            'maxCount': 6
-          },
-          'minorTicks': {
-            'mode': 'linear',
-            'base': 0,
-            'count': 5
-          },
-          'stackMode': 'none',
-          'stickToZero': true
+          'stackMode': 'value'
         }
       ],
       'xScale': 0,
-      'yScale': 1,
-      'maxBubbleSize': '20%',
-      'minBubbleSize': '5%',
-      'crosshair': {
-        'enabled': false,
-        'displayMode': 'float',
-        'xStroke': colorStrokeExtraBright,
-        'yStroke': colorStrokeExtraBright,
-        'zIndex': 41
-      },
-      'a11y': {
-        'titleFormatter': scatterA11yTitleFormatter
-      },
-      'annotations': {
-        'annotationsList': [],
-        'zIndex': 2000
-      }
+      'yScale': 1
     },
 
     // merge with chart

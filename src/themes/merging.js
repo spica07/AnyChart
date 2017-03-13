@@ -529,6 +529,7 @@ anychart.themes.merging.mergingMap_ = [
       'chart.defaultLabelSettings',
       'cartesianBase.defaultTextMarkerSettings',
       'scatter.defaultTextMarkerSettings',
+      'mosaic.defaultTextMarkerSettings',
       'standalones.label',
       'standalones.table',
       'standalones.textAxisMarker',
@@ -798,7 +799,8 @@ anychart.themes.merging.mergingMap_ = [
       'treeMap',
       'linearGauge',
       'pert',
-      'resource'
+      'resource',
+      'mosaic'
     ]
   },
   {
@@ -886,7 +888,8 @@ anychart.themes.merging.mergingMap_ = [
       'cartesianBase.defaultSeriesSettings.box',
       'cartesianBase.defaultSeriesSettings.rangeBar',
       'cartesianBase.defaultSeriesSettings.rangeColumn',
-      'cartesianBase.defaultSeriesSettings.candlestick'
+      'cartesianBase.defaultSeriesSettings.candlestick',
+      'mosaic.defaultSeriesSettings.column'
     ]
   },
   {
@@ -1273,7 +1276,19 @@ anychart.themes.merging.mergingMap_ = [
       'resource.resourceList.descriptions',
       'resource.resourceList.tags'
     ]
-  }
+  },
+  {
+    defaultObj: 'cartesianBase.defaultXAxisSettings',
+    targets: [
+      'mosaic.defaultXAxisSettings'
+    ]
+  },
+  {
+    defaultObj: 'cartesianBase.defaultYAxisSettings',
+    targets: [
+      'mosaic.defaultYAxisSettings'
+    ]
+  },
 ];
 
 

@@ -19,7 +19,6 @@ goog.require('anychart.modules.base');
  * @return {anychart.charts.Scatter} Chart with defaults for scatter series.
  */
 anychart.mosaic = function(var_args) {
-  debugger;
   var chart = new anychart.charts.Mosaic();
   chart.setupByVal(anychart.getFullTheme('mosaic'), true);
 

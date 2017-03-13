@@ -786,7 +786,6 @@ anychart.core.ChartWithAxes.prototype.getBoundsWithoutAxes = function(contentAre
       if (axis && axis.enabled()) {
         axis.parentBounds(contentAreaBounds);
         orientation = axis.orientation();
-        debugger;
         axisStrokeThickness = acgraph.vector.getThickness(/** @type {acgraph.vector.Stroke} */(axis.stroke()));
 
         if (orientation == anychart.enums.Orientation.TOP) {
