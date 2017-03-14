@@ -3002,6 +3002,36 @@ anychart.enums.normalizeHeatMapSeriesType = function(value, opt_default) {
 
 //----------------------------------------------------------------------------------------------------------------------
 //
+//  MosaicSeriesType
+//
+//----------------------------------------------------------------------------------------------------------------------
+/**
+ * List of all series types.
+ * @enum {string}
+ */
+anychart.enums.MosaicSeriesType = {
+  MOSAIC: 'mosaic'
+};
+
+
+/**
+ * Normalizes mosaic series type.
+ * @param {*} value Series type to normalize.
+ * @param {anychart.enums.MosaicSeriesType=} opt_default Custom default value (defaults to LINE).
+ * @return {anychart.enums.MosaicSeriesType}
+ */
+anychart.enums.normalizeMosaicSeriesType = function(value, opt_default) {
+  value = (String(value)).toLowerCase();
+  switch (value) {
+    case 'mosaic':
+      return anychart.enums.MosaicSeriesType.MOSAIC;
+  }
+  return opt_default || anychart.enums.MosaicSeriesType.MOSAIC;
+};
+
+
+//----------------------------------------------------------------------------------------------------------------------
+//
 //  Scale types
 //
 //----------------------------------------------------------------------------------------------------------------------

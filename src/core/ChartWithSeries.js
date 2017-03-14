@@ -1997,7 +1997,7 @@ anychart.core.ChartWithSeries.prototype.applyXZoom = function() {};
  * Spread Column and Bar series to categories width
  */
 anychart.core.ChartWithSeries.prototype.distributeSeries = function() {
-  if (this.categorizeData) {
+  if (this.categorizeData && false) {
     var i;
     var scale;
     var drawingPlansOfScale;

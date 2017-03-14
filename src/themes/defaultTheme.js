@@ -2360,7 +2360,7 @@ goog.provide('anychart.themes.defaultTheme');
 
     // merge with chart
     'mosaic': {
-      'defaultSeriesType': 'column',
+      'defaultSeriesType': 'mosaic',
       // 'series': [],
       'xAxes': [{}],
       'yAxes': [{}],
@@ -2370,7 +2370,7 @@ goog.provide('anychart.themes.defaultTheme');
         },
         {
           'type': 'linear',
-          'stackMode': 'value'
+          'stackMode': 'percent'
         }
       ],
       'xScale': 0,

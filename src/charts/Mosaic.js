@@ -21,7 +21,7 @@ goog.require('anychart.enums');
 anychart.charts.Mosaic = function() {
   anychart.charts.Mosaic.base(this, 'constructor', true);
 
-  this.defaultSeriesType(anychart.enums.CartesianSeriesType.COLUMN);
+  this.defaultSeriesType(anychart.enums.MosaicSeriesType.MOSAIC);
 };
 goog.inherits(anychart.charts.Mosaic, anychart.core.ChartWithAxes);
 
@@ -51,7 +51,7 @@ anychart.charts.Mosaic.prototype.seriesConfig = (function() {
   anychart.core.series.Capabilities.SUPPORTS_MARKERS |
   anychart.core.series.Capabilities.SUPPORTS_LABELS |
   0);
-  res[anychart.enums.CartesianSeriesType.COLUMN] = {
+  res[anychart.enums.MosaicSeriesType.MOSAIC] = {
     drawerType: anychart.enums.SeriesDrawerTypes.COLUMN,
     shapeManagerType: anychart.enums.ShapeManagerTypes.PER_POINT,
     shapesConfig: [
@@ -117,7 +117,7 @@ anychart.charts.Mosaic.prototype.createSeriesInstance = function(type, config) {
 
 /** @inheritDoc */
 anychart.charts.Mosaic.prototype.normalizeSeriesType = function(type) {
-  return anychart.enums.normalizeCartesianSeriesType(type);
+  return anychart.enums.normalizeMosaicSeriesType(type);
 };
 
 

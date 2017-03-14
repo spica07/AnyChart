@@ -904,8 +904,7 @@ anychart.themes.merging.mergingMap_ = [
       'cartesianBase.defaultSeriesSettings.box',
       'cartesianBase.defaultSeriesSettings.rangeBar',
       'cartesianBase.defaultSeriesSettings.rangeColumn',
-      'cartesianBase.defaultSeriesSettings.candlestick',
-      'mosaic.defaultSeriesSettings.column'
+      'cartesianBase.defaultSeriesSettings.candlestick'
     ]
   },
   {
@@ -968,6 +967,12 @@ anychart.themes.merging.mergingMap_ = [
   {
     defaultObj: 'area',
     targets: ['area3d']
+  },
+  {
+    defaultObj: 'cartesianBase.defaultSeriesSettings.column',
+    targets: [
+      'mosaic.defaultSeriesSettings.mosaic'
+    ]
   },
   {
     defaultObj: 'scatter.defaultAnnotationSettings.base',
