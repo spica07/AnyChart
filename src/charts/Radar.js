@@ -3,7 +3,7 @@ goog.provide('anychart.charts.Radar');
 goog.require('anychart.core.RadarPolarChart');
 goog.require('anychart.core.axes.Radar');
 goog.require('anychart.core.grids.Radar');
-goog.require('anychart.core.series.Cartesian');
+goog.require('anychart.core.series.Radar');
 goog.require('anychart.enums');
 
 
@@ -80,7 +80,7 @@ anychart.charts.Radar.prototype.createScaleByType = function(value, isXScale, re
 
 /** @inheritDoc */
 anychart.charts.Radar.prototype.createSeriesInstance = function(type, config) {
-  return new anychart.core.series.Cartesian(this, this, type, config, true);
+  return new anychart.core.series.Radar(this, this, type, config, true);
 };
 
 

@@ -55,11 +55,56 @@ anychart.core.drawers.Line.prototype.requiredShapes = (function() {
 
 
 /** @inheritDoc */
+anychart.core.drawers.Line.prototype.startDrawing = function(shapeManager) {
+  anychart.core.drawers.Line.base(this, 'startDrawing', shapeManager);
+
+  /**
+   * If the line should be closed to its first point.
+   * @type {boolean}
+   * @private
+   */
+  this.closed_ = !!this.series.getOption('closed');
+
+  /**
+   * If the first point is missing (for the closed mode).
+   * @type {boolean}
+   * @private
+   */
+  this.firstPointMissing_ = false;
+
+  /**
+   * First non-missing point X coord (for the closed mode).
+   * @type {number}
+   * @private
+   */
+  this.firstPointX_ = NaN;
+
+  /**
+   * First non-missing point Y coord (for the closed mode).
+   * @type {number}
+   * @private
+   */
+  this.firstPointY_ = NaN;
+};
+
+
+/** @inheritDoc */
+anychart.core.drawers.Line.prototype.drawMissingPoint = function(point, state) {
+  if (isNaN(this.firstPointX_))
+    this.firstPointMissing_ = true;
+};
+
+
+/** @inheritDoc */
 anychart.core.drawers.Line.prototype.drawFirstPoint = function(point, state) {
   var shapes = this.shapesManager.getShapesGroup(this.seriesState);
   var x = /** @type {number} */(point.meta('x'));
   var y = /** @type {number} */(point.meta('value'));
   anychart.core.drawers.move(/** @type {acgraph.vector.Path} */(shapes['stroke']), this.isVertical, x, y);
+  if (isNaN(this.firstPointX_)) {
+    this.firstPointX_ = x;
+    this.firstPointY_ = y;
+  }
 };
 
 
@@ -69,4 +114,14 @@ anychart.core.drawers.Line.prototype.drawSubsequentPoint = function(point, state
   var x = /** @type {number} */(point.meta('x'));
   var y = /** @type {number} */(point.meta('value'));
   anychart.core.drawers.line(/** @type {acgraph.vector.Path} */(shapes['stroke']), this.isVertical, x, y);
+};
+
+
+/** @inheritDoc */
+anychart.core.drawers.Line.prototype.finalizeDrawing = function() {
+  if (this.closed_ && !isNaN(this.firstPointX_) && (this.connectMissing || this.prevPointDrawn && !this.firstPointMissing_)) {
+    var shapes = this.shapesManager.getShapesGroup(this.seriesState);
+    anychart.core.drawers.line(/** @type {acgraph.vector.Path} */(shapes['stroke']), this.isVertical, this.firstPointX_, this.firstPointY_);
+  }
+  anychart.core.drawers.Line.base(this, 'finalizeDrawing');
 };

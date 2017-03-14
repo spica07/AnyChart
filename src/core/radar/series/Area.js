@@ -1,6 +1,6 @@
 goog.provide('anychart.core.radar.series.Area');
 
-goog.require('anychart.core.radar.series.ContinuousBase');
+// goog.require('anychart.core.radar.series.ContinuousBase');
 
 
 
