@@ -92,9 +92,10 @@ anychart.core.ChartWithSeries.generateSeriesConstructors(anychart.charts.Mosaic,
  * @param {(anychart.enums.ScaleTypes|anychart.scales.Base)=} opt_value X Scale to set.
  * @return {!(anychart.scales.Base|anychart.core.ChartWithSeries)} Default chart scale value or itself for method chaining.
  */
-anychart.core.Mosaic.prototype.xWeightsScale = function() {
+anychart.charts.Mosaic.prototype.xWeightsScale = function() {
   if (!this.xWeightsScale_) {
     this.xWeightsScale_ = this.createScaleByType('linear', true, false);
+    this.xWeightsScale_.stackMode('percent');
     this.xWeightsScale_.listenSignals(this.xWeightsScaleInvalidated, this);
   }
   return /** @type {!anychart.scales.Base} */(this.xWeightsScale_);
@@ -106,7 +107,7 @@ anychart.core.Mosaic.prototype.xWeightsScale = function() {
  * @param {anychart.SignalEvent} event Event.
  * @protected
  */
-anychart.core.ChartWithSeries.prototype.xWeightsScaleInvalidated = function(event) {
+anychart.charts.Mosaic.prototype.xWeightsScaleInvalidated = function(event) {
   this.suspendSignalsDispatching();
   if (event.hasSignal(anychart.Signal.NEEDS_RECALCULATION)) {
     var state = anychart.ConsistencyState.SERIES_CHART_SCALES |
@@ -148,6 +149,32 @@ anychart.charts.Mosaic.prototype.checkYScaleType = function(scale) {
   //   anychart.core.reporting.error(anychart.enums.ErrorCode.INCORRECT_SCALE_TYPE, undefined, ['Scatter chart scales', 'scatter', 'linear, log']);
   // return res;
   return true;
+};
+
+
+//endregion
+//region --- Calculations
+//----------------------------------------------------------------------------------------------------------------------
+//
+//  Calculations
+//
+//----------------------------------------------------------------------------------------------------------------------
+/** @inheritDoc */
+anychart.charts.Mosaic.prototype.calculate = function() {
+  anychart.charts.Mosaic.base(this, 'calculate');
+
+  this.suspendSignalsDispatching();
+
+  var wScale = this.xWeightsScale();
+
+  wScale.extendDataRange(10, 5, 20, 35);
+  wScale.calculate();
+
+  var ticks = wScale.ticks();
+  console.log(ticks);
+  console.log(ticks.get());
+
+  this.resumeSignalsDispatching(false);
 };
 
 
