@@ -21,7 +21,14 @@ goog.require('anychart.enums');
 anychart.charts.Mosaic = function() {
   anychart.charts.Mosaic.base(this, 'constructor', true);
 
-  // Need to be defined for proper xPointPosition calculation
+  /**
+   * Scale for x scale weights calculation
+   * @type {anychart.scales.Base}
+   * @private
+   */
+  this.xWeightsScale_ = null;
+
+  // Should be defined for proper xPointPosition calculation
   this.barsPadding_ = 0;
   this.barGroupsPadding_ = 0;
 
@@ -80,6 +87,44 @@ anychart.core.ChartWithSeries.generateSeriesConstructors(anychart.charts.Mosaic,
 //  Scales
 //
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * Getter for xScale.
+ * @param {(anychart.enums.ScaleTypes|anychart.scales.Base)=} opt_value X Scale to set.
+ * @return {!(anychart.scales.Base|anychart.core.ChartWithSeries)} Default chart scale value or itself for method chaining.
+ */
+anychart.core.Mosaic.prototype.xWeightsScale = function() {
+  if (!this.xWeightsScale_) {
+    this.xWeightsScale_ = this.createScaleByType('linear', true, false);
+    this.xWeightsScale_.listenSignals(this.xWeightsScaleInvalidated, this);
+  }
+  return /** @type {!anychart.scales.Base} */(this.xWeightsScale_);
+};
+
+
+/**
+ * xWeightsScale invalidation handler.
+ * @param {anychart.SignalEvent} event Event.
+ * @protected
+ */
+anychart.core.ChartWithSeries.prototype.xWeightsScaleInvalidated = function(event) {
+  this.suspendSignalsDispatching();
+  if (event.hasSignal(anychart.Signal.NEEDS_RECALCULATION)) {
+    var state = anychart.ConsistencyState.SERIES_CHART_SCALES |
+        anychart.ConsistencyState.SERIES_CHART_Y_SCALES |
+        anychart.ConsistencyState.SERIES_CHART_SCALE_MAPS;
+    // if (this.allowLegendCategoriesMode() &&
+    //     this.legend().itemsSourceMode() == anychart.enums.LegendItemsSourceMode.CATEGORIES) {
+    //   state |= anychart.ConsistencyState.CHART_LEGEND;
+    // }
+    this.invalidate(state, anychart.Signal.NEEDS_REDRAW);
+  }
+  if (event.hasSignal(anychart.Signal.NEEDS_REAPPLICATION)) {
+    this.invalidateSeriesOfScale(this.xScale_);
+  }
+  this.resumeSignalsDispatching(true);
+};
+
+
 /** @inheritDoc */
 anychart.charts.Mosaic.prototype.allowLegendCategoriesMode = function() {
   return false;
