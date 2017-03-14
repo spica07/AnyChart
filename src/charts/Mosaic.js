@@ -21,6 +21,10 @@ goog.require('anychart.enums');
 anychart.charts.Mosaic = function() {
   anychart.charts.Mosaic.base(this, 'constructor', true);
 
+  // Need to be defined for proper xPointPosition calculation
+  this.barsPadding_ = 0;
+  this.barGroupsPadding_ = 0;
+
   this.defaultSeriesType(anychart.enums.MosaicSeriesType.MOSAIC);
 };
 goog.inherits(anychart.charts.Mosaic, anychart.core.ChartWithAxes);

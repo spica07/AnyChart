@@ -2361,7 +2361,7 @@ goog.provide('anychart.themes.defaultTheme');
     // merge with chart
     'mosaic': {
       'defaultSeriesType': 'mosaic',
-      // 'series': [],
+      'series': [],
       'xAxes': [{}],
       'yAxes': [{}],
       'scales': [
