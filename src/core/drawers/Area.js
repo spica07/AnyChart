@@ -91,7 +91,7 @@ anychart.core.drawers.Area.prototype.drawSegmentContinuation_ = function(shapes,
 
 /** @inheritDoc */
 anychart.core.drawers.Area.prototype.startDrawing = function(shapeManager) {
-  anychart.core.drawers.Line.base(this, 'startDrawing', shapeManager);
+  anychart.core.drawers.Area.base(this, 'startDrawing', shapeManager);
 
   /**
    * If the line should be closed to its first point.
