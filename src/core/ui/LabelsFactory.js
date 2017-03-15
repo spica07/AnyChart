@@ -1,3 +1,4 @@
+//region --- Requiring and Providing
 goog.provide('anychart.core.ui.LabelsFactory');
 goog.provide('anychart.core.ui.LabelsFactory.Label');
 goog.require('acgraph.math');
@@ -10,6 +11,7 @@ goog.require('anychart.core.utils.TokenParser');
 goog.require('anychart.enums');
 goog.require('anychart.math.Rect');
 goog.require('goog.math.Coordinate');
+//endregion
 
 
 
@@ -173,6 +175,13 @@ anychart.core.ui.LabelsFactory = function() {
     'connectorStroke', 'textWrap'
   ];
 
+  /**
+   * States.
+   * @type {Object.<string, Object>}
+   * @private
+   */
+  this.states_ = {};
+
   this.adjustFontSizeMode('different');
 
   this.invalidate(anychart.ConsistencyState.ALL);
@@ -181,6 +190,7 @@ anychart.core.ui.LabelsFactory = function() {
 goog.inherits(anychart.core.ui.LabelsFactory, anychart.core.Text);
 
 
+//region --- Class const
 /**
  * Supported consistency states.
  * @type {number}
@@ -256,6 +266,8 @@ anychart.core.ui.LabelsFactory.HANDLED_EVENT_TYPES_ = {
 anychart.core.ui.LabelsFactory.HANDLED_EVENT_TYPES_CAPTURE_SHIFT_ = 12;
 
 
+//endregion
+//region --- Settings
 /**
  * Getter/setter for enabled.
  * @param {?boolean=} opt_value Value to set.
@@ -763,9 +775,62 @@ anychart.core.ui.LabelsFactory.prototype.setAutoColor = function(value) {
 };
 
 
-/** @inheritDoc */
-anychart.core.ui.LabelsFactory.prototype.remove = function() {
-  if (this.layer_) this.layer_.parent(null);
+//endregion
+//region --- Settings managment
+/**
+ * Returns object with changed states.
+ * @return {Object.<boolean>}
+ */
+anychart.core.ui.LabelsFactory.prototype.getSettingsChangedStatesObj = function() {
+  return this.changedSettings;
+};
+
+
+/**
+ * Returns changed settings.
+ * @return {Object}
+ */
+anychart.core.ui.LabelsFactory.prototype.getChangedSettings = function() {
+  var result = {};
+  goog.object.forEach(this.changedSettings, function(value, key) {
+    if (value) {
+      if (key == 'adjustByHeight' || key == 'adjustByWidth') {
+        key = 'adjustFontSize';
+      }
+      if (key == 'padding' || key == 'background') {
+        result[key] = this[key]().serialize();
+      } else {
+        result[key] = this[key]();
+      }
+    }
+  }, this);
+  return result;
+};
+
+
+/**
+ * @param {string} name State name.
+ * @param {Object=} opt_value State settings.
+ * @return {anychart.core.ui.LabelsFactory|Object}
+ */
+anychart.core.ui.LabelsFactory.prototype.state = function(name, opt_value) {
+  if (goog.isDef(opt_value)) {
+    this.states_[name] = opt_value;
+    return this;
+  }
+
+  return this.states_[name];
+};
+
+
+//endregion
+//region --- DOM Elements
+/**
+ * Returns DOM element.
+ * @return {acgraph.vector.Layer}
+ */
+anychart.core.ui.LabelsFactory.prototype.getDomElement = function() {
+  return this.layer_;
 };
 
 
@@ -778,6 +843,8 @@ anychart.core.ui.LabelsFactory.prototype.getRootLayer = function() {
 };
 
 
+//endregion
+//region --- Labels managment
 /**
  * Clears an array of labels.
  * @param {number=} opt_index If set, removes only the label that is in passed index.
@@ -835,46 +902,6 @@ anychart.core.ui.LabelsFactory.prototype.labelsCount = function() {
 
 
 /**
- * Returns object with changed states.
- * @return {Object.<boolean>}
- */
-anychart.core.ui.LabelsFactory.prototype.getSettingsChangedStatesObj = function() {
-  return this.changedSettings;
-};
-
-
-/**
- * Returns changed settings.
- * @return {Object}
- */
-anychart.core.ui.LabelsFactory.prototype.getChangedSettings = function() {
-  var result = {};
-  goog.object.forEach(this.changedSettings, function(value, key) {
-    if (value) {
-      if (key == 'adjustByHeight' || key == 'adjustByWidth') {
-        key = 'adjustFontSize';
-      }
-      if (key == 'padding' || key == 'background') {
-        result[key] = this[key]().serialize();
-      } else {
-        result[key] = this[key]();
-      }
-    }
-  }, this);
-  return result;
-};
-
-
-/**
- * Returns DOM element.
- * @return {acgraph.vector.Layer}
- */
-anychart.core.ui.LabelsFactory.prototype.getDomElement = function() {
-  return this.layer_;
-};
-
-
-/**
  * Creates new instance of anychart.core.ui.LabelsFactory.Label, saves it in the factory
  * and returns it.
  * @param {*} formatProvider Object that provides info for textFormatter function.
@@ -911,6 +938,7 @@ anychart.core.ui.LabelsFactory.prototype.add = function(formatProvider, position
 
   label.formatProvider(formatProvider);
   label.positionProvider(positionProvider);
+  label.setFactory(this);
   label.parentLabelsFactory(this);
   label.resumeSignalsDispatching(false);
 
@@ -924,6 +952,14 @@ anychart.core.ui.LabelsFactory.prototype.add = function(formatProvider, position
  */
 anychart.core.ui.LabelsFactory.prototype.createLabel = function() {
   return new anychart.core.ui.LabelsFactory.Label();
+};
+
+
+//endregion
+//region --- Drawing
+/** @inheritDoc */
+anychart.core.ui.LabelsFactory.prototype.remove = function() {
+  if (this.layer_) this.layer_.parent(null);
 };
 
 
@@ -970,11 +1006,8 @@ anychart.core.ui.LabelsFactory.prototype.draw = function() {
 };
 
 
-//----------------------------------------------------------------------------------------------------------------------
-//
-//  Measurement.
-//
-//----------------------------------------------------------------------------------------------------------------------
+//endregion
+//region --- Measuring
 /**
  * Returns label size.
  * @param {*|anychart.core.ui.LabelsFactory.Label} formatProviderOrLabel Object that provides info for textFormatter function.
@@ -1151,6 +1184,8 @@ anychart.core.ui.LabelsFactory.prototype.measureWithTransform = function(formatP
 };
 
 
+//endregion
+//region --- TextFormatter calls managment
 /**
  * Calls text formatter in scope of provider, or returns value from cache.
  * @param {Function|string} formatter Text formatter function.
@@ -1191,6 +1226,8 @@ anychart.core.ui.LabelsFactory.prototype.dropCallsCache = function(opt_index) {
 };
 
 
+//endregion
+//region --- Interactivity
 //----------------------------------------------------------------------------------------------------------------------
 //
 //  Events
@@ -1212,6 +1249,8 @@ anychart.core.ui.LabelsFactory.prototype.makeBrowserEvent = function(e) {
 };
 
 
+//endregion
+//region --- Setup & Dispose
 /** @inheritDoc */
 anychart.core.ui.LabelsFactory.prototype.disposeInternal = function() {
   goog.disposeAll(
@@ -1296,12 +1335,8 @@ anychart.core.ui.LabelsFactory.prototype.setupByJSON = function(config, opt_defa
 
 
 //endregion
+//endregion
 //region --- Label
-//----------------------------------------------------------------------------------------------------------------------
-//
-//  LabelsFactory label class.
-//
-//----------------------------------------------------------------------------------------------------------------------
 /**
  * Class for creation of sets of similar labels and management of such sets.
  * Any individual label can be changed after all labels are displayed.
@@ -1344,10 +1379,23 @@ anychart.core.ui.LabelsFactory.Label = function() {
   this.mergedSettings;
 
   this.resetSettings();
+
+  this.states_ = {
+    'self': this,
+    'state': this.superSettingsObj
+  };
+
+  /**
+   * Drawing plan.
+   * @type {Object.<string, number>}
+   * @private
+   */
+  this.drawingPlan_ = ['auto', 'self', 'state'];
 };
 goog.inherits(anychart.core.ui.LabelsFactory.Label, anychart.core.Text);
 
 
+//region --- Class const
 /**
  * Supported signals.
  * @type {number}
@@ -1365,6 +1413,8 @@ anychart.core.ui.LabelsFactory.Label.prototype.SUPPORTED_CONSISTENCY_STATES =
     anychart.ConsistencyState.LABELS_FACTORY_CONNECTOR;
 
 
+//endregion
+//region --- Dom elements
 /**
  * Returns DOM element.
  * @return {acgraph.vector.Layer}
@@ -1383,6 +1433,17 @@ anychart.core.ui.LabelsFactory.Label.prototype.getConnectorElement = function() 
 };
 
 
+//endregion
+//region --- States
+/**
+ * Root factory.
+ * @param {anychart.core.ui.LabelsFactory} value .
+ */
+anychart.core.ui.LabelsFactory.Label.prototype.setFactory = function(value) {
+  this.factory_ = value;
+};
+
+
 /**
  * Gets/sets parent LabelsFactory.
  * @param {!anychart.core.ui.LabelsFactory=} opt_value labels factory.
@@ -1393,6 +1454,11 @@ anychart.core.ui.LabelsFactory.Label.prototype.parentLabelsFactory = function(op
   if (goog.isDefAndNotNull(opt_value)) {
     if (this.parentLabelsFactory_ != opt_value) {
       this.parentLabelsFactory_ = opt_value;
+
+      var stateName = 'parentFactorySet';
+      this.state(stateName, opt_value);
+      this.drawingPlan(stateName, 1);
+
       this.invalidate(anychart.ConsistencyState.APPEARANCE, anychart.Signal.NEEDS_REDRAW);
     }
     return this;
@@ -1402,6 +1468,63 @@ anychart.core.ui.LabelsFactory.Label.prototype.parentLabelsFactory = function(op
 };
 
 
+/**
+ * Gets/sets LabelsFactory to a label.
+ * @param {anychart.core.ui.LabelsFactory=} opt_value labels factory.
+ * @return {anychart.core.ui.LabelsFactory|anychart.core.ui.LabelsFactory.Label} Returns LabelsFactory or self
+ * for method chainging.
+ */
+anychart.core.ui.LabelsFactory.Label.prototype.currentLabelsFactory = function(opt_value) {
+  if (goog.isDef(opt_value)) {
+    if (this.currentLabelsFactory_ != opt_value) {
+      this.currentLabelsFactory_ = opt_value;
+
+      var stateName = 'stateFactorySet';
+      this.state(stateName, opt_value);
+      this.drawingPlan(stateName, 3);
+
+      this.invalidate(anychart.ConsistencyState.APPEARANCE, anychart.Signal.NEEDS_REDRAW);
+    }
+    return this;
+  } else {
+    return this.currentLabelsFactory_;
+  }
+};
+
+
+/**
+ * @param {string} name State name.
+ * @param {Object=} opt_value State settings.
+ * @return {anychart.core.ui.LabelsFactory|Object}
+ */
+anychart.core.ui.LabelsFactory.Label.prototype.state = function(name, opt_value) {
+  if (goog.isDef(opt_value)) {
+    this.states_[name] = opt_value;
+    return this;
+  }
+
+  return this.states_[name];
+};
+
+
+/**
+ * Drawing plan.
+ * @param {string} name .
+ * @param {number=} opt_value .
+ * @return {anychart.core.ui.LabelsFactory.Label|Object} .
+ */
+anychart.core.ui.LabelsFactory.Label.prototype.drawingPlan = function(name, opt_value) {
+  if (goog.isDef(opt_value)) {
+    goog.array.insertAt(this.drawingPlan_, name, opt_value);
+    return this;
+  }
+
+  return this.drawingPlan_[name];
+};
+
+
+//endregion
+//region --- Settings
 /**
  * Returns label index.
  * @return {number}
@@ -1419,25 +1542,6 @@ anychart.core.ui.LabelsFactory.Label.prototype.getIndex = function() {
 anychart.core.ui.LabelsFactory.Label.prototype.setIndex = function(index) {
   this.index_ = +index;
   return this;
-};
-
-
-/**
- * Gets/sets LabelsFactory to a label.
- * @param {anychart.core.ui.LabelsFactory=} opt_value labels factory.
- * @return {anychart.core.ui.LabelsFactory|anychart.core.ui.LabelsFactory.Label} Returns LabelsFactory or self
- * for method chainging.
- */
-anychart.core.ui.LabelsFactory.Label.prototype.currentLabelsFactory = function(opt_value) {
-  if (goog.isDef(opt_value)) {
-    if (this.currentLabelsFactory_ != opt_value) {
-      this.currentLabelsFactory_ = opt_value;
-      this.invalidate(anychart.ConsistencyState.APPEARANCE, anychart.Signal.NEEDS_REDRAW);
-    }
-    return this;
-  } else {
-    return this.currentLabelsFactory_;
-  }
 };
 
 
@@ -1958,19 +2062,8 @@ anychart.core.ui.LabelsFactory.Label.prototype.positionProvider = function(opt_v
 };
 
 
-/**
- * Resets label to the initial state, but leaves DOM elements intact, but without the parent.
- */
-anychart.core.ui.LabelsFactory.Label.prototype.clear = function() {
-  this.resetSettings();
-  if (this.layer_) {
-    this.layer_.parent(null);
-    this.layer_.removeAllListeners();
-  }
-  this.invalidate(anychart.ConsistencyState.CONTAINER);
-};
-
-
+//endregion
+//region --- Settings manipulations
 /**
  * Reset settings.
  */
@@ -2011,80 +2104,6 @@ anychart.core.ui.LabelsFactory.Label.prototype.setSettings = function(opt_settin
     this.invalidate(anychart.ConsistencyState.APPEARANCE | anychart.ConsistencyState.ENABLED,
         anychart.Signal.BOUNDS_CHANGED | anychart.Signal.NEEDS_REDRAW);
   return this;
-};
-
-
-/**
- * Adjust font size by width/height.
- * @param {number} originWidth
- * @param {number} originHeight
- * @param {number} minFontSize
- * @param {number} maxFontSize
- * @param {boolean} adjustByWidth
- * @param {boolean} adjustByHeight
- * @return {number}
- */
-anychart.core.ui.LabelsFactory.Label.prototype.calculateFontSize = function(originWidth, originHeight, minFontSize, maxFontSize, adjustByWidth, adjustByHeight) {
-  /** @type {acgraph.vector.Text} */
-  var text = this.createSizeMeasureElement_();
-
-  /** @type {number} */
-  var fontSize = Math.round((maxFontSize + minFontSize) / 2);
-
-  /** @type {number} */
-  var from = minFontSize;
-
-  /** @type {number} */
-  var to = maxFontSize;
-
-  /** @type {number} */
-  var checked;
-
-  // check if the maximal value is ok
-  text.fontSize(maxFontSize);
-
-  if (this.check_(text.getBounds().width, text.getBounds().height, originWidth, originHeight, adjustByWidth, adjustByHeight) <= 0) {
-    return maxFontSize;
-  }
-  // set initial fontSize - that's half way between min and max
-  text.fontSize(fontSize);
-  // check sign
-  var sign = checked = this.check_(text.getBounds().width, text.getBounds().height, originWidth, originHeight, adjustByWidth, adjustByHeight);
-
-  // divide in half and iterate waiting for the sign to change
-  while (from != to) {
-    if (checked < 0) {
-      from = Math.min(fontSize + 1, to);
-      fontSize += Math.floor((to - fontSize) / 2);
-    } else if (checked > 0) {
-      to = Math.max(fontSize - 1, from);
-      fontSize -= Math.ceil((fontSize - from) / 2);
-    } else {
-      break;
-    }
-    text.fontSize(fontSize);
-    checked = this.check_(text.getBounds().width, text.getBounds().height, originWidth, originHeight, adjustByWidth, adjustByHeight);
-    // sign chaneged if product is negative, 0 is an exit too
-    if (sign * checked <= 0) {
-      break;
-    }
-  }
-
-  if (!checked) {
-    // size is exactly ok for the bounds set
-    return fontSize;
-  }
-
-  // iterate increase/decrease font size until sign changes again
-  do {
-    fontSize += sign;
-    text.fontSize(fontSize);
-    checked = this.check_(text.getBounds().width, text.getBounds().height, originWidth, originHeight, adjustByWidth, adjustByHeight);
-  } while (sign * checked < 0);
-
-  // decrease font size only if we've been increasing it - we are looking for size to fit in bounds
-  if (sign > 0) fontSize -= sign;
-  return fontSize;
 };
 
 
@@ -2181,6 +2200,235 @@ anychart.core.ui.LabelsFactory.Label.prototype.getFinalSettings_ = function(
 
 
 /**
+ * Drops merged settings.
+ */
+anychart.core.ui.LabelsFactory.Label.prototype.dropMergedSettings = function() {
+  this.mergedSettings = null;
+};
+
+
+/**
+ * Returns merged settings.
+ * @return {!Object}
+ */
+anychart.core.ui.LabelsFactory.Label.prototype.getMergedSettings = function() {
+  if (this.mergedSettings)
+    return goog.object.clone(this.mergedSettings);
+
+  var parentLabelsFactory = this.parentLabelsFactory();
+  var currentLabelsFactory = this.currentLabelsFactory() ? this.currentLabelsFactory() : parentLabelsFactory;
+  var labelsFactory = currentLabelsFactory ? currentLabelsFactory : parentLabelsFactory;
+  var settingsChangedStates;
+  var notSelfSettings = labelsFactory != parentLabelsFactory;
+  if (notSelfSettings)
+    settingsChangedStates = labelsFactory.getSettingsChangedStatesObj();
+
+  var mergedSettings = {};
+  for (var i = 0, len = labelsFactory.settingsFieldsForMerge.length; i < len; i++) {
+    var field = this.factory_.settingsFieldsForMerge[i];
+    var setting = void 0;
+
+    for (var j = this.drawingPlan_.length; j--;) {
+      var stateName = this.drawingPlan_[j];
+      if (stateName == 'auto') {
+        var selfAutoSettings = 'auto' + goog.string.capitalize(field);
+        setting = this[selfAutoSettings] ? this[selfAutoSettings]() : undefined;
+      } else {
+        var stateSettings = this.states_[stateName];
+        if (stateSettings instanceof anychart.core.ui.LabelsFactory.Label) {
+          setting = field == 'background' || field == 'padding' ? stateSettings.settingsObj[field] : stateSettings[field]();
+        } else if (stateSettings instanceof anychart.core.ui.LabelsFactory) {
+          setting = stateSettings.getSettingsChangedStatesObj()[field] ? stateSettings[field]() : undefined;
+        } else {
+          setting = stateSettings[field];
+        }
+      }
+
+      if (goog.isDef(setting))
+        break;
+    }
+
+    mergedSettings[field] = setting;
+
+    // var selfAutoSettings = 'auto' + goog.string.capitalize(field);
+    //
+    // mergedSettings[field] = this.getFinalSettings_(
+    //     field == 'background' || field == 'padding' ? this.settingsObj[field] : this[field](),
+    //     this.superSettingsObj[field],
+    //     parentLabelsFactory.getSettingsChangedStatesObj()[field] ? parentLabelsFactory[field]() : undefined,
+    //     currentLabelsFactory.getSettingsChangedStatesObj()[field] ? currentLabelsFactory[field]() : undefined,
+    //     this[selfAutoSettings] ? this[selfAutoSettings]() : undefined,
+    //     !!(settingsChangedStates && settingsChangedStates[field]));
+  }
+
+  var adjFontSizePointSupSet = this.superSettingsObj['adjustFontSize'];
+  var adjustByWidthPointSupSet, adjustByHeightPointSupSet;
+  if (goog.isDef(adjFontSizePointSupSet)) {
+    if (goog.isArray(adjFontSizePointSupSet)) {
+      adjustByWidthPointSupSet = adjFontSizePointSupSet[0];
+      adjustByHeightPointSupSet = adjFontSizePointSupSet[1];
+    } else if (goog.isObject(adjFontSizePointSupSet)) {
+      adjustByWidthPointSupSet = adjFontSizePointSupSet['width'];
+      adjustByHeightPointSupSet = adjFontSizePointSupSet['height'];
+    } else {
+      adjustByWidthPointSupSet = !!adjFontSizePointSupSet;
+      adjustByHeightPointSupSet = !!adjFontSizePointSupSet;
+    }
+  }
+  var adjFontSizeFactorySet = parentLabelsFactory.adjustFontSize();
+  var adjFontSizeFactorySupSet = currentLabelsFactory.adjustFontSize();
+
+  mergedSettings['adjustByWidth'] = this.getFinalSettings_(
+      this.settingsObj.adjustByWidth,
+      adjustByWidthPointSupSet,
+      adjFontSizeFactorySet.width,
+      adjFontSizeFactorySupSet.width,
+      undefined,
+      !!(settingsChangedStates && settingsChangedStates['adjustByWidth']));
+
+  mergedSettings['adjustByHeight'] = this.getFinalSettings_(
+      this.settingsObj.adjustByHeight,
+      adjustByHeightPointSupSet,
+      adjFontSizeFactorySet.height,
+      adjFontSizeFactorySupSet.height,
+      undefined,
+      !!(settingsChangedStates && settingsChangedStates['adjustByHeight']));
+
+  this.mergedSettings = mergedSettings;
+
+  return goog.object.clone(this.mergedSettings);
+};
+
+
+//endregion
+//region --- Measuring and calculations
+/**
+ * Adjust font size by width/height.
+ * @param {number} originWidth
+ * @param {number} originHeight
+ * @param {number} minFontSize
+ * @param {number} maxFontSize
+ * @param {boolean} adjustByWidth
+ * @param {boolean} adjustByHeight
+ * @return {number}
+ */
+anychart.core.ui.LabelsFactory.Label.prototype.calculateFontSize = function(originWidth, originHeight, minFontSize, maxFontSize, adjustByWidth, adjustByHeight) {
+  /** @type {acgraph.vector.Text} */
+  var text = this.createSizeMeasureElement_();
+
+  /** @type {number} */
+  var fontSize = Math.round((maxFontSize + minFontSize) / 2);
+
+  /** @type {number} */
+  var from = minFontSize;
+
+  /** @type {number} */
+  var to = maxFontSize;
+
+  /** @type {number} */
+  var checked;
+
+  // check if the maximal value is ok
+  text.fontSize(maxFontSize);
+
+  if (this.check_(text.getBounds().width, text.getBounds().height, originWidth, originHeight, adjustByWidth, adjustByHeight) <= 0) {
+    return maxFontSize;
+  }
+  // set initial fontSize - that's half way between min and max
+  text.fontSize(fontSize);
+  // check sign
+  var sign = checked = this.check_(text.getBounds().width, text.getBounds().height, originWidth, originHeight, adjustByWidth, adjustByHeight);
+
+  // divide in half and iterate waiting for the sign to change
+  while (from != to) {
+    if (checked < 0) {
+      from = Math.min(fontSize + 1, to);
+      fontSize += Math.floor((to - fontSize) / 2);
+    } else if (checked > 0) {
+      to = Math.max(fontSize - 1, from);
+      fontSize -= Math.ceil((fontSize - from) / 2);
+    } else {
+      break;
+    }
+    text.fontSize(fontSize);
+    checked = this.check_(text.getBounds().width, text.getBounds().height, originWidth, originHeight, adjustByWidth, adjustByHeight);
+    // sign chaneged if product is negative, 0 is an exit too
+    if (sign * checked <= 0) {
+      break;
+    }
+  }
+
+  if (!checked) {
+    // size is exactly ok for the bounds set
+    return fontSize;
+  }
+
+  // iterate increase/decrease font size until sign changes again
+  do {
+    fontSize += sign;
+    text.fontSize(fontSize);
+    checked = this.check_(text.getBounds().width, text.getBounds().height, originWidth, originHeight, adjustByWidth, adjustByHeight);
+  } while (sign * checked < 0);
+
+  // decrease font size only if we've been increasing it - we are looking for size to fit in bounds
+  if (sign > 0) fontSize -= sign;
+  return fontSize;
+};
+
+
+/**
+ * Creates and returns size measure element.
+ * @return {!acgraph.vector.Text}
+ * @private
+ */
+anychart.core.ui.LabelsFactory.Label.prototype.createSizeMeasureElement_ = function() {
+  var parentLabelsFactory = this.parentLabelsFactory();
+  var currentLabelsFactory = this.currentLabelsFactory() ? this.currentLabelsFactory() : parentLabelsFactory;
+  var labelsFactory = currentLabelsFactory ? currentLabelsFactory : parentLabelsFactory;
+  var notSelfSettings = labelsFactory != parentLabelsFactory;
+  var isHtml = parentLabelsFactory.useHtml() || labelsFactory.useHtml() || this.useHtml();
+
+  var mergedSettings = this.getMergedSettings();
+
+  var formatProvider = this.formatProvider();
+  var text = parentLabelsFactory.callTextFormatter(mergedSettings['textFormatter'], formatProvider, this.getIndex());
+
+  if (!this.fontSizeMeasureElement_) {
+    this.fontSizeMeasureElement_ = acgraph.text();
+    this.fontSizeMeasureElement_.attr('aria-hidden', 'true');
+  }
+
+  if (isHtml) this.fontSizeMeasureElement_.htmlText(goog.isDef(text) ? String(text) : '');
+  else this.fontSizeMeasureElement_.text(goog.isDef(text) ? String(text) : '');
+
+  parentLabelsFactory.applyTextSettings(this.fontSizeMeasureElement_, true);
+  if (notSelfSettings) labelsFactory.applyTextSettings(this.fontSizeMeasureElement_, false);
+  this.applyTextSettings(this.fontSizeMeasureElement_, false);
+  if (notSelfSettings) {
+    this.textSettings(this.superSettingsObj);
+    this.applyTextSettings(this.fontSizeMeasureElement_, false);
+  }
+
+  return this.fontSizeMeasureElement_;
+};
+
+
+//endregion
+//region --- Drawing
+/**
+ * Resets label to the initial state, but leaves DOM elements intact, but without the parent.
+ */
+anychart.core.ui.LabelsFactory.Label.prototype.clear = function() {
+  this.resetSettings();
+  if (this.layer_) {
+    this.layer_.parent(null);
+    this.layer_.removeAllListeners();
+  }
+  this.invalidate(anychart.ConsistencyState.CONTAINER);
+};
+
+
+/**
  * Label drawing.
  * @param {anychart.math.Rect} bounds Outter label bounds.
  * @param {anychart.math.Rect} parentBounds Parent bounds.
@@ -2268,123 +2516,6 @@ anychart.core.ui.LabelsFactory.Label.prototype.drawConnector = function() {
     var formattedConnectorPosition = goog.object.clone(positionFormatter.call(connectorPoint, connectorPoint));
     this.connector.moveTo(position.x, position.y).lineTo(formattedConnectorPosition['x'], formattedConnectorPosition['y']);
   }
-};
-
-
-/**
- * Drops merged settings.
- */
-anychart.core.ui.LabelsFactory.Label.prototype.dropMergedSettings = function() {
-  this.mergedSettings = null;
-};
-
-
-/**
- * Returns merged settings.
- * @return {!Object}
- */
-anychart.core.ui.LabelsFactory.Label.prototype.getMergedSettings = function() {
-  if (this.mergedSettings)
-    return goog.object.clone(this.mergedSettings);
-
-  var parentLabelsFactory = this.parentLabelsFactory();
-  var currentLabelsFactory = this.currentLabelsFactory() ? this.currentLabelsFactory() : parentLabelsFactory;
-  var labelsFactory = currentLabelsFactory ? currentLabelsFactory : parentLabelsFactory;
-  var settingsChangedStates;
-  var notSelfSettings = labelsFactory != parentLabelsFactory;
-  if (notSelfSettings)
-    settingsChangedStates = labelsFactory.getSettingsChangedStatesObj();
-
-  var mergedSettings = {};
-  var selfAutoSettings;
-
-  for (var i = 0, len = labelsFactory.settingsFieldsForMerge.length; i < len; i++) {
-    var field = labelsFactory.settingsFieldsForMerge[i];
-
-    selfAutoSettings = 'auto' + goog.string.capitalize(field);
-
-    mergedSettings[field] = this.getFinalSettings_(
-        field == 'background' || field == 'padding' ? this.settingsObj[field] : this[field](),
-        this.superSettingsObj[field],
-        parentLabelsFactory.getSettingsChangedStatesObj()[field] ? parentLabelsFactory[field]() : undefined,
-        currentLabelsFactory.getSettingsChangedStatesObj()[field] ? currentLabelsFactory[field]() : undefined,
-        this[selfAutoSettings] ? this[selfAutoSettings]() : undefined,
-        !!(settingsChangedStates && settingsChangedStates[field]));
-  }
-
-  var adjFontSizePointSupSet = this.superSettingsObj['adjustFontSize'];
-  var adjustByWidthPointSupSet, adjustByHeightPointSupSet;
-  if (goog.isDef(adjFontSizePointSupSet)) {
-    if (goog.isArray(adjFontSizePointSupSet)) {
-      adjustByWidthPointSupSet = adjFontSizePointSupSet[0];
-      adjustByHeightPointSupSet = adjFontSizePointSupSet[1];
-    } else if (goog.isObject(adjFontSizePointSupSet)) {
-      adjustByWidthPointSupSet = adjFontSizePointSupSet['width'];
-      adjustByHeightPointSupSet = adjFontSizePointSupSet['height'];
-    } else {
-      adjustByWidthPointSupSet = !!adjFontSizePointSupSet;
-      adjustByHeightPointSupSet = !!adjFontSizePointSupSet;
-    }
-  }
-  var adjFontSizeFactorySet = parentLabelsFactory.adjustFontSize();
-  var adjFontSizeFactorySupSet = currentLabelsFactory.adjustFontSize();
-
-  mergedSettings['adjustByWidth'] = this.getFinalSettings_(
-      this.settingsObj.adjustByWidth,
-      adjustByWidthPointSupSet,
-      adjFontSizeFactorySet.width,
-      adjFontSizeFactorySupSet.width,
-      undefined,
-      !!(settingsChangedStates && settingsChangedStates['adjustByWidth']));
-
-  mergedSettings['adjustByHeight'] = this.getFinalSettings_(
-      this.settingsObj.adjustByHeight,
-      adjustByHeightPointSupSet,
-      adjFontSizeFactorySet.height,
-      adjFontSizeFactorySupSet.height,
-      undefined,
-      !!(settingsChangedStates && settingsChangedStates['adjustByHeight']));
-
-  this.mergedSettings = mergedSettings;
-
-  return goog.object.clone(this.mergedSettings);
-};
-
-
-/**
- * Creates and returns size measure element.
- * @return {!acgraph.vector.Text}
- * @private
- */
-anychart.core.ui.LabelsFactory.Label.prototype.createSizeMeasureElement_ = function() {
-  var parentLabelsFactory = this.parentLabelsFactory();
-  var currentLabelsFactory = this.currentLabelsFactory() ? this.currentLabelsFactory() : parentLabelsFactory;
-  var labelsFactory = currentLabelsFactory ? currentLabelsFactory : parentLabelsFactory;
-  var notSelfSettings = labelsFactory != parentLabelsFactory;
-  var isHtml = parentLabelsFactory.useHtml() || labelsFactory.useHtml() || this.useHtml();
-
-  var mergedSettings = this.getMergedSettings();
-
-  var formatProvider = this.formatProvider();
-  var text = parentLabelsFactory.callTextFormatter(mergedSettings['textFormatter'], formatProvider, this.getIndex());
-
-  if (!this.fontSizeMeasureElement_) {
-    this.fontSizeMeasureElement_ = acgraph.text();
-    this.fontSizeMeasureElement_.attr('aria-hidden', 'true');
-  }
-
-  if (isHtml) this.fontSizeMeasureElement_.htmlText(goog.isDef(text) ? String(text) : '');
-  else this.fontSizeMeasureElement_.text(goog.isDef(text) ? String(text) : '');
-
-  parentLabelsFactory.applyTextSettings(this.fontSizeMeasureElement_, true);
-  if (notSelfSettings) labelsFactory.applyTextSettings(this.fontSizeMeasureElement_, false);
-  this.applyTextSettings(this.fontSizeMeasureElement_, false);
-  if (notSelfSettings) {
-    this.textSettings(this.superSettingsObj);
-    this.applyTextSettings(this.fontSizeMeasureElement_, false);
-  }
-
-  return this.fontSizeMeasureElement_;
 };
 
 
@@ -2674,6 +2805,8 @@ anychart.core.ui.LabelsFactory.Label.prototype.draw = function() {
 };
 
 
+//endregion
+//region --- Setup & Dispose
 /** @inheritDoc */
 anychart.core.ui.LabelsFactory.Label.prototype.serialize = function() {
   var json = anychart.core.ui.LabelsFactory.Label.base(this, 'serialize');
@@ -2745,6 +2878,7 @@ anychart.core.ui.LabelsFactory.Label.prototype.disposeInternal = function() {
 };
 
 
+//endregion
 //endregion
 //region --- Exports
 //exports
