@@ -46,7 +46,7 @@ anychart.core.RadarPolarChart.prototype.startAngle_;
  * @type {number}
  */
 anychart.core.RadarPolarChart.prototype.SUPPORTED_CONSISTENCY_STATES =
-    anychart.core.ChartWithSeries.prototype.SUPPORTED_CONSISTENCY_STATES |
+    anychart.core.ChartWithOrthogonalScales.prototype.SUPPORTED_CONSISTENCY_STATES |
     anychart.ConsistencyState.AXES_CHART_AXES |
     anychart.ConsistencyState.AXES_CHART_GRIDS;
 
