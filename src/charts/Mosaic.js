@@ -107,26 +107,53 @@ anychart.charts.Mosaic.prototype.leftCategoriesScale = function() {
 
 
 /**
+ * Getter for rightCategoriesScale.
+ * @return {!anychart.scales.Ordinal}
+ */
+anychart.charts.Mosaic.prototype.rightCategoriesScale = function() {
+  if (!this.rightCategoriesScale_) {
+    this.rightCategoriesScale_ = this.createScaleByType('ordinal', true, false);
+    this.rightCategoriesScale_.listenSignals(this.categoriesScaleInvalidated, this);
+  }
+  return /** @type {!anychart.scales.Ordinal} */(this.rightCategoriesScale_);
+};
+
+
+/**
  * Left and right categories scales invalidation handler.
  * @param {anychart.SignalEvent} event Event.
  * @protected
  */
 anychart.charts.Mosaic.prototype.categoriesScaleInvalidated = function(event) {
-  this.suspendSignalsDispatching();
-  if (event.hasSignal(anychart.Signal.NEEDS_RECALCULATION)) {
-    var state = anychart.ConsistencyState.SERIES_CHART_SCALES |
-        anychart.ConsistencyState.SERIES_CHART_Y_SCALES |
-        anychart.ConsistencyState.SERIES_CHART_SCALE_MAPS;
-    // if (this.allowLegendCategoriesMode() &&
-    //     this.legend().itemsSourceMode() == anychart.enums.LegendItemsSourceMode.CATEGORIES) {
-    //   state |= anychart.ConsistencyState.CHART_LEGEND;
-    // }
-    this.invalidate(state, anychart.Signal.NEEDS_REDRAW);
+  if (this.drawingPlans_.length) {
+    this.suspendSignalsDispatching();
+    if (event.hasSignal(anychart.Signal.NEEDS_RECALCULATION)) {
+      var state = anychart.ConsistencyState.SERIES_CHART_SCALES |
+          anychart.ConsistencyState.SERIES_CHART_Y_SCALES |
+          anychart.ConsistencyState.SERIES_CHART_SCALE_MAPS;
+
+      var currentScale = this.yAxis().scale();
+      var categoriesScaleName;
+      if (currentScale == this.leftCategoriesScale())
+        categoriesScaleName = 'l';
+      else if (currentScale == this.rightCategoriesScale())
+        categoriesScaleName = 'r';
+
+      if (categoriesScaleName) {
+        var categoryIndex = categoriesScaleName == 'l' ? 0 : this.drawingPlans_[0].data.length - 1;
+        var values = [];
+        var weights = [];
+        for (var i = 0; i < this.drawingPlans_.length; i++) {
+          values.push(this.drawingPlans_[i].series.name());
+          weights.push(this.drawingPlans_[i].data[categoryIndex].data['value']);
+        }
+        currentScale.values(values).weights(weights);
+      }
+
+      this.invalidate(state, anychart.Signal.NEEDS_REDRAW);
+    }
+    this.resumeSignalsDispatching(true);
   }
-  // if (event.hasSignal(anychart.Signal.NEEDS_REAPPLICATION)) {
-  //   this.invalidateSeriesOfScale(this.xScale_);
-  // }
-  this.resumeSignalsDispatching(true);
 };
 
 
@@ -266,4 +293,6 @@ anychart.charts.Mosaic.prototype.serialize = function() {
   proto['removeAllSeries'] = proto.removeAllSeries;
   proto['getPlotBounds'] = proto.getPlotBounds;
   proto['annotations'] = proto.annotations;
+  proto['leftCategoriesScale'] = proto.leftCategoriesScale;
+  proto['rightCategoriesScale'] = proto.rightCategoriesScale;
 })();
