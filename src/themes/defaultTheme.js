@@ -2777,6 +2777,7 @@ goog.provide('anychart.themes.defaultTheme');
             'enabled': null
           },
           'markers': {
+            // 'fill': returnSourceColor,
             'enabled': false,
             'disablePointerEvents': false
           },
@@ -2803,7 +2804,8 @@ goog.provide('anychart.themes.defaultTheme');
           'yScale': null,
           'a11y': {
             'titleFormatter': 'Series named {%SeriesName}'
-          }
+          },
+          'clip': false
         },
         'choropleth': {
           'labels': {
@@ -2819,7 +2821,9 @@ goog.provide('anychart.themes.defaultTheme');
           'startSize': 0,
           'endSize': 0,
           'curvature': .3,
-          'stroke': returnSourceColor,
+          'stroke': function() {
+            return {'thickness': 2, 'color': this['sourceColor'], 'lineJoin': 'round'};
+          },
           'hoverStroke': returnLightenSourceColor,
           'selectStroke': '2 ' + defaultSelectColor,
           'markers': {
@@ -2869,6 +2873,9 @@ goog.provide('anychart.themes.defaultTheme');
           }
         },
         'bubble': {
+          'stroke': function() {
+            return {'thickness': 2, 'color': global['anychart']['color']['darken'](this['sourceColor'])};
+          },
           'labels': {
             'anchor': 'center'
           },
@@ -2996,7 +3003,7 @@ goog.provide('anychart.themes.defaultTheme');
           for (var i = 0, len = seriesStatus.length; i < len; i++) {
             var status = seriesStatus[i];
             if (!status['points'].length) continue;
-            result += 'Series ' + status['series'].index() + ':\n';
+            result += 'Series ' + status['series'].getIndex() + ':\n';
             for (var j = 0, len_ = status['points'].length; j < len_; j++) {
               var point = status['points'][j];
               result += 'id: ' + point['id'] + ' index: ' + point['index'];
