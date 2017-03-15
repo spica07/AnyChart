@@ -4,7 +4,6 @@ goog.require('anychart.core.shapeManagers');
 goog.require('anychart.enums');
 
 
-
 /**
  * Mosaic chart class.<br/>
  * To get the chart use any of these methods:
@@ -22,11 +21,18 @@ anychart.charts.Mosaic = function() {
   anychart.charts.Mosaic.base(this, 'constructor', true);
 
   /**
-   * Scale for x scale weights calculation
-   * @type {anychart.scales.Base}
+   * Scale for LEFT oriented Y axes. Uses first categories values to calculate weights.
+   * @type {anychart.scales.Ordinal}
    * @private
    */
-  this.xWeightsScale_ = null;
+  this.leftCategoriesScale_ = null;
+
+  /**
+   * Scale for RIGHT oriented Y axes. Uses last categories values to calculate weights.
+   * @type {anychart.scales.Ordinal}
+   * @private
+   */
+  this.rightCategoriesScale_ = null;
 
   // Should be defined for proper xPointPosition calculation
   this.barsPadding_ = 0;
@@ -88,26 +94,24 @@ anychart.core.ChartWithSeries.generateSeriesConstructors(anychart.charts.Mosaic,
 //
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Getter for xScale.
- * @param {(anychart.enums.ScaleTypes|anychart.scales.Base)=} opt_value X Scale to set.
- * @return {!(anychart.scales.Base|anychart.core.ChartWithSeries)} Default chart scale value or itself for method chaining.
+ * Getter for leftCategoriesScale.
+ * @return {!anychart.scales.Ordinal}
  */
-anychart.charts.Mosaic.prototype.xWeightsScale = function() {
-  if (!this.xWeightsScale_) {
-    this.xWeightsScale_ = this.createScaleByType('linear', true, false);
-    this.xWeightsScale_.stackMode('percent');
-    this.xWeightsScale_.listenSignals(this.xWeightsScaleInvalidated, this);
+anychart.charts.Mosaic.prototype.leftCategoriesScale = function() {
+  if (!this.leftCategoriesScale_) {
+    this.leftCategoriesScale_ = this.createScaleByType('ordinal', true, false);
+    this.leftCategoriesScale_.listenSignals(this.categoriesScaleInvalidated, this);
   }
-  return /** @type {!anychart.scales.Base} */(this.xWeightsScale_);
+  return /** @type {!anychart.scales.Ordinal} */(this.leftCategoriesScale_);
 };
 
 
 /**
- * xWeightsScale invalidation handler.
+ * Left and right categories scales invalidation handler.
  * @param {anychart.SignalEvent} event Event.
  * @protected
  */
-anychart.charts.Mosaic.prototype.xWeightsScaleInvalidated = function(event) {
+anychart.charts.Mosaic.prototype.categoriesScaleInvalidated = function(event) {
   this.suspendSignalsDispatching();
   if (event.hasSignal(anychart.Signal.NEEDS_RECALCULATION)) {
     var state = anychart.ConsistencyState.SERIES_CHART_SCALES |
@@ -119,9 +123,9 @@ anychart.charts.Mosaic.prototype.xWeightsScaleInvalidated = function(event) {
     // }
     this.invalidate(state, anychart.Signal.NEEDS_REDRAW);
   }
-  if (event.hasSignal(anychart.Signal.NEEDS_REAPPLICATION)) {
-    this.invalidateSeriesOfScale(this.xScale_);
-  }
+  // if (event.hasSignal(anychart.Signal.NEEDS_REAPPLICATION)) {
+  //   this.invalidateSeriesOfScale(this.xScale_);
+  // }
   this.resumeSignalsDispatching(true);
 };
 
@@ -161,20 +165,32 @@ anychart.charts.Mosaic.prototype.checkYScaleType = function(scale) {
 //----------------------------------------------------------------------------------------------------------------------
 /** @inheritDoc */
 anychart.charts.Mosaic.prototype.calculate = function() {
-  anychart.charts.Mosaic.base(this, 'calculate');
 
-  this.suspendSignalsDispatching();
+  var state = anychart.ConsistencyState.SERIES_CHART_SCALES |
+      anychart.ConsistencyState.SERIES_CHART_SCALE_MAPS |
+      anychart.ConsistencyState.SERIES_CHART_Y_SCALES;
 
-  var wScale = this.xWeightsScale();
+  if (this.hasInvalidationState(state)) {
+    anychart.charts.Mosaic.base(this, 'calculate');
 
-  wScale.extendDataRange(10, 5, 20, 35);
-  wScale.calculate();
+    var i;
+    var j;
+    var seriesData;
+    var weights = [];
+    for (i = 0; i < this.drawingPlans_.length; i++) {
+      seriesData = this.drawingPlans_[i].data;
+      for (j = 0; j < seriesData.length; j++) {
+        var value = seriesData[j].data['value'];
+        if (weights[j] == undefined) {
+          weights.push(value);
+        } else {
+          weights[j] += value;
+        }
+      }
+    }
 
-  var ticks = wScale.ticks();
-  console.log(ticks);
-  console.log(ticks.get());
-
-  this.resumeSignalsDispatching(false);
+    this.xScale().weights(weights);
+  }
 };
 
 
