@@ -2164,10 +2164,10 @@ anychart.core.series.Base.prototype.drawSingleFactoryElement = function(factory,
   if (formatProvider) {
     element.state('pointState', statePointOverride, 0);
     element.state('seriesState', stateFactory, 1);
-    element.state('chartState', stateFactory, 2);
+    // element.state('chartState', this.chart.labels(), 2);
     element.state('pointNormal', pointOverride, 3);
     element.state('seriesNormal', factory, 4);
-    element.state('chartNormal', factory, 5);
+    element.state('chartNormal', this.chart.labels(), 5);
   } else {
     element.currentMarkersFactory(stateFactory || factory);
     element.setSettings(/** @type {Object} */(pointOverride), /** @type {Object} */(statePointOverride));
