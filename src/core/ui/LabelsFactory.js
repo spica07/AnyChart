@@ -37,76 +37,6 @@ anychart.core.ui.LabelsFactory = function() {
   this.enabledState_ = null;
 
   /**
-   * Labels width settings.
-   * @type {string|number|null}
-   * @private
-   */
-  this.width_;
-
-  /**
-   * Labels height settings.
-   * @type {string|number|null}
-   * @private
-   */
-  this.height_;
-
-  /**
-   * Rotation angle.
-   * @type {number}
-   * @private
-   */
-  this.rotationAngle_;
-
-  /**
-   * Clip settings.
-   * @type {anychart.math.Rect}
-   * @private
-   */
-  this.clip_;
-
-  /**
-   * Labels position settings.
-   * @type {string}
-   * @private
-   */
-  this.position_;
-
-  /**
-   * Labels anchor settings.
-   * @type {?anychart.enums.Anchor}
-   * @private
-   */
-  this.anchor_;
-
-  /**
-   * Offset by X coordinate from labels position.
-   * @type {number|string}
-   * @private
-   */
-  this.offsetX_;
-
-  /**
-   * Offset by Y coordinate from labels position.
-   * @type {number|string}
-   * @private
-   */
-  this.offsetY_;
-
-  /**
-   * Label text formatting function, by default we use value field of the format provider.
-   * @type {Function|string}
-   * @private
-   */
-  this.textFormatter_;
-
-  /**
-   * Label position function, by default we use value obtained from context.
-   * @type {Function}
-   * @private
-   */
-  this.positionFormatter_;
-
-  /**
    * Labels background settings.
    * @type {anychart.core.ui.Background}
    * @private
@@ -135,34 +65,6 @@ anychart.core.ui.LabelsFactory = function() {
   this.labels_;
 
   /**
-   * Adjust font size by width.
-   * @type {boolean}
-   * @private
-   */
-  this.adjustByWidth_;
-
-  /**
-   * Adjust font size by height.
-   * @type {boolean}
-   * @private
-   */
-  this.adjustByHeight_;
-
-  /**
-   * Minimimum font size for adjusting from.
-   * @type {number}
-   * @private
-   */
-  this.minFontSize_;
-
-  /**
-   * Maximum font size for adjusting to.
-   * @type {number}
-   * @private
-   */
-  this.maxFontSize_;
-
-  /**
    * @type {Object.<boolean>}
    * @protected
    */
@@ -183,6 +85,31 @@ anychart.core.ui.LabelsFactory = function() {
    * @private
    */
   this.states_ = {};
+
+  /**
+   * Theme settings.
+   * @type {Object}
+   */
+  this.themeSettings = {};
+
+  /**
+   * Own settings (Settings set by user with API).
+   * @type {Object}
+   */
+  this.ownSettings = {};
+
+  /**
+   * Auto values of settings set by external controller.
+   * @type {!Object}
+   */
+  this.autoSettings = {};
+
+  /**
+   * Parent title.
+   * @type {anychart.core.ui.Title}
+   * @private
+   */
+  this.parent_ = null;
 
   this.adjustFontSizeMode('different');
 
@@ -303,7 +230,7 @@ anychart.core.ui.LabelsFactory.SIMPLE_PROPS_DESCRIPTORS = (function() {
   map['position'] = anychart.core.settings.createDescriptor(
       anychart.enums.PropertyHandlerType.SINGLE_ARG,
       'position',
-      anychart.enums.asIsNormalizer,
+      anychart.core.settings.asIsNormalizer,
       anychart.ConsistencyState.BOUNDS,
       anychart.Signal.NEEDS_REDRAW | anychart.Signal.BOUNDS_CHANGED);
 
@@ -317,14 +244,14 @@ anychart.core.ui.LabelsFactory.SIMPLE_PROPS_DESCRIPTORS = (function() {
   map['offsetX'] = anychart.core.settings.createDescriptor(
       anychart.enums.PropertyHandlerType.SINGLE_ARG,
       'offsetX',
-      anychart.enums.asIsNormalizer,
+      anychart.core.settings.asIsNormalizer,
       anychart.ConsistencyState.BOUNDS,
       anychart.Signal.NEEDS_REDRAW | anychart.Signal.BOUNDS_CHANGED);
 
   map['offsetY'] = anychart.core.settings.createDescriptor(
       anychart.enums.PropertyHandlerType.SINGLE_ARG,
       'offsetY',
-      anychart.enums.asIsNormalizer,
+      anychart.core.settings.asIsNormalizer,
       anychart.ConsistencyState.BOUNDS,
       anychart.Signal.NEEDS_REDRAW | anychart.Signal.BOUNDS_CHANGED);
 
@@ -359,7 +286,7 @@ anychart.core.ui.LabelsFactory.SIMPLE_PROPS_DESCRIPTORS = (function() {
   map['clip'] = anychart.core.settings.createDescriptor(
       anychart.enums.PropertyHandlerType.SINGLE_ARG,
       'clip',
-      anychart.enums.asIsNormalizer,
+      anychart.core.settings.asIsNormalizer,
       anychart.ConsistencyState.LABELS_FACTORY_CLIP,
       anychart.Signal.NEEDS_REDRAW);
 
@@ -544,7 +471,7 @@ anychart.core.ui.LabelsFactory.prototype.textSettings = function(opt_objectOrNam
  */
 anychart.core.ui.LabelsFactory.prototype.adjustEnabled_ = function() {
   var adjustFontSize = this.getOption('adjustFontSize');
-  return (adjustFontSize['width'] || adjustFontSize['height']);
+  return !!adjustFontSize && (adjustFontSize['width'] || adjustFontSize['height']);
 };
 
 
@@ -872,38 +799,39 @@ anychart.core.ui.LabelsFactory.prototype.createLabel = function() {
 //region --- Drawing
 /**
  * Applies text settings to text element.
+ * @param {!acgraph.vector.Text} textElement Text element to apply settings to.
  * @param {boolean} isInitial - Whether is initial operation.
  */
-anychart.core.ui.LabelsFactory.prototype.applyTextSettings = function(isInitial) {
+anychart.core.ui.LabelsFactory.prototype.applyTextSettings = function(textElement, isInitial) {
   var textVal = this.getOption('text');
   var useHtml = this.getOption('useHtml');
 
   if (isInitial || goog.isDef(textVal) || goog.isDef(useHtml)) {
     var text = /** @type {string} */(textVal);
     if (useHtml) {
-      this.text_.htmlText(text);
+      textElement.htmlText(text);
     } else {
-      this.text_.text(text);
+      textElement.text(text);
     }
   }
-  this.text_.fontSize(/** @type {number|string} */ (this.getOption('fontSize')));
-  this.text_.fontFamily(/** @type {string} */ (this.getOption('fontFamily')));
-  this.text_.color(/** @type {string} */ (this.getOption('fontColor')));
-  this.text_.direction(/** @type {string} */ (this.getOption('textDirection')));
-  this.text_.textWrap(/** @type {string} */ (this.getOption('textWrap')));
-  this.text_.opacity(/** @type {number} */ (this.getOption('fontOpacity')));
-  this.text_.decoration(/** @type {string} */ (this.getOption('fontDecoration')));
-  this.text_.fontStyle(/** @type {string} */ (this.getOption('fontStyle')));
-  this.text_.fontVariant(/** @type {string} */ (this.getOption('fontVariant')));
-  this.text_.fontWeight(/** @type {number|string} */ (this.getOption('fontWeight')));
-  this.text_.letterSpacing(/** @type {number|string} */ (this.getOption('letterSpacing')));
-  this.text_.lineHeight(/** @type {number|string} */ (this.getOption('lineHeight')));
-  this.text_.textIndent(/** @type {number} */ (this.getOption('textIndent')));
-  this.text_.vAlign(/** @type {string} */ (this.getOption('vAlign')));
-  this.text_.hAlign(/** @type {string} */ (this.getOption('hAlign')));
-  this.text_.textOverflow(/** @type {string} */ (this.getOption('textOverflow')));
-  this.text_.selectable(/** @type {boolean} */ (this.getOption('selectable')));
-  this.text_.disablePointerEvents(/** @type {boolean} */ (this.getOption('disablePointerEvents')));
+  textElement.fontSize(/** @type {number|string} */ (this.getOption('fontSize')));
+  textElement.fontFamily(/** @type {string} */ (this.getOption('fontFamily')));
+  textElement.color(/** @type {string} */ (this.getOption('fontColor')));
+  textElement.direction(/** @type {string} */ (this.getOption('textDirection')));
+  textElement.textWrap(/** @type {string} */ (this.getOption('textWrap')));
+  textElement.opacity(/** @type {number} */ (this.getOption('fontOpacity')));
+  textElement.decoration(/** @type {string} */ (this.getOption('fontDecoration')));
+  textElement.fontStyle(/** @type {string} */ (this.getOption('fontStyle')));
+  textElement.fontVariant(/** @type {string} */ (this.getOption('fontVariant')));
+  textElement.fontWeight(/** @type {number|string} */ (this.getOption('fontWeight')));
+  textElement.letterSpacing(/** @type {number|string} */ (this.getOption('letterSpacing')));
+  textElement.lineHeight(/** @type {number|string} */ (this.getOption('lineHeight')));
+  textElement.textIndent(/** @type {number} */ (this.getOption('textIndent')));
+  textElement.vAlign(/** @type {string} */ (this.getOption('vAlign')));
+  textElement.hAlign(/** @type {string} */ (this.getOption('hAlign')));
+  textElement.textOverflow(/** @type {string} */ (this.getOption('textOverflow')));
+  textElement.selectable(/** @type {boolean} */ (this.getOption('selectable')));
+  textElement.disablePointerEvents(/** @type {boolean} */ (this.getOption('disablePointerEvents')));
 };
 
 
@@ -1223,14 +1151,12 @@ anychart.core.ui.LabelsFactory.prototype.disposeInternal = function() {
 
 
 anychart.core.ui.LabelsFactory.prototype.setThemeSettings = function(config) {
-  var enabledState = this.enabled();
-
-  for (var name in this.TEXT_DESCRIPTORS) {
+  for (var name in anychart.core.ui.LabelsFactory.TEXT_DESCRIPTORS) {
     var val = config[name];
     if (goog.isDef(val))
       this.themeSettings[name] = val;
   }
-  for (var name in this.SIMPLE_PROPS_DESCRIPTORS) {
+  for (var name in anychart.core.ui.LabelsFactory.SIMPLE_PROPS_DESCRIPTORS) {
     var val = config[name];
     if (goog.isDef(val))
       this.themeSettings[name] = val;
@@ -1278,8 +1204,8 @@ anychart.core.ui.LabelsFactory.prototype.setupByJSON = function(config, opt_defa
   if (opt_default) {
     this.setThemeSettings(config);
   } else {
-    anychart.core.settings.deserialize(this, this.TEXT_DESCRIPTORS, config);
-    anychart.core.settings.deserialize(this, this.SIMPLE_PROPS_DESCRIPTORS, config);
+    anychart.core.settings.deserialize(this, anychart.core.ui.LabelsFactory.TEXT_DESCRIPTORS, config);
+    anychart.core.settings.deserialize(this, anychart.core.ui.LabelsFactory.SIMPLE_PROPS_DESCRIPTORS, config);
 
     var enabledState = this.enabled();
     anychart.core.ui.LabelsFactory.base(this, 'setupByJSON', config, opt_default);
@@ -2181,7 +2107,7 @@ anychart.core.ui.LabelsFactory.Label.prototype.resolveSetting_ = function(field,
         if (field == 'enabled') {
           setting = !goog.isNull(settings[field]()) ? settings[field]() : undefined;
         } else {
-          setting = settings.getSettingsChangedStatesObj()[field] ? settings[field]() : undefined;
+          setting = settings[field]();
         }
       } else if (goog.isObject(settings)) {
         if (field == 'adjustFontSize') {
@@ -2840,20 +2766,20 @@ anychart.core.ui.LabelsFactory.Label.prototype.disposeInternal = function() {
   var proto = anychart.core.ui.LabelsFactory.prototype;
   proto['background'] = proto.background;
   proto['padding'] = proto.padding;
-  proto['textFormatter'] = proto.textFormatter;
-  proto['positionFormatter'] = proto.positionFormatter;
-  proto['position'] = proto.position;
-  proto['anchor'] = proto.anchor;
-  proto['offsetX'] = proto.offsetX;
-  proto['offsetY'] = proto.offsetY;
-  proto['connectorStroke'] = proto.connectorStroke;
-  proto['rotation'] = proto.rotation;
-  proto['width'] = proto.width;
-  proto['height'] = proto.height;
+  // proto['textFormatter'] = proto.textFormatter;
+  // proto['positionFormatter'] = proto.positionFormatter;
+  // proto['position'] = proto.position;
+  // proto['anchor'] = proto.anchor;
+  // proto['offsetX'] = proto.offsetX;
+  // proto['offsetY'] = proto.offsetY;
+  // proto['connectorStroke'] = proto.connectorStroke;
+  // proto['rotation'] = proto.rotation;
+  // proto['width'] = proto.width;
+  // proto['height'] = proto.height;
   proto['enabled'] = proto.enabled;
-  proto['adjustFontSize'] = proto.adjustFontSize;
-  proto['minFontSize'] = proto.minFontSize;
-  proto['maxFontSize'] = proto.maxFontSize;
+  // proto['adjustFontSize'] = proto.adjustFontSize;
+  // proto['minFontSize'] = proto.minFontSize;
+  // proto['maxFontSize'] = proto.maxFontSize;
 
   proto = anychart.core.ui.LabelsFactory.Label.prototype;
   proto['padding'] = proto.padding;

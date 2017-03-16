@@ -528,9 +528,9 @@ anychart.core.series.Base.prototype.recreateShapeManager = function() {
  */
 anychart.core.series.Base.prototype.applyDefaultsToElements = function(defaults, opt_resetLegendItem, opt_default, opt_reapplyClip) {
   if (this.supportsLabels()) {
-    this.labels().setup(defaults['labels']);
-    this.hoverLabels().setup(defaults['hoverLabels']);
-    this.selectLabels().setup(defaults['selectLabels']);
+    this.labels().setupByVal(defaults['labels'], opt_default);
+    this.hoverLabels().setupByVal(defaults['hoverLabels'], opt_default);
+    this.selectLabels().setupByVal(defaults['selectLabels'], opt_default);
   }
 
   if (this.supportsMarkers()) {
