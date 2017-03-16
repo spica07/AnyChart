@@ -32,16 +32,16 @@ anychart.mosaic = function(var_args) {
 };
 
 
-// anychart.marimekko = function(var_args) {
-//   var chart = new anychart.charts.Mosaic();
-//   chart.setupByVal(anychart.getFullTheme('mosaic'), true);
-//
-//   for (var i = 0, count = arguments.length; i < count; i++) {
-//     chart['column'](arguments[i]);
-//   }
-//
-//   return chart;
-// };
+anychart.marimekko = function(var_args) {
+  var chart = new anychart.charts.Mosaic();
+  chart.setupByVal(anychart.getFullTheme('mosaic'), true);
+
+  for (var i = 0, count = arguments.length; i < count; i++) {
+    chart['column'](arguments[i]);
+  }
+
+  return chart;
+};
 
 
 anychart.barmekko = function(var_args) {

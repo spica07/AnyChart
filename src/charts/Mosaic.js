@@ -34,6 +34,12 @@ anychart.charts.Mosaic = function() {
    */
   this.rightCategoriesScale_ = null;
 
+  /**
+   * @type {number}
+   * @private
+   */
+  this.pointsPadding_ = 0;
+
   // Should be defined for proper xPointPosition calculation
   this.barsPadding_ = 0;
   this.barGroupsPadding_ = 0;
@@ -103,7 +109,7 @@ anychart.charts.Mosaic.prototype.leftCategoriesScale = function() {
     this.leftCategoriesScale_.listenSignals(this.categoriesScaleInvalidated, this);
 
     if (!this.rightCategoriesScale_) {
-      this.yAxis().listenSignals(this.onYAxisOrientation, this);
+      this.yAxis().listenSignals(this.axisOrientationHandler_, this);
     }
   }
   return /** @type {!anychart.scales.Ordinal} */(this.leftCategoriesScale_);
@@ -120,7 +126,7 @@ anychart.charts.Mosaic.prototype.rightCategoriesScale = function() {
     this.rightCategoriesScale_.listenSignals(this.categoriesScaleInvalidated, this);
 
     if (!this.leftCategoriesScale_) {
-      this.yAxis().listenSignals(this.onYAxisOrientation, this);
+      this.yAxis().listenSignals(this.axisOrientationHandler_, this);
     }
   }
   return /** @type {!anychart.scales.Ordinal} */(this.rightCategoriesScale_);
@@ -136,12 +142,11 @@ anychart.charts.Mosaic.prototype.categoriesScaleInvalidated = function(event) {
   this.suspendSignalsDispatching();
   if (event.hasSignal(anychart.Signal.NEEDS_RECALCULATION)) {
     //console.log("categoriesScaleInvalidated()");
+    this.calculateCategoriesScales();
+
     var state = anychart.ConsistencyState.SCALE_CHART_SCALES |
         anychart.ConsistencyState.SCALE_CHART_Y_SCALES |
         anychart.ConsistencyState.SCALE_CHART_SCALE_MAPS;
-
-    this.calculateCategoriesScales();
-
     this.invalidate(state, anychart.Signal.NEEDS_REDRAW);
   }
   this.resumeSignalsDispatching(true);
@@ -153,7 +158,7 @@ anychart.charts.Mosaic.prototype.categoriesScaleInvalidated = function(event) {
  * @param {anychart.SignalEvent} event Event.
  * @protected
  */
-anychart.charts.Mosaic.prototype.onYAxisOrientation = function(event) {
+anychart.charts.Mosaic.prototype.axisOrientationHandler_ = function(event) {
   if (event.hasSignal(anychart.Signal.NEEDS_REDRAW | anychart.Signal.BOUNDS_CHANGED)) {
     var orientation = this.yAxis().orientation();
     var axisScale = this.yAxis().scale();
@@ -265,6 +270,22 @@ anychart.charts.Mosaic.prototype.calculateCategoriesScales = function() {
 //  Series
 //
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * Getter/setter for points padding.
+ * @param {number} opt_value
+ * @return {(number|!anychart.charts.Mosaic)}
+ */
+anychart.charts.Mosaic.prototype.pointsPadding = function(opt_value) {
+  if (goog.isDef(opt_value) && this.pointsPadding_ != opt_value) {
+    opt_value = anychart.utils.toNumber(opt_value);
+    this.pointsPadding_ = isNaN(opt_value) ? 0 : (opt_value >= 0 ? opt_value : -opt_value);
+
+    return this;
+  }
+  return this.pointsPadding_;
+};
+
+
 /** @inheritDoc */
 anychart.charts.Mosaic.prototype.createSeriesInstance = function(type, config) {
   return new anychart.core.series.Cartesian(this, this, type, config, false);
@@ -302,4 +323,5 @@ anychart.charts.Mosaic.prototype.serialize = function() {
   var proto = anychart.charts.Mosaic.prototype;
   proto['leftCategoriesScale'] = proto.leftCategoriesScale;
   proto['rightCategoriesScale'] = proto.rightCategoriesScale;
+  proto['pointsPadding'] = proto.pointsPadding;
 })();
