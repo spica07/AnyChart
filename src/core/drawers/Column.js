@@ -79,11 +79,18 @@ anychart.core.drawers.Column.prototype.updatePointOnAnimate = function(point) {
  * @private
  */
 anychart.core.drawers.Column.prototype.drawPoint_ = function(point, shapes) {
-  var x = /** @type {number} */(point.meta('x'));
-  var zero = /** @type {number} */(point.meta('zero'));
-  var y = /** @type {number} */(point.meta('value'));
+   //debugger;
+  var pointsPadding = 0;
+  if(this.series.chart.pointsPadding) {
+    pointsPadding = chart.pointsPadding();
+    this.pointWidth -= pointsPadding * 2;
+  }
 
-  var leftX = x - this.pointWidth / 2;
+  var x = /** @type {number} */(point.meta('x'));
+  var zero = /** @type {number} */(point.meta('zero')) - pointsPadding;
+  var y = /** @type {number} */(point.meta('value')) + pointsPadding;
+
+  var leftX = (x - this.pointWidth / 2);
   var rightX = leftX + this.pointWidth;
 
   var thickness = acgraph.vector.getThickness(/** @type {acgraph.vector.Stroke} */(shapes['path'].stroke()));

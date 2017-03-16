@@ -26,7 +26,9 @@ anychart.mosaic = function(var_args) {
     chart['column'](arguments[i]);
   }
 
+  // todo: move these settings to defaultTheme.js?
   chart.yAxis().scale(chart.leftCategoriesScale());
+  chart.pointsPadding(5);
 
   return chart;
 };
@@ -39,7 +41,6 @@ anychart.marimekko = function(var_args) {
   for (var i = 0, count = arguments.length; i < count; i++) {
     chart['column'](arguments[i]);
   }
-
   return chart;
 };
 
@@ -53,7 +54,6 @@ anychart.barmekko = function(var_args) {
   }
 
   chart.yScale().stackMode('value');
-
   return chart;
 };
 
