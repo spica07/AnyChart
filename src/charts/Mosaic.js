@@ -128,9 +128,9 @@ anychart.charts.Mosaic.prototype.categoriesScaleInvalidated = function(event) {
   this.suspendSignalsDispatching();
   //console.log(event);
   if (event.hasSignal(anychart.Signal.NEEDS_RECALCULATION)) {
-    var state = anychart.ConsistencyState.SERIES_CHART_SCALES |
-        anychart.ConsistencyState.SERIES_CHART_Y_SCALES |
-        anychart.ConsistencyState.SERIES_CHART_SCALE_MAPS;
+    var state = anychart.ConsistencyState.SCALE_CHART_SCALES |
+        anychart.ConsistencyState.SCALE_CHART_Y_SCALES |
+        anychart.ConsistencyState.SCALE_CHART_SCALE_MAPS;
 
     this.calculateCategoriesScales();
 
@@ -176,9 +176,9 @@ anychart.charts.Mosaic.prototype.checkYScaleType = function(scale) {
 /** @inheritDoc */
 anychart.charts.Mosaic.prototype.calculate = function() {
 
-  var state = anychart.ConsistencyState.SERIES_CHART_SCALES |
-      anychart.ConsistencyState.SERIES_CHART_SCALE_MAPS |
-      anychart.ConsistencyState.SERIES_CHART_Y_SCALES;
+  var state = anychart.ConsistencyState.SCALE_CHART_SCALES |
+      anychart.ConsistencyState.SCALE_CHART_SCALE_MAPS |
+      anychart.ConsistencyState.SCALE_CHART_Y_SCALES;
 
   if (this.hasInvalidationState(state)) {
     anychart.charts.Mosaic.base(this, 'calculate');
