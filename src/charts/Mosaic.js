@@ -4,6 +4,7 @@ goog.require('anychart.core.shapeManagers');
 goog.require('anychart.enums');
 
 
+
 /**
  * Mosaic chart class.<br/>
  * To get the chart use any of these methods:
@@ -68,12 +69,13 @@ anychart.charts.Mosaic.prototype.getType = function() {
 anychart.charts.Mosaic.prototype.seriesConfig = (function() {
   var res = {};
   var capabilities = (
-  anychart.core.series.Capabilities.ALLOW_INTERACTIVITY |
-  anychart.core.series.Capabilities.ALLOW_POINT_SETTINGS |
-  anychart.core.series.Capabilities.ALLOW_ERROR |
-  anychart.core.series.Capabilities.SUPPORTS_MARKERS |
-  anychart.core.series.Capabilities.SUPPORTS_LABELS |
-  0);
+      anychart.core.series.Capabilities.ALLOW_INTERACTIVITY |
+      anychart.core.series.Capabilities.ALLOW_POINT_SETTINGS |
+      anychart.core.series.Capabilities.ALLOW_ERROR |
+      anychart.core.series.Capabilities.SUPPORTS_MARKERS |
+      anychart.core.series.Capabilities.SUPPORTS_LABELS |
+      0);
+
   res[anychart.enums.MosaicSeriesType.MOSAIC] = {
     drawerType: anychart.enums.SeriesDrawerTypes.COLUMN,
     shapeManagerType: anychart.enums.ShapeManagerTypes.PER_POINT,
@@ -156,24 +158,25 @@ anychart.charts.Mosaic.prototype.categoriesScaleInvalidated = function(event) {
 /**
  * Left and right categories scales invalidation handler.
  * @param {anychart.SignalEvent} event Event.
- * @protected
+ * @private
  */
 anychart.charts.Mosaic.prototype.axisOrientationHandler_ = function(event) {
   if (event.hasSignal(anychart.Signal.NEEDS_REDRAW | anychart.Signal.BOUNDS_CHANGED)) {
     var orientation = this.yAxis().orientation();
     var axisScale = this.yAxis().scale();
     if (axisScale == this.leftCategoriesScale() || axisScale == this.rightCategoriesScale()) {
-      if (orientation == "left" && axisScale != this.leftCategoriesScale()) {
+      if (orientation == 'left' && axisScale != this.leftCategoriesScale()) {
         this.yAxis().scale(this.leftCategoriesScale());
         this.calculateCategoriesScales();
 
-      } else if (orientation == "right" && axisScale != this.rightCategoriesScale()) {
+      } else if (orientation == 'right' && axisScale != this.rightCategoriesScale()) {
         this.yAxis().scale(this.rightCategoriesScale());
         this.calculateCategoriesScales();
       }
     }
   }
 };
+
 
 /** @inheritDoc */
 anychart.charts.Mosaic.prototype.allowLegendCategoriesMode = function() {
@@ -240,6 +243,9 @@ anychart.charts.Mosaic.prototype.calculate = function() {
 };
 
 
+/**
+ * Left and right categories scales values and weights calculation.
+ */
 anychart.charts.Mosaic.prototype.calculateCategoriesScales = function() {
   if (this.drawingPlans_.length) {
     var currentScale = this.yAxis().scale();
@@ -272,7 +278,7 @@ anychart.charts.Mosaic.prototype.calculateCategoriesScales = function() {
 //----------------------------------------------------------------------------------------------------------------------
 /**
  * Getter/setter for points padding.
- * @param {number} opt_value
+ * @param {number=} opt_value
  * @return {(number|!anychart.charts.Mosaic)}
  */
 anychart.charts.Mosaic.prototype.pointsPadding = function(opt_value) {

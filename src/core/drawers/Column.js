@@ -79,9 +79,9 @@ anychart.core.drawers.Column.prototype.updatePointOnAnimate = function(point) {
  * @private
  */
 anychart.core.drawers.Column.prototype.drawPoint_ = function(point, shapes) {
-   //debugger;
+  //debugger;
   var pointsPadding = 0;
-  if(this.series.chart.pointsPadding) {
+  if (this.series.chart.pointsPadding) {
     pointsPadding = chart.pointsPadding();
     this.pointWidth -= pointsPadding * 2;
   }

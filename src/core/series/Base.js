@@ -556,7 +556,7 @@ anychart.core.series.Base.prototype.applyDefaultsToElements = function(defaults,
     this.tooltip().setupByVal(defaults['tooltip'], opt_default);
   }
 
-  if(!goog.isDef(opt_reapplyClip))
+  if (!goog.isDef(opt_reapplyClip))
     opt_reapplyClip = opt_default;
 
   if (!!opt_reapplyClip) {
@@ -1043,7 +1043,7 @@ anychart.core.series.Base.prototype.getWhiskerWidth = function(point, pointState
  * @return {number} Category width in pixels.
  * @protected
  */
-anychart.core.series.Base.prototype.getCategoryWidth = function(opt_categoryIndex){};
+anychart.core.series.Base.prototype.getCategoryWidth = function(opt_categoryIndex){return NaN;};
 
 
 /**
