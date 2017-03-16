@@ -50,7 +50,7 @@ anychart.ConsistencyState = {
   DATA_MASK: 1 << 0,
   //---------------------------------- CHART STATES (VB) ---------------------------------
   /**
-   * Chart title has changed.
+   * Chart background has changed.
    */
   CHART_BACKGROUND: 1 << 6,
   /**
@@ -58,7 +58,7 @@ anychart.ConsistencyState = {
    */
   CHART_TITLE: 1 << 7,
   /**
-   * Chart title has changed.
+   * Labels have changed.
    */
   CHART_LABELS: 1 << 8,
   // We also add SeparateChart states here to not to add prefix SEPARATE_CHART.

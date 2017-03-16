@@ -101,6 +101,10 @@ anychart.charts.Mosaic.prototype.leftCategoriesScale = function() {
   if (!this.leftCategoriesScale_) {
     this.leftCategoriesScale_ = this.createScaleByType('ordinal', true, false);
     this.leftCategoriesScale_.listenSignals(this.categoriesScaleInvalidated, this);
+
+    if (!this.rightCategoriesScale_) {
+      this.yAxis().listenSignals(this.onYAxisOrientation, this);
+    }
   }
   return /** @type {!anychart.scales.Ordinal} */(this.leftCategoriesScale_);
 };
@@ -114,6 +118,10 @@ anychart.charts.Mosaic.prototype.rightCategoriesScale = function() {
   if (!this.rightCategoriesScale_) {
     this.rightCategoriesScale_ = this.createScaleByType('ordinal', true, false);
     this.rightCategoriesScale_.listenSignals(this.categoriesScaleInvalidated, this);
+
+    if (!this.leftCategoriesScale_) {
+      this.yAxis().listenSignals(this.onYAxisOrientation, this);
+    }
   }
   return /** @type {!anychart.scales.Ordinal} */(this.rightCategoriesScale_);
 };
@@ -126,8 +134,8 @@ anychart.charts.Mosaic.prototype.rightCategoriesScale = function() {
  */
 anychart.charts.Mosaic.prototype.categoriesScaleInvalidated = function(event) {
   this.suspendSignalsDispatching();
-  //console.log(event);
   if (event.hasSignal(anychart.Signal.NEEDS_RECALCULATION)) {
+    //console.log("categoriesScaleInvalidated()");
     var state = anychart.ConsistencyState.SCALE_CHART_SCALES |
         anychart.ConsistencyState.SCALE_CHART_Y_SCALES |
         anychart.ConsistencyState.SCALE_CHART_SCALE_MAPS;
@@ -139,6 +147,28 @@ anychart.charts.Mosaic.prototype.categoriesScaleInvalidated = function(event) {
   this.resumeSignalsDispatching(true);
 };
 
+
+/**
+ * Left and right categories scales invalidation handler.
+ * @param {anychart.SignalEvent} event Event.
+ * @protected
+ */
+anychart.charts.Mosaic.prototype.onYAxisOrientation = function(event) {
+  if (event.hasSignal(anychart.Signal.NEEDS_REDRAW | anychart.Signal.BOUNDS_CHANGED)) {
+    var orientation = this.yAxis().orientation();
+    var axisScale = this.yAxis().scale();
+    if (axisScale == this.leftCategoriesScale() || axisScale == this.rightCategoriesScale()) {
+      if (orientation == "left" && axisScale != this.leftCategoriesScale()) {
+        this.yAxis().scale(this.leftCategoriesScale());
+        this.calculateCategoriesScales();
+
+      } else if (orientation == "right" && axisScale != this.rightCategoriesScale()) {
+        this.yAxis().scale(this.rightCategoriesScale());
+        this.calculateCategoriesScales();
+      }
+    }
+  }
+};
 
 /** @inheritDoc */
 anychart.charts.Mosaic.prototype.allowLegendCategoriesMode = function() {
@@ -200,14 +230,12 @@ anychart.charts.Mosaic.prototype.calculate = function() {
     }
 
     this.xScale().weights(weights);
-
     this.calculateCategoriesScales();
   }
 };
 
 
 anychart.charts.Mosaic.prototype.calculateCategoriesScales = function() {
-  console.log("Mosaic.calculateCategoriesScales");
   if (this.drawingPlans_.length) {
     var currentScale = this.yAxis().scale();
     var categoriesScaleName;
@@ -272,36 +300,6 @@ anychart.charts.Mosaic.prototype.serialize = function() {
 //exports
 (function() {
   var proto = anychart.charts.Mosaic.prototype;
-  proto['crosshair'] = proto.crosshair;
-  proto['xScale'] = proto.xScale;//doc|ex
-  proto['yScale'] = proto.yScale;//doc|ex
-  proto['grid'] = proto.grid;//doc|ex
-  proto['minorGrid'] = proto.minorGrid;//doc|ex
-  proto['xAxis'] = proto.xAxis;//doc|ex
-  proto['yAxis'] = proto.yAxis;//doc|ex
-  proto['getSeries'] = proto.getSeries;//doc|ex
-  // autoexport
-  // proto['bubble'] = proto.bubble;//doc|ex
-  // proto['line'] = proto.line;//doc|ex
-  // proto['marker'] = proto.marker;//doc|ex
-  proto['lineMarker'] = proto.lineMarker;//doc|ex
-  proto['rangeMarker'] = proto.rangeMarker;//doc|ex
-  proto['textMarker'] = proto.textMarker;//doc|ex
-  proto['palette'] = proto.palette;//doc|ex
-  proto['markerPalette'] = proto.markerPalette;
-  proto['hatchFillPalette'] = proto.hatchFillPalette;
-  proto['getType'] = proto.getType;
-  proto['maxBubbleSize'] = proto.maxBubbleSize;
-  proto['minBubbleSize'] = proto.minBubbleSize;
-  proto['defaultSeriesType'] = proto.defaultSeriesType;
-  proto['addSeries'] = proto.addSeries;
-  proto['getSeriesAt'] = proto.getSeriesAt;
-  proto['getSeriesCount'] = proto.getSeriesCount;
-  proto['removeSeries'] = proto.removeSeries;
-  proto['removeSeriesAt'] = proto.removeSeriesAt;
-  proto['removeAllSeries'] = proto.removeAllSeries;
-  proto['getPlotBounds'] = proto.getPlotBounds;
-  proto['annotations'] = proto.annotations;
   proto['leftCategoriesScale'] = proto.leftCategoriesScale;
   proto['rightCategoriesScale'] = proto.rightCategoriesScale;
 })();
