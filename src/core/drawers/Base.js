@@ -186,7 +186,8 @@ anychart.core.drawers.Base.prototype.drawPointInternal_ = function(point, state)
     this.prevPointDrawn = this.prevPointDrawn && this.connectMissing;
   } else {
     // Point width based on ordinal scale weights
-    if (this.series.xScale && this.series.xScale() instanceof anychart.scales.Ordinal) {
+    var xScale = this.series.xScale && this.series.xScale();
+    if (xScale instanceof anychart.scales.Ordinal && this.series.xScale().checkWeights()) {
       this.pointWidth = this.series.getCategoryWidth(point.getIndex());
     }
     if (this.prevPointDrawn)

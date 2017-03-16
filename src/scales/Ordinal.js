@@ -167,6 +167,21 @@ anychart.scales.Ordinal.prototype.names = function(opt_value) {
 
 
 /**
+ * Checks if weights is valuable.
+ * @return {boolean}
+ */
+anychart.scales.Ordinal.prototype.checkWeights = function() {
+  if (!this.weights_.length) return false;
+
+  for (var i = 1; i < this.weights_.length; i++)
+    if (this.weights_[i] !== this.weights_[0])
+      break;
+
+  return i != this.weights_.length;
+};
+
+
+/**
  * Getter/setter for weights.
  * @param {(Array.<number>)=} opt_value Array of weights.
  * @return {(Array.<number>|anychart.scales.Ordinal)} Scale weights or self for chaining.
@@ -379,14 +394,19 @@ anychart.scales.Ordinal.prototype.transform = function(value, opt_subRangeRatio)
   var index = this.getIndexByValue(value);
   if (isNaN(index)) return NaN;
 
-  var weightRatios = this.weightRatios();
-  var ratio = (opt_subRangeRatio || 0) * weightRatios[index];
+  var result;
+  if (this.checkWeights()) {
+    var weightRatios = this.weightRatios();
+    result = (opt_subRangeRatio || 0) * weightRatios[index];
 
-  while (index > 0) {
-    ratio += weightRatios[--index];
+    while (index > 0) {
+      result += weightRatios[--index];
+    }
+  } else {
+    result = index / this.values_.length +
+        (opt_subRangeRatio || 0) / this.values_.length; // sub scale part
   }
-
-  return this.applyZoomAndInverse(ratio);
+  return this.applyZoomAndInverse(result);
 };
 
 
@@ -410,16 +430,21 @@ anychart.scales.Ordinal.prototype.transform = function(value, opt_subRangeRatio)
  */
 anychart.scales.Ordinal.prototype.inverseTransform = function(ratio) {
   ratio = this.reverseZoomAndInverse(ratio);
-
-  var weightRatios = this.weightRatios();
   var i;
-  var min;
-  var max = 0;
-  for (i = 0; i < weightRatios.length; i++) {
-    min = max;
-    max = min + weightRatios[i];
-    if (ratio > min && ratio <= max) break;
+  if (this.checkWeights()) {
+    var weightRatios = this.weightRatios();
+    var min;
+    var max = 0;
+    for (i = 0; i < weightRatios.length; i++) {
+      min = max;
+      max = min + weightRatios[i];
+      if (ratio > min && ratio <= max) break;
+    }
+  } else {
+    //todo(Anton Saukh): needs improvement.
+    i = goog.math.clamp(Math.ceil(ratio * this.values_.length) - 1, 0, this.values_.length - 1);
   }
+
   return this.values_[i];
 };
 
