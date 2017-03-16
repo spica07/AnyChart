@@ -2161,11 +2161,18 @@ anychart.core.series.Base.prototype.drawSingleFactoryElement = function(factory,
   if (goog.isDef(opt_position) && formatProvider) {
     this.resolveAutoAnchor(opt_position, element);
   }
-  if (formatProvider)
-    element.currentLabelsFactory(stateFactory || factory);
-  else
+  if (formatProvider) {
+    element.state('pointState', statePointOverride, 0);
+    element.state('seriesState', stateFactory, 1);
+    element.state('chartState', stateFactory, 2);
+    element.state('pointNormal', pointOverride, 3);
+    element.state('seriesNormal', factory, 4);
+    element.state('chartNormal', factory, 5);
+  } else {
     element.currentMarkersFactory(stateFactory || factory);
-  element.setSettings(/** @type {Object} */(pointOverride), /** @type {Object} */(statePointOverride));
+    element.setSettings(/** @type {Object} */(pointOverride), /** @type {Object} */(statePointOverride));
+  }
+
   element.draw();
   return element;
 };
