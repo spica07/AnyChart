@@ -193,12 +193,12 @@ anychart.charts.Mosaic.prototype.checkYScaleType = function(scale) {
 //----------------------------------------------------------------------------------------------------------------------
 /** @inheritDoc */
 anychart.core.ChartWithAxes.prototype.setYAxisScale = function(axis) {
-  // todo: Process inverse yScale()
   if (this.useCategoryScale_) {
+    var straight = !this.xScale().inverted();
     if (axis.orientation() == anychart.enums.Orientation.LEFT || axis.orientation() == anychart.enums.Orientation.TOP)
-      axis.scale(this.leftCategoriesScale());
+      axis.scale(straight ? this.leftCategoriesScale() : this.rightCategoriesScale());
     else if (axis.orientation() == anychart.enums.Orientation.RIGHT || axis.orientation() == anychart.enums.Orientation.BOTTOM)
-      axis.scale(this.rightCategoriesScale());
+      axis.scale(straight ? this.rightCategoriesScale() : this.leftCategoriesScale());
 
   } else {
     axis.scale(/** @type {anychart.scales.Base} */(this.yScale()));
