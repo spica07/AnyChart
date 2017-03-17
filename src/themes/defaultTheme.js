@@ -2361,7 +2361,7 @@ goog.provide('anychart.themes.defaultTheme');
     'bubble': {},
 
     // merge with chart
-    'mosaic': {
+    'marimekko': {
       'defaultSeriesType': 'mosaic',
       'series': [],
       'xAxes': [{}],
@@ -2378,6 +2378,12 @@ goog.provide('anychart.themes.defaultTheme');
       'xScale': 0,
       'yScale': 1
     },
+    // merge with marimekko
+    'mosaic': {
+      'pointsPadding': 5
+    },
+    // merge with marimekko
+    'barmekko': {},
 
     // merge with chart
     'radar': {

@@ -552,7 +552,7 @@ anychart.themes.merging.mergingMap_ = [
       'chart.defaultLabelSettings',
       'cartesianBase.defaultTextMarkerSettings',
       'scatter.defaultTextMarkerSettings',
-      'mosaic.defaultTextMarkerSettings',
+      'marimekko.defaultTextMarkerSettings',
       'standalones.label',
       'standalones.table',
       'standalones.textAxisMarker',
@@ -823,7 +823,7 @@ anychart.themes.merging.mergingMap_ = [
       'linearGauge',
       'pert',
       'resource',
-      'mosaic'
+      'marimekko'
     ]
   },
   {
@@ -978,7 +978,7 @@ anychart.themes.merging.mergingMap_ = [
   {
     defaultObj: 'cartesianBase.defaultSeriesSettings.column',
     targets: [
-      'mosaic.defaultSeriesSettings.mosaic'
+      'marimekko.defaultSeriesSettings.mosaic'
     ]
   },
   {
@@ -1308,15 +1308,22 @@ anychart.themes.merging.mergingMap_ = [
   {
     defaultObj: 'cartesianBase.defaultXAxisSettings',
     targets: [
-      'mosaic.defaultXAxisSettings'
+      'marimekko.defaultXAxisSettings'
     ]
   },
   {
     defaultObj: 'cartesianBase.defaultYAxisSettings',
     targets: [
-      'mosaic.defaultYAxisSettings'
+      'marimekko.defaultYAxisSettings'
     ]
   },
+  {
+    defaultObj: 'marimekko',
+    targets: [
+      'mosaic',
+      'barmekko'
+    ]
+  }
 ];
 
 

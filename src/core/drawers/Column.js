@@ -81,14 +81,30 @@ anychart.core.drawers.Column.prototype.updatePointOnAnimate = function(point) {
 anychart.core.drawers.Column.prototype.drawPoint_ = function(point, shapes) {
   //debugger;
   var pointsPadding = 0;
+  var doublePadding = 0;
   if (this.series.chart.pointsPadding) {
     pointsPadding = chart.pointsPadding();
-    this.pointWidth -= pointsPadding * 2;
+    doublePadding = pointsPadding + pointsPadding;
+    this.pointWidth -= doublePadding;
+    // if(this.pointWidth >= 0)
+    //   this.pointWidth = 1;
   }
 
   var x = /** @type {number} */(point.meta('x'));
-  var zero = /** @type {number} */(point.meta('zero')) - pointsPadding;
-  var y = /** @type {number} */(point.meta('value')) + pointsPadding;
+  var zero = /** @type {number} */(point.meta('zero'))/* - pointsPadding*/;
+  var y = /** @type {number} */(point.meta('value'))/* + pointsPadding*/;
+  var height = zero - y;
+
+
+  if(height > 0) {
+    // if(height <= doublePadding) {
+    //   pointsPadding = (height - 2) / 2;
+    //   console.log(height, doublePadding, pointsPadding);
+    // }
+
+    zero -= pointsPadding;
+    y += pointsPadding;
+  }
 
   var leftX = (x - this.pointWidth / 2);
   var rightX = leftX + this.pointWidth;
