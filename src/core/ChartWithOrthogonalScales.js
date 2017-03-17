@@ -2026,7 +2026,7 @@ anychart.core.ChartWithOrthogonalScales.prototype.serializeElementsWithScales = 
 /**
  * Serialization function with scales context.
  * @param {!Object} json
- * @param {Array.<anychart.scales.Base>} scales
+ * @param {Array.<Object>} scales
  * @param {Object} scaleIds
  * @protected
  */

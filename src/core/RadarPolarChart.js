@@ -80,6 +80,12 @@ anychart.core.RadarPolarChart.prototype.startAngle = function(opt_value) {
 };
 
 
+/** @inheritDoc */
+anychart.core.RadarPolarChart.prototype.getPlotBounds = function() {
+  return this.dataBounds;
+};
+
+
 //endregion
 //region --- Series
 //------------------------------------------------------------------------------

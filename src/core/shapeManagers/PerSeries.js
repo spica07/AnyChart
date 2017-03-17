@@ -40,7 +40,7 @@ anychart.core.shapeManagers.PerSeries.prototype.clearShapes = function() {
 
 
 /** @inheritDoc */
-anychart.core.shapeManagers.PerSeries.prototype.getShapesGroup = function(state, opt_only, opt_baseZIndex) {
+anychart.core.shapeManagers.PerSeries.prototype.getShapesGroup = function(state, opt_only, opt_baseZIndex, opt_shape) {
   // we generate all shapes for the first time, because we cannot afford to vary the set
   if (!this.shapes_) {
     this.shapes_ = anychart.core.shapeManagers.PerSeries.base(this, 'getShapesGroup', state, null, opt_baseZIndex);

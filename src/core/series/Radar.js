@@ -15,8 +15,6 @@ goog.require('anychart.core.series.Cartesian');
  */
 anychart.core.series.Radar = function(chart, plot, type, config, sortedMode) {
   anychart.core.series.Radar.base(this, 'constructor', chart, plot, type, config, sortedMode);
-
-  this.setOption('closed', true);
 };
 goog.inherits(anychart.core.series.Radar, anychart.core.series.Cartesian);
 
@@ -79,11 +77,27 @@ anychart.core.series.Radar.prototype.makeMissing = function(rowInfo, yNames, xRa
 
 /** @inheritDoc */
 anychart.core.series.Radar.prototype.makeZeroMeta = function(rowInfo, yNames, yColumns, pointMissing, xRatio) {
+  /* other interesting behavior
   var zero = this.ratiosToPixelPairs(xRatio, [this.zeroYRatio]);
   rowInfo.meta('zeroX', zero[0]);
   rowInfo.meta('zero', zero[1]);
+  /*/
+  rowInfo.meta('zeroX', this.zeroX);
+  rowInfo.meta('zero', this.zeroY);
+  //*/
   rowInfo.meta('zeroMissing', false);
   return pointMissing;
+};
+
+
+/** @inheritDoc */
+anychart.core.series.Radar.prototype.prepareMetaMakers = function() {
+  anychart.core.series.Radar.base(this, 'prepareMetaMakers');
+  if (this.needsZero()) {
+    var zero = this.ratiosToPixelPairs(0, [0]);
+    this.zeroX = zero[0];
+    this.zeroY = zero[1];
+  }
 };
 
 

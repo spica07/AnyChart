@@ -80,7 +80,9 @@ anychart.charts.Radar.prototype.createScaleByType = function(value, isXScale, re
 
 /** @inheritDoc */
 anychart.charts.Radar.prototype.createSeriesInstance = function(type, config) {
-  return new anychart.core.series.Radar(this, this, type, config, true);
+  var result = new anychart.core.series.Radar(this, this, type, config, true);
+  result.setOption('closed', true);
+  return result;
 };
 
 
