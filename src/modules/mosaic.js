@@ -19,24 +19,24 @@ goog.require('anychart.modules.base');
  * @return {anychart.charts.Scatter} Chart with defaults for scatter series.
  */
 anychart.mosaic = function(var_args) {
-  var chart = new anychart.charts.Mosaic();
+  var chart = new anychart.charts.Mosaic(true);
   chart.setupByVal(anychart.getFullTheme('mosaic'), true);
 
   for (var i = 0, count = arguments.length; i < count; i++) {
     chart['column'](arguments[i]);
   }
 
-  // todo: move these settings to defaultTheme.js?
-  chart.yAxis().scale(chart.leftCategoriesScale());
-  chart.pointsPadding(5);
+  // todo: move these settings to defaultTheme.js
+  //chart.yAxis().scale(chart.leftCategoriesScale());
+  //chart.pointsPadding(5);
 
   return chart;
 };
 
 
 anychart.marimekko = function(var_args) {
-  var chart = new anychart.charts.Mosaic();
-  chart.setupByVal(anychart.getFullTheme('mosaic'), true);
+  var chart = new anychart.charts.Mosaic(false);
+  chart.setupByVal(anychart.getFullTheme('marimekko'), true);
 
   for (var i = 0, count = arguments.length; i < count; i++) {
     chart['column'](arguments[i]);
@@ -46,8 +46,8 @@ anychart.marimekko = function(var_args) {
 
 
 anychart.barmekko = function(var_args) {
-  var chart = new anychart.charts.Mosaic();
-  chart.setupByVal(anychart.getFullTheme('mosaic'), true);
+  var chart = new anychart.charts.Mosaic(false);
+  chart.setupByVal(anychart.getFullTheme('barmekko'), true);
 
   for (var i = 0, count = arguments.length; i < count; i++) {
     chart['column'](arguments[i]);

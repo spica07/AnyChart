@@ -449,6 +449,15 @@ anychart.core.ChartWithAxes.prototype.getAxisByIndex = function(index) {
 };
 
 
+/**
+ * @param {anychart.core.axes.Linear} axis
+ * @protected
+ */
+anychart.core.ChartWithAxes.prototype.setYAxisScale = function(axis) {
+  axis.scale(/** @type {anychart.scales.Base} */(this.yScale()));
+};
+
+
 //endregion
 //region --- Axis markers
 //----------------------------------------------------------------------------------------------------------------------
@@ -1003,7 +1012,7 @@ anychart.core.ChartWithAxes.prototype.drawContent = function(bounds) {
         item.labels().dropCallsCache();
         item.minorLabels().dropCallsCache();
         if (item && !item.scale())
-          item.scale(/** @type {anychart.scales.Base} */(this.yScale()));
+          this.setYAxisScale(item);
       }
     }
   }
