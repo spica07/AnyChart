@@ -914,7 +914,7 @@ anychart.core.ChartWithSeries.prototype.drawSeries = function(opt_topAxisPadding
       var series = this.seriesList[i];
       series.container(this.rootElement);
       series.parentBounds(this.dataBounds);
-      this.setupSeriesBeforeDraw(series);
+      this.setupSeriesBeforeDraw(series, opt_topAxisPadding, opt_rightAxisPadding, opt_bottomAxisPadding, opt_leftAxisPadding);
     }
 
     this.beforeSeriesDraw();
