@@ -600,6 +600,10 @@ anychart.core.ui.LabelsFactory.prototype.getThemeOption = function(name) {
 anychart.core.ui.LabelsFactory.prototype.getOption = anychart.core.settings.getOption;
 
 
+/**
+ * Returns own and auto option value.
+ * @type {*}
+ */
 anychart.core.ui.LabelsFactory.prototype.getOwnAndAutoOption = function(name) {
   var chain = this.getLowAndHighResolutionChain();
   for (var i = 0; i < chain.length; i++) {
@@ -1901,6 +1905,10 @@ anychart.core.ui.LabelsFactory.Label.prototype.hasOwnOption = function(name) {
 anychart.core.ui.LabelsFactory.Label.prototype.getOption = anychart.core.settings.getOption;
 
 
+/**
+ * Returns own and auto option value.
+ * @type {*}
+ */
 anychart.core.ui.LabelsFactory.Label.prototype.getOwnAndAutoOption = anychart.core.ui.LabelsFactory.Label.prototype.getOwnOption;
 
 
@@ -2330,10 +2338,15 @@ anychart.core.ui.LabelsFactory.Label.prototype.drawConnector = function() {
  * @param {!acgraph.vector.Text} textElement Text element to apply settings to.
  * @param {boolean} isInitial - Whether is initial operation.
  * @param {Object=} opt_settings .
+ * @this {anychart.core.ui.LabelsFactory.Label|anychart.core.ui.LabelsFactory}
  */
 anychart.core.ui.LabelsFactory.Label.prototype.applyTextSettings = function(textElement, isInitial, opt_settings) {
   var textVal, useHtml, text;
-  var target = goog.isDef(opt_settings) ? function(value) {return opt_settings[value]} : this.getOwnAndAutoOption;
+  var target = goog.isDef(opt_settings) ?
+      function(value) {return opt_settings[value]} :
+      this instanceof anychart.core.ui.LabelsFactory.Label ?
+          this.getOwnOption :
+          anychart.core.ui.LabelsFactory.prototype.getOwnAndAutoOption;
 
   textVal = target.call(this, 'text');
   useHtml = target.call(this, 'useHtml');
