@@ -2172,17 +2172,17 @@ anychart.core.series.Base.prototype.drawSingleFactoryElement = function(factory,
     this.resolveAutoAnchor(opt_position, element);
   }
   if (formatProvider) {
-    element.state('pointState', goog.isDef(statePointOverride) ? statePointOverride : null, 0);
-    element.state('seriesState', seriesStateFactory, 1);
-    element.state('chartState', chartStateFactory, 2);
-    element.state('pointNormal', goog.isDef(pointOverride) ? pointOverride : null, 3);
-    element.state('seriesNormal', factory, 4);
-    element.state('chartNormal', chartNormalFactory, 5);
-    element.state('seriesStateTheme', seriesStateFactory ? seriesStateFactory.themeSettings : null, 6);
-    element.state('chartStateTheme', chartStateFactory ? chartStateFactory.themeSettings : null, 7);
-    element.state('auto', element.autoSettings, 8);
-    element.state('seriesNormalTheme', factory.themeSettings, 9);
-    element.state('chartNormalTheme', chartNormalFactory ? chartNormalFactory.themeSettings : null, 10);
+    element.state('pointState', goog.isDef(statePointOverride) ? statePointOverride : null);
+    element.state('seriesState', seriesStateFactory);
+    element.state('chartState', chartStateFactory);
+    element.state('pointNormal', goog.isDef(pointOverride) ? pointOverride : null);
+    element.state('seriesNormal', factory);
+    element.state('chartNormal', chartNormalFactory);
+    element.state('seriesStateTheme', seriesStateFactory ? seriesStateFactory.themeSettings : null);
+    element.state('chartStateTheme', chartStateFactory ? chartStateFactory.themeSettings : null);
+    element.state('auto', element.autoSettings);
+    element.state('seriesNormalTheme', factory.themeSettings);
+    element.state('chartNormalTheme', chartNormalFactory ? chartNormalFactory.themeSettings : null);
   } else {
     element.currentMarkersFactory(seriesStateFactory || factory);
     element.setSettings(/** @type {Object} */(pointOverride), /** @type {Object} */(statePointOverride));
