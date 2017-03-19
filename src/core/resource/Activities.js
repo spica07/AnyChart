@@ -248,9 +248,9 @@ anychart.core.resource.Activities.prototype.drawLabel = function(index, state, f
 
   if (isDraw) {
     var position = (statePointOverride && statePointOverride['position']) ||
-        (stateFactory && stateFactory.position()) ||
+        (stateFactory && stateFactory.getOption('position')) ||
         (pointOverride && pointOverride['position']) ||
-        mainFactory.position();
+        mainFactory.getOption('position');
     var positionProvider = {'value': anychart.utils.getCoordinateByAnchor(bounds, position)};
 
     var element = mainFactory.getLabel(/** @type {number} */(index));
@@ -263,9 +263,9 @@ anychart.core.resource.Activities.prototype.drawLabel = function(index, state, f
     element.resetSettings();
     element.currentLabelsFactory(stateFactory || mainFactory);
     element.setSettings(pointOverride, statePointOverride);
-    element.width(bounds.width);
-    element.height(bounds.height);
-    element.clip(bounds);
+    element.setOption('width', bounds.width);
+    element.setOption('height', bounds.height);
+    element.setOption('clip', bounds);
     element.draw();
   } else {
     mainFactory.clear(index);

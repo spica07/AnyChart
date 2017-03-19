@@ -2,6 +2,7 @@ goog.provide('anychart.core.ChartWithSeries');
 
 goog.require('anychart.core.SeparateChart');
 goog.require('anychart.core.reporting');
+goog.require('anychart.core.ui.LabelsFactory');
 goog.require('anychart.palettes.DistinctColors');
 goog.require('anychart.palettes.HatchFills');
 goog.require('anychart.palettes.Markers');

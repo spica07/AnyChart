@@ -2286,7 +2286,7 @@ anychart.core.series.Base.prototype.drawLabel = function(point, pointState) {
   if (this.check(anychart.core.series.Capabilities.SUPPORTS_LABELS))
     point.meta('label', this.drawFactoryElement(
         [this.labels, this.hoverLabels, this.selectLabels],
-        [this.chart.labels, this.chart.hoverLabels, this.chart.selectLabels],
+        [this.getChart().labels, this.getChart().hoverLabels, this.getChart().selectLabels],
         ['label', 'hoverLabel', 'selectLabel'],
         this.planHasPointLabels(),
         true,

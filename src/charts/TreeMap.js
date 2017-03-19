@@ -1820,25 +1820,25 @@ anychart.charts.TreeMap.prototype.getLabelsAnchor = function(pointState, isHeade
   var labelHoverAnchor = hoverPointLabel && hoverPointLabel['anchor'] ? hoverPointLabel['anchor'] : null;
   var labelSelectAnchor = selectPointLabel && selectPointLabel['anchor'] ? selectPointLabel['anchor'] : null;
 
-  return hovered || selected ?
+  return /** @type {anychart.enums.Anchor} */(hovered || selected ?
       hovered ?
           labelHoverAnchor ?
               labelHoverAnchor :
-              hoverFactory.anchor() ?
-                  hoverFactory.anchor() :
+              hoverFactory.getOption('anchor') ?
+                  hoverFactory.getOption('anchor') :
                   labelAnchor ?
                       labelAnchor :
-                      factory.anchor() :
+                      factory.getOption('anchor') :
           labelSelectAnchor ?
               labelSelectAnchor :
-              selectFactory.anchor() ?
-                  selectFactory.anchor() :
+              selectFactory.getOption('anchor') ?
+                  selectFactory.getOption('anchor') :
                   labelAnchor ?
                       labelAnchor :
-                      factory.anchor() :
+                      factory.getOption('anchor') :
       labelAnchor ?
           labelAnchor :
-          factory.anchor();
+          factory.getOption('anchor'));
 };
 
 
@@ -2118,7 +2118,7 @@ anychart.charts.TreeMap.prototype.drawLabel_ = function(pointState) {
     labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(factory);
   }
 
-  var adjustFontSize = labelsFactory.adjustFontSize();
+  var adjustFontSize = labelsFactory.getOption('adjustFontSize');
   var needAdjustFontSize = (adjustFontSize['width'] || adjustFontSize['height']) && labelsFactory.enabled();
 
   var displayMode = isHeader ? this.headersDisplayMode() : this.labelsDisplayMode();
@@ -2147,7 +2147,7 @@ anychart.charts.TreeMap.prototype.drawLabel_ = function(pointState) {
     mergedSettings['width'] = null;
     mergedSettings['height'] = null;
     if (mergedSettings['adjustByWidth'] || mergedSettings['adjustByHeight'])
-      mergedSettings['fontSize'] = label.parentLabelsFactory().adjustFontSizeValue;
+      mergedSettings['fontSize'] = label.parentLabelsFactory().autoSettings['fontSize'];
     var measuredBounds = factory.measure(label.formatProvider(), label.positionProvider(), mergedSettings);
     //measuredBounds = mergedSettings['padding'].widenBounds(measuredBounds);
 
@@ -2163,23 +2163,27 @@ anychart.charts.TreeMap.prototype.drawLabel_ = function(pointState) {
         if (isHeader) {
           dropText = true;
           textFormatter = labelsFactory.getTextFormatterInternal();
-          labelsFactory.textFormatter(anychart.charts.TreeMap.EMPTY_TEXT_FORMATTER);
-          label.width(bounds.width).height(bounds.height);
+          labelsFactory.setOption('textFormatter', anychart.charts.TreeMap.EMPTY_TEXT_FORMATTER);
+          label.setOption('width', bounds.width);
+          label.setOption('height', bounds.height);
         } else
           factory.clear(index);
       } else {
         if (label.width() != measuredBounds.width || label.height() != measuredBounds.height) {
           label.dropMergedSettings();
-          label.width(bounds.width).height(bounds.height);
+          label.setOption('width', bounds.width);
+          label.setOption('height', bounds.height);
         }
       }
-    } else
-      label.width(bounds.width).height(bounds.height);
+    } else {
+      label.setOption('width', bounds.width);
+      label.setOption('height', bounds.height);
+    }
 
     if (displayMode != anychart.enums.LabelsDisplayMode.ALWAYS_SHOW) {
-      label.clip(bounds);
+      label.setOption('clip', bounds);
     } else {
-      label.clip(null);
+      label.setOption('clip', null);
     }
 
     if (isHeader) {
@@ -2191,7 +2195,7 @@ anychart.charts.TreeMap.prototype.drawLabel_ = function(pointState) {
       }
       if (emptyText) {
         textFormatter = labelsFactory.getTextFormatterInternal();
-        labelsFactory.textFormatter(anychart.charts.TreeMap.EMPTY_TEXT_FORMATTER);
+        labelsFactory.setOption('textFormatter', anychart.charts.TreeMap.EMPTY_TEXT_FORMATTER);
         label.enabled(true);
       }
     }
@@ -2660,7 +2664,7 @@ anychart.charts.TreeMap.prototype.drawContent = function(bounds) {
     if (this.dataLayer_)
       this.dataLayer_.clip(this.dataBounds_);
     if (this.headers_)
-      this.headers_.clip(this.dataBounds_);
+      this.headers_.setOption('clip', this.dataBounds_);
   }
 
   if (this.hasInvalidationState(anychart.ConsistencyState.TREEMAP_COLOR_RANGE)) {
@@ -2687,7 +2691,7 @@ anychart.charts.TreeMap.prototype.drawContent = function(bounds) {
       this.dataLayer_.parent(this.rootElement);
 
       this.headers().container(this.rootElement).zIndex(41);
-      this.headers().clip(this.dataBounds_);
+      this.headers().setOption('clip', this.dataBounds_);
       this.labels().container(this.rootElement).zIndex(40);
       this.markers().container(this.rootElement).zIndex(40);
     }

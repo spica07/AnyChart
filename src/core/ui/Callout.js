@@ -896,33 +896,36 @@ anychart.core.ui.Callout.prototype.configureLabel = function(item, label, opt_po
 
   var parentSettings = this.labels().getChangedSettings();
   parentSettings['enabled'] = this.labels().enabled();
+
   var currentSettings = calloutLabelsFactory.getChangedSettings();
   currentSettings['enabled'] = goog.isNull(calloutLabelsFactory.enabled()) ? parentSettings['enabled'] : calloutLabelsFactory.enabled();
 
-  label.setSettings(parentSettings, goog.object.extend(label.superSettingsObj, currentSettings));
+  label.setSettings(parentSettings, goog.object.extend(label.state('pointState'), currentSettings));
 
   var positionProvider = this.createPositionProvider(label.getIndex());
   positionProvider['connectorPoint'] = {'value': series.getMiddlePoint()};
   label.positionProvider(positionProvider);
 
   if (this.isHorizontal()) {
-    label.width(this.internalItemLength_).height(this.internalItemSize_);
+    label.setOption('width', this.internalItemLength_);
+    label.setOption('height', this.internalItemSize_);
   } else {
-    label.width(this.internalItemSize_).height(this.internalItemLength_);
+    label.setOption('width', this.internalItemSize_);
+    label.setOption('height', this.internalItemLength_);
   }
 
   switch (this.orientation()) {
     case anychart.enums.Orientation.TOP:
-      label.anchor('centerbottom');
+      label.setOption('anchor', 'centerbottom');
       break;
     case anychart.enums.Orientation.RIGHT:
-      label.anchor('leftcenter');
+      label.setOption('anchor', 'leftcenter');
       break;
     case anychart.enums.Orientation.BOTTOM:
-      label.anchor('centertop');
+      label.setOption('anchor', 'centertop');
       break;
     case anychart.enums.Orientation.LEFT:
-      label.anchor('rightcenter');
+      label.setOption('anchor', 'rightcenter');
       break;
   }
 

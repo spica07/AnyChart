@@ -1,5 +1,6 @@
 //region --- Requiring and Providing
 goog.provide('anychart.core.ui.CircularLabelsFactory');
+goog.require('anychart.core.settings');
 goog.require('anychart.core.ui.LabelsFactory');
 goog.require('anychart.math.Rect');
 //endregion
@@ -8,6 +9,8 @@ goog.require('anychart.math.Rect');
 
 /**
  * @constructor
+ * @implements {anychart.core.settings.IObjectWithSettings}
+ * @implements {anychart.core.settings.IResolvable}
  * @extends {anychart.core.ui.LabelsFactory}
  */
 anychart.core.ui.CircularLabelsFactory = function() {
@@ -93,8 +96,8 @@ anychart.core.ui.CircularLabelsFactory.prototype.getDimensionInternal = function
   var cy = 0;
   var factoryCx = this.getOption('cx');
   var factoryCy = this.getOption('cy');
-  var factorySweepAngle = this.getOption('sweepAngle');
-  var factoryParentRadius = this.getOption('parentRadius');
+  var factorySweepAngle = /** @type {number} */(this.getOption('sweepAngle'));
+  var factoryParentRadius = /** @type {number} */(this.getOption('parentRadius'));
 
   if (parentBounds || (!isNaN(factoryCx) && !isNaN(factoryCy))) {
     //bounds
@@ -146,6 +149,8 @@ anychart.core.ui.CircularLabelsFactory.prototype.createLabel = function() {
 
 /**
  * @constructor
+ * @implements {anychart.core.settings.IObjectWithSettings}
+ * @implements {anychart.core.settings.IResolvable}
  * @extends {anychart.core.ui.LabelsFactory.Label}
  */
 anychart.core.ui.CircularLabelsFactory.Label = function() {
@@ -210,8 +215,8 @@ anychart.core.ui.CircularLabelsFactory.Label.prototype.drawLabel = function(boun
   var cy = 0;
   var factoryCx = this.getOption('cx');
   var factoryCy = this.getOption('cy');
-  var factorySweepAngle = factory.getOption('sweepAngle');
-  var factoryParentRadius = factory.getOption('parentRadius');
+  var factorySweepAngle = /** @type {number} */(factory.getOption('sweepAngle'));
+  var factoryParentRadius = /** @type {number} */(factory.getOption('parentRadius'));
 
   if (parentBounds || (!isNaN(factoryCx) && !isNaN(factoryCy))) {
     //bounds
@@ -248,8 +253,8 @@ anychart.core.ui.CircularLabelsFactory.Label.prototype.drawLabel = function(boun
 
   this.textX += x;
   this.textY += y;
-  bounds.left = x;
-  bounds.top = y;
+  bounds.left = /** @type {number} */(x);
+  bounds.top = /** @type {number} */(y);
 
   this.mergedSettings['rotation'] = this.getRotation_(angle);
   this.textElement.x(/** @type {number} */(this.textX)).y(/** @type {number} */(this.textY));

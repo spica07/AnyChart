@@ -3,8 +3,9 @@ goog.provide('anychart.core.ui.LabelsFactory');
 goog.provide('anychart.core.ui.LabelsFactory.Label');
 goog.require('acgraph.math');
 goog.require('anychart.core.IStandaloneBackend');
-goog.require('anychart.core.Text');
+goog.require('anychart.core.VisualBase');
 goog.require('anychart.core.reporting');
+goog.require('anychart.core.settings');
 goog.require('anychart.core.ui.Background');
 goog.require('anychart.core.utils.Padding');
 goog.require('anychart.core.utils.TokenParser');
@@ -383,7 +384,7 @@ anychart.core.ui.LabelsFactory.prototype.paddingInvalidated_ = function(event) {
  * @return {Function|string} Text formatter.
  */
 anychart.core.ui.LabelsFactory.prototype.getTextFormatterInternal = function() {
-  return this.getOwnOption('textFormatter');
+  return /** @type {Function|string} */(this.getOwnOption('textFormatter'));
 };
 
 
@@ -911,7 +912,7 @@ anychart.core.ui.LabelsFactory.prototype.getDimension = function(formatProviderO
   var offsetX = /** @type {number|string} */(this.measureCustomLabel_.getOption('offsetX') || this.getOption('offsetX'));
   if (!goog.isDef(offsetX)) offsetX = 0;
   var anchor = /** @type {string} */(this.measureCustomLabel_.getOption('anchor') || this.getOption('anchor'));
-  var textFormatter = this.measureCustomLabel_.getOption('textFormatter') || this.getOption('textFormatter');
+  var textFormatter = /** @type {Function|string} */(this.measureCustomLabel_.getOption('textFormatter') || this.getOption('textFormatter'));
 
   if (!this.measureTextElement_) {
     this.measureTextElement_ = acgraph.text();
@@ -975,8 +976,8 @@ anychart.core.ui.LabelsFactory.prototype.getDimension = function(formatProviderO
  * @param {anychart.math.Rect} outerBounds
  * @param {Object} formattedPosition
  * @param {anychart.math.Rect} parentBounds
- * @param {number} offsetX
- * @param {number} offsetY
+ * @param {number|string} offsetX
+ * @param {number|string} offsetY
  * @param {string} anchor
  * @return {anychart.math.Rect}
  */
@@ -1164,7 +1165,7 @@ anychart.core.ui.LabelsFactory.prototype.setThemeSettings = function(config) {
 
 /** @inheritDoc */
 anychart.core.ui.LabelsFactory.prototype.serialize = function() {
-  // var json = anychart.core.ui.LabelsFactory.base(this, 'serialize');
+  var json = anychart.core.ui.LabelsFactory.base(this, 'serialize');
   // if (goog.isNull(json['enabled'])) delete json['enabled'];
   // if (this.background_) json['background'] = this.background_.serialize();
   // if (this.padding_) json['padding'] = this.padding_.serialize();
@@ -1437,7 +1438,7 @@ anychart.core.ui.LabelsFactory.Label.prototype.state = function(name, opt_value,
  * Drawing plan.
  * @param {string} name State name.
  * @param {number=} opt_value Priority value. 0 is more priority than 1. if passed 'null' - auto mode - last priority value.
- * @return {anychart.core.ui.LabelsFactory.Label|Object} .
+ * @return {anychart.core.ui.LabelsFactory.Label|number} .
  */
 anychart.core.ui.LabelsFactory.Label.prototype.stateOrder = function(name, opt_value) {
   if (goog.isDef(opt_value)) {
@@ -1445,7 +1446,7 @@ anychart.core.ui.LabelsFactory.Label.prototype.stateOrder = function(name, opt_v
     var index = this.drawingPlan_.indexOf(name);
 
     if (index == opt_value)
-      return;
+      return this;
 
     if (index != -1) {
       goog.array.moveItem(this.drawingPlan_, index, isNaN(opt_value) ? this.drawingPlan_.length - 1 : opt_value - 1);
@@ -1465,12 +1466,12 @@ anychart.core.ui.LabelsFactory.Label.prototype.stateOrder = function(name, opt_v
  * @return {boolean} .
  */
 anychart.core.ui.LabelsFactory.Label.prototype.checkInvalidationState = function(state) {
-  return this.iterateDrawingPlans_(function(name, settings) {
+  return /** @type {boolean} */(this.iterateDrawingPlans_(function(name, settings) {
     if (settings instanceof anychart.core.ui.LabelsFactory.Label || settings instanceof anychart.core.ui.LabelsFactory) {
       if (settings.hasInvalidationState(state))
         return true;
     }
-  }) || this.hasInvalidationState(state);
+  }) || this.hasInvalidationState(state));
 };
 
 
@@ -2461,13 +2462,13 @@ anychart.core.ui.LabelsFactory.Label.prototype.draw = function() {
 
     //define parent bounds
     var parentWidth, parentHeight;
-    var parentBounds = this.iterateDrawingPlans_(function(name, settings) {
+    var parentBounds = /** @type {anychart.math.Rect} */(this.iterateDrawingPlans_(function(name, settings) {
       if (settings instanceof anychart.core.ui.LabelsFactory) {
         parentBounds = settings.parentBounds();
         if (parentBounds)
           return parentBounds;
       }
-    });
+    }));
 
     if (!parentBounds) {
       if (factory.container()) {
@@ -2591,15 +2592,15 @@ anychart.core.ui.LabelsFactory.Label.prototype.draw = function() {
       } else {
         calculatedFontSize = this.iterateDrawingPlans_(function(name, settings) {
           if (settings instanceof anychart.core.ui.LabelsFactory) {
-            if (goog.isDef(settings.autoSettings.fontSize))
-              return settings.autoSettings.fontSize;
+            if (goog.isDef(settings.autoSettings['fontSize']))
+              return settings.autoSettings['fontSize'];
           }
         });
       }
 
       this.suspendSignalsDispatching();
 
-      this.textElement.fontSize(calculatedFontSize);
+      this.textElement.fontSize(/** @type {number|string} */(calculatedFontSize));
 
       //need fix outer bounds after applying adjust font size
       if (isWidthSet) {

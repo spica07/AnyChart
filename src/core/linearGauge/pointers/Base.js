@@ -976,25 +976,25 @@ anychart.core.linearGauge.pointers.Base.prototype.getLabelsPosition = function(p
   var labelHoverPosition = hoverPointLabel && hoverPointLabel['position'] ? hoverPointLabel['position'] : null;
   var labelSelectPosition = selectPointLabel && selectPointLabel['position'] ? selectPointLabel['position'] : null;
 
-  return hovered || selected ?
+  return /** @type {string} */(hovered || selected ?
       hovered ?
           labelHoverPosition ?
               labelHoverPosition :
-              this.hoverLabel().position() ?
-                  this.hoverLabel().position() :
+              this.hoverLabel().getOption('position') ?
+                  this.hoverLabel().getOption('position') :
                   labelPosition ?
                       labelPosition :
-                      this.label().position() :
+                      this.label().getOption('position') :
           labelSelectPosition ?
               labelSelectPosition :
-              this.selectLabel().position() ?
-                  this.selectLabel().position() :
+              this.selectLabel().getOption('position') ?
+                  this.selectLabel().getOption('position') :
                   labelPosition ?
                       labelPosition :
-                      this.label().position() :
+                      this.label().getOption('position') :
       labelPosition ?
           labelPosition :
-          this.label().position();
+          this.label().getOption('position'));
 };
 //endregion
 

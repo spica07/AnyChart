@@ -122,15 +122,15 @@ anychart.charts.Sparkline = function(opt_data, opt_csvSettings) {
    */
   this.labelsInternal_ = new anychart.core.ui.LabelsFactory();
   // defaults that was deleted form LabelsFactory
-  this.labelsInternal_.positionFormatter(anychart.utils.DEFAULT_FORMATTER);
-  this.labelsInternal_.textFormatter(anychart.utils.DEFAULT_FORMATTER);
+  this.labelsInternal_.setOption('positionFormatter', anychart.utils.DEFAULT_FORMATTER);
+  this.labelsInternal_.setOption('textFormatter', anychart.utils.DEFAULT_FORMATTER);
   this.labelsInternal_.background(null);
-  this.labelsInternal_.rotation(0);
-  this.labelsInternal_.width(null);
-  this.labelsInternal_.height(null);
-  this.labelsInternal_.fontSize(11);
-  this.labelsInternal_.minFontSize(8);
-  this.labelsInternal_.maxFontSize(72);
+  this.labelsInternal_.setOption('rotation', 0);
+  this.labelsInternal_.setOption('width', null);
+  this.labelsInternal_.setOption('height', null);
+  this.labelsInternal_.setOption('fontSize', 11);
+  this.labelsInternal_.setOption('minFontSize', 8);
+  this.labelsInternal_.setOption('maxFontSize', 72);
   this.labelsInternal_.setParentEventTarget(this);
   this.labelsInternal_.setAutoZIndex(anychart.charts.Sparkline.ZINDEX_LABEL);
 
@@ -2054,7 +2054,7 @@ anychart.charts.Sparkline.prototype.getFinalLabel = function(usePointSettings) {
   var label = this.labelsInternal_.getLabel(index);
   var res = null;
   if (finalSettings['enabled']) {
-    var position = finalSettings['position'] || this.labelsInternal_.position();
+    var position = finalSettings['position'] || this.labelsInternal_.getOption('position');
     var positionProvider = this.series_.createPositionProvider(/** @type {anychart.enums.Position|string} */(position));
     var formatProvider = this.series_.createFormatProvider();
 

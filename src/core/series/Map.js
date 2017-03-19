@@ -303,25 +303,25 @@ anychart.core.series.Map.prototype.getLabelsPosition = function(pointState) {
   var labelHoverPosition = hoverPointLabel && hoverPointLabel['position'] ? hoverPointLabel['position'] : null;
   var labelSelectPosition = selectPointLabel && selectPointLabel['position'] ? selectPointLabel['position'] : null;
 
-  return hovered || selected ?
+  return /** @type {string} */(hovered || selected ?
       hovered ?
           labelHoverPosition ?
               labelHoverPosition :
-              this.hoverLabels().position() ?
-                  this.hoverLabels().position() :
+              this.hoverLabels().getOption('position') ?
+                  this.hoverLabels().getOption('position') :
                   labelPosition ?
                       labelPosition :
-                      this.labels().position() :
+                      this.labels().getOption('position') :
           labelSelectPosition ?
               labelSelectPosition :
-              this.selectLabels().position() ?
-                  this.selectLabels().position() :
+              this.selectLabels().getOption('position') ?
+                  this.selectLabels().getOption('position') :
                   labelPosition ?
                       labelPosition :
-                      this.labels().position() :
+                      this.labels().getOption('position') :
       labelPosition ?
           labelPosition :
-          this.labels().position();
+          this.labels().getOption('position'));
 };
 
 

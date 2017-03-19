@@ -1226,7 +1226,7 @@ anychart.core.PyramidFunnelBase.prototype.drawContent = function(bounds) {
         anychart.getFullTheme('pie.insideLabels') :
         anychart.getFullTheme('pie.outsideLabels');
     this.labels().setAutoColor(themePart['autoColor']);
-    this.labels().disablePointerEvents(themePart['disablePointerEvents']);
+    this.labels().setOption('disablePointerEvents', themePart['disablePointerEvents']);
 
     if (!this.isInsideLabels()) {
       this.connectorLengthValue_ = anychart.utils.normalizeSize(
@@ -2440,7 +2440,7 @@ anychart.core.PyramidFunnelBase.prototype.createLabelsPositionProvider_ = functi
     labelBounds = anychart.math.Rect.fromCoordinateBox(labelBounds);
   }
 
-  var labelAnchor = opt_label && opt_label.anchor() || this.labels().anchor();
+  var labelAnchor = opt_label && opt_label.getOption('anchor') || this.labels().getOption('anchor');
 
   if (opt_label) {
     y = opt_label.positionProvider()['value'].y;
@@ -3058,7 +3058,7 @@ anychart.core.PyramidFunnelBase.prototype.shiftCenterX_ = function() {
  * @return {anychart.enums.PyramidLabelsPosition}
  */
 anychart.core.PyramidFunnelBase.prototype.getLabelsPosition_ = function() {
-  return anychart.enums.normalizePyramidLabelsPosition(this.labels().position());
+  return anychart.enums.normalizePyramidLabelsPosition(this.labels().getOption('position'));
 };
 
 
@@ -4069,8 +4069,8 @@ anychart.core.PyramidFunnelBase.LabelsDomain.prototype.applyLabelsPosition_ = fu
 
     // Need to preserve the order of the labels.
     if (prevLabel && prevLabelBounds && prevLabelPosition) {
-      var prevLabelPositionBottom = prevLabelPosition.y + prevLabelBounds.height / 2 + (prevLabel.offsetY() || 0);
-      var currentLabelPositionTop = labelNewY - labelBounds.height / 2 + (label.offsetY() || 0);
+      var prevLabelPositionBottom = prevLabelPosition.y + prevLabelBounds.height / 2 + (prevLabel.getOption('offsetY') || 0);
+      var currentLabelPositionTop = labelNewY - labelBounds.height / 2 + (label.getOption('offsetY') || 0);
 
       if (currentLabelPositionTop < prevLabelPositionBottom) {
         labelNewY += prevLabelPositionBottom - currentLabelPositionTop;
@@ -4083,7 +4083,7 @@ anychart.core.PyramidFunnelBase.LabelsDomain.prototype.applyLabelsPosition_ = fu
     domain.chart.updateConnector(label, pointState);
 
     labelsHeightSum += labelBounds.height;
-    labelsOffsetYSum += label.offsetY() || 0;
+    labelsOffsetYSum += label.getOption('offsetY') || 0;
 
     prevLabel = label;
     prevLabelBounds = labelBounds;

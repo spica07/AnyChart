@@ -725,7 +725,7 @@ anychart.core.axes.Circular.prototype.getLabelRadius_ = function(height, isMajor
   var ticks = isMajor ? this.ticks() : this.minorTicks();
   var labels = isMajor ? this.labels() : this.minorLabels();
 
-  var position = anychart.enums.normalizeGaugeSidePosition(labels.position());
+  var position = anychart.enums.normalizeGaugeSidePosition(labels.getOption('position'));
 
   var radius = this.pixRadius_;
   if (position == anychart.enums.GaugeSidePosition.OUTSIDE) {
@@ -814,9 +814,9 @@ anychart.core.axes.Circular.prototype.getLabelBounds_ = function(index, isMajor)
   var ratio = scale.transform(value);
 
   var label = labels.getLabel(index);
-  var autoRotate = label && goog.isDef(label.autoRotate()) ? label.autoRotate() : labels.autoRotate();
-  var offsetX = label && goog.isDef(label.offsetX()) ? label.offsetX() : labels.offsetX();
-  var offsetY = label && goog.isDef(label.offsetY()) ? label.offsetY() : labels.offsetY();
+  var autoRotate = label && goog.isDef(label.getOption('autoRotate')) ? label.getOption('autoRotate') : labels.getOption('autoRotate');
+  var offsetX = label && goog.isDef(label.getOption('offsetX')) ? label.getOption('offsetX') : labels.getOption('offsetX');
+  var offsetY = label && goog.isDef(label.getOption('offsetY')) ? label.getOption('offsetY') : labels.getOption('offsetY');
 
   var radius = this.getLabelRadius_(bounds.height, isMajor, autoRotate ? bounds.height : 0);
   radius += anychart.utils.normalizeSize(/** @type {number|string} */(offsetY), this.gauge_.getPixRadius());
@@ -832,17 +832,17 @@ anychart.core.axes.Circular.prototype.getLabelBounds_ = function(index, isMajor)
   var x = this.gauge_.getCx() + radius * Math.cos(angleRad);
   var y = this.gauge_.getCy() + radius * Math.sin(angleRad);
 
-  var rotation = label && goog.isDef(label.rotation()) ?
-      label.rotation() :
-      labels.rotation();
+  var rotation = label && goog.isDef(label.getOption('rotation')) ?
+      label.getOption('rotation') :
+      labels.getOption('rotation');
 
   if (autoRotate)
     rotation += this.getLabelAngle_(angle);
 
-  var anchor = label && goog.isDef(label.anchor()) ?
-      label.anchor() :
+  var anchor = label && goog.isDef(label.getOption('anchor')) ?
+      label.getOption('anchor') :
       autoRotate ?
-          labels.anchor() :
+          labels.getOption('anchor') :
           this.getAnchorForLabel_(/** @type {number} */(angle));
 
   bounds.left = x;
@@ -886,7 +886,7 @@ anychart.core.axes.Circular.prototype.getLabelsFormatProvider_ = function(index,
 anychart.core.axes.Circular.prototype.getAnchorForLabel_ = function(angle) {
   angle = goog.math.standardAngle(angle);
   var anchor = anychart.enums.Anchor.CENTER;
-  var position = anychart.enums.normalizeGaugeSidePosition(this.labels().position());
+  var position = anychart.enums.normalizeGaugeSidePosition(this.labels().getOption('position'));
 
   if (position == 'inside') {
     if (!angle) {
@@ -941,7 +941,7 @@ anychart.core.axes.Circular.prototype.drawLabel_ = function(index, angle, isMajo
   var scaleTicksArr = isMajor ? scale.ticks().get() : scale.minorTicks().get();
   var labels = isMajor ? this.labels() : this.minorLabels();
   var label = labels.getLabel(index);
-  var autoRotate = label && goog.isDef(label.autoRotate()) ? label.autoRotate() : labels.autoRotate();
+  var autoRotate = label && goog.isDef(label.getOption('autoRotate')) ? label.getOption('autoRotate') : labels.getOption('autoRotate');
 
   var bounds = this.getLabelBoundsWithoutTransform_(index, isMajor);
   var radius = this.getLabelRadius_(bounds.height, isMajor, autoRotate ? bounds.height : 0);
@@ -952,7 +952,7 @@ anychart.core.axes.Circular.prototype.drawLabel_ = function(index, angle, isMajo
 
   if (!autoRotate) {
     var sweepAngle = goog.isDef(this.sweepAngle_) ? this.sweepAngle_ : this.gauge_.sweepAngle();
-    var offsetX = label && goog.isDef(label.offsetX()) ? label.offsetX() : labels.offsetX();
+    var offsetX = label && goog.isDef(label.getOption('offsetX')) ? label.getOption('offsetX') : labels.getOption('offsetX');
     angle += anychart.utils.normalizeSize(/** @type {number|string} */(offsetX), sweepAngle);
 
     label.anchor(this.getAnchorForLabel_(angle));
@@ -1093,21 +1093,21 @@ anychart.core.axes.Circular.prototype.draw = function() {
   if (this.hasInvalidationState(anychart.ConsistencyState.AXIS_LABELS)) {
     var labels = this.labels();
     labels.parentBounds(this.gauge_.getGaugeBounds());
-    labels.cx(cx);
-    labels.cy(cy);
-    labels.startAngle(startAngle);
-    labels.sweepAngle(sweepAngle);
-    labels.parentRadius(this.gauge_.getPixRadius());
+    labels.setOption('cx', cx);
+    labels.setOption('cy', cy);
+    labels.setOption('startAngle', startAngle);
+    labels.setOption('sweepAngle', sweepAngle);
+    labels.setOption('parentRadius', this.gauge_.getPixRadius());
     labels.clear();
     labelsDrawer = this.drawLabel_;
 
     var minorLabels = this.minorLabels();
     minorLabels.parentBounds(this.gauge_.getGaugeBounds());
-    minorLabels.cx(cx);
-    minorLabels.cy(cy);
-    minorLabels.startAngle(startAngle);
-    minorLabels.sweepAngle(sweepAngle);
-    minorLabels.parentRadius(this.gauge_.getPixRadius());
+    minorLabels.setOption('cx', cx);
+    minorLabels.setOption('cy', cy);
+    minorLabels.setOption('startAngle', startAngle);
+    minorLabels.setOption('sweepAngle', sweepAngle);
+    minorLabels.setOption('parentRadius', this.gauge_.getPixRadius());
     minorLabels.clear();
     minorLabelsDrawer = this.drawLabel_;
     this.markConsistent(anychart.ConsistencyState.AXIS_LABELS);

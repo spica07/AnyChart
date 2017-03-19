@@ -955,10 +955,10 @@ anychart.charts.Pie.prototype.overlapMode = function(opt_value) {
 anychart.charts.Pie.prototype.labels = function(opt_value) {
   if (!this.labels_) {
     this.labels_ = new anychart.core.ui.CircularLabelsFactory();
-    this.labels_.textFormatter(function() {
+    this.labels_.setOption('textFormatter', function() {
       return (this['value'] * 100 / this.getStat(anychart.enums.Statistics.SUM)).toFixed(1) + '%';
     });
-    this.labels_.positionFormatter(function() {
+    this.labels_.setOption('positionFormatter', function() {
       return this['value'];
     });
 
@@ -1405,15 +1405,15 @@ anychart.charts.Pie.prototype.calculate_ = function(bounds) {
   this.aquaStyleObj_['fy'] = !isNaN(fy) && isFinite(fy) ? fy : 0;
   this.aquaStyleObj_['mode'] = bounds;
 
-  this.labels()
-      .suspendSignalsDispatching()
-      .cx(this.cx_)
-      .cy(this.cy_)
-      .parentRadius(this.radiusValue_)
-      .startAngle(this.startAngle_)
-      .sweepAngle(360)
-      .parentBounds(this.pieBounds_)
-      .resumeSignalsDispatching(false);
+  var labels = this.labels();
+  labels.suspendSignalsDispatching();
+  labels.setOption('cx', this.cx_);
+  labels.setOption('cy', this.cy_);
+  labels.setOption('parentRadius', this.radiusValue_);
+  labels.setOption('startAngle', this.startAngle_);
+  labels.setOption('sweepAngle', 360);
+  labels.parentBounds(this.pieBounds_);
+  labels.resumeSignalsDispatching(false);
 
   this.hoverLabels()
       .parentBounds(this.pieBounds_);
@@ -1614,7 +1614,7 @@ anychart.charts.Pie.prototype.drawContent = function(bounds) {
         anychart.getFullTheme('pie.outsideLabels') :
         anychart.getFullTheme('pie.insideLabels');
     this.labels().setAutoColor(themePart['autoColor']);
-    this.labels().disablePointerEvents(themePart['disablePointerEvents']);
+    this.labels().setOption('disablePointerEvents', themePart['disablePointerEvents']);
     if (this.isOutsideLabels()) {
       this.calculateOutsideLabels();
     } else {
@@ -3085,7 +3085,7 @@ anychart.charts.Pie.prototype.clickSlice = function(opt_explode) {
  * @return {boolean} Define, is labels have outside position.
  */
 anychart.charts.Pie.prototype.isOutsideLabels = function() {
-  return anychart.enums.normalizeSidePosition(this.labels().position()) == anychart.enums.SidePosition.OUTSIDE;
+  return anychart.enums.normalizeSidePosition(this.labels().getOption('position')) == anychart.enums.SidePosition.OUTSIDE;
 };
 
 
@@ -4170,11 +4170,11 @@ anychart.charts.Pie.prototype.drawConnectorLine = function(label, path) {
     var connector = /** @type {number} */(iterator.meta('connector'));
     var positionProvider = label.positionProvider()['value'];
 
-    var offsetY = goog.isDef(label.offsetY()) ? label.offsetY() : this.labels().offsetY();
+    var offsetY = goog.isDef(label.getOption('offsetY')) ? label.getOption('offsetY') : this.labels().getOption('offsetY');
     if (!offsetY) offsetY = 0;
     var offsetRadius = anychart.utils.normalizeSize(/** @type {number|string} */(offsetY), this.radiusValue_);
 
-    var offsetX = goog.isDef(label.offsetX()) ? label.offsetX() : this.labels().offsetX();
+    var offsetX = goog.isDef(label.getOption('offsetX')) ? label.getOption('offsetX') : this.labels().getOption('offsetX');
     if (!offsetX) offsetX = 0;
     var offsetAngle = anychart.utils.normalizeSize(/** @type {number|string} */(offsetX), 360);
 
@@ -4708,11 +4708,11 @@ anychart.charts.Pie.PieOutsideLabelsDomain.prototype.calcDomain = function() {
     sweep = /** @type {number} */ (iterator.meta('sweep'));
     exploded = /** @type {boolean} */ (iterator.meta('exploded'));
 
-    var offsetX = goog.isDef(label.offsetX()) ? label.offsetX() : this.pie.labels().offsetX();
+    var offsetX = goog.isDef(label.getOption('offsetX')) ? label.getOption('offsetX') : this.pie.labels().getOption('offsetX');
     if (!offsetX) offsetX = 0;
     var offsetAngle = anychart.utils.normalizeSize(/** @type {number|string} */(offsetX), 360);
 
-    var offsetY = goog.isDef(label.offsetY()) ? label.offsetY() : this.pie.labels().offsetY();
+    var offsetY = goog.isDef(label.getOption('offsetY')) ? label.getOption('offsetY') : this.pie.labels().getOption('offsetY');
     if (!offsetY) offsetY = 0;
     var offsetRadius = anychart.utils.normalizeSize(/** @type {number|string} */(offsetY), this.pie.radiusValue_);
 

@@ -165,9 +165,9 @@ anychart.core.ui.Crosshair.prototype.xAxis = function(opt_value) {
       this.suspendSignalsDispatching();
       // set textFormatter
       if (!this.xLabel_.textFormatter() ||
-          (this.xAxis_ && this.xLabel_.textFormatter() == this.xAxis_.labels().textFormatter())) {
+          (this.xAxis_ && this.xLabel_.textFormatter() == this.xAxis_.labels().getOption('textFormatter'))) {
 
-        this.xLabel_.textFormatter(/** @type {Function} */(opt_value.labels().textFormatter()));
+        this.xLabel_.textFormatter(/** @type {Function} */(opt_value.labels().getOption('textFormatter')));
       }
 
       // set anchor
