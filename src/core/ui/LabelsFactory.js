@@ -1371,15 +1371,14 @@ anychart.core.ui.LabelsFactory.Label.prototype.getFactory = function() {
  */
 anychart.core.ui.LabelsFactory.Label.prototype.parentLabelsFactory = function(opt_value) {
   if (goog.isDefAndNotNull(opt_value)) {
-    if (this.parentLabelsFactory_ != opt_value) {
-      this.parentLabelsFactory_ = opt_value;
+    if (this.state('seriesNormal') != opt_value) {
       this.setFactory(opt_value);
       this.state('seriesNormal', opt_value);
       this.invalidate(anychart.ConsistencyState.APPEARANCE, anychart.Signal.NEEDS_REDRAW);
     }
     return this;
   } else {
-    return this.parentLabelsFactory_;
+    return /** @type {anychart.core.ui.LabelsFactory} */(this.state('seriesNormal'));
   }
 };
 
@@ -1392,14 +1391,13 @@ anychart.core.ui.LabelsFactory.Label.prototype.parentLabelsFactory = function(op
  */
 anychart.core.ui.LabelsFactory.Label.prototype.currentLabelsFactory = function(opt_value) {
   if (goog.isDef(opt_value)) {
-    if (this.currentLabelsFactory_ != opt_value) {
-      this.currentLabelsFactory_ = opt_value;
+    if (this.state('seriesState') != opt_value) {
       this.state('seriesState', opt_value);
       this.invalidate(anychart.ConsistencyState.APPEARANCE, anychart.Signal.NEEDS_REDRAW);
     }
     return this;
   } else {
-    return this.currentLabelsFactory_;
+    return /** @type {anychart.core.ui.LabelsFactory} */(this.state('seriesState'));
   }
 };
 
@@ -2217,10 +2215,9 @@ anychart.core.ui.LabelsFactory.Label.prototype.createSizeMeasureElement_ = funct
   this.iterateDrawingPlans_(function(name, settings, index) {
     var isInit = index == 0;
     if (settings instanceof anychart.core.ui.LabelsFactory || settings instanceof anychart.core.ui.LabelsFactory.Label) {
-      settings.applyTextSettings(this.fontSizeMeasureElement_, isInit);
+      this.applyTextSettings.call(settings, this.fontSizeMeasureElement_, isInit);
     } else {
-      this.textSettings(settings);
-      this.applyTextSettings(this.fontSizeMeasureElement_, isInit);
+      this.applyTextSettings(this.fontSizeMeasureElement_, isInit, settings);
     }
   }, true);
 
@@ -2427,6 +2424,7 @@ anychart.core.ui.LabelsFactory.Label.prototype.draw = function() {
   }
 
   if (this.checkInvalidationState(anychart.ConsistencyState.APPEARANCE | anychart.ConsistencyState.BOUNDS)) {
+    debugger;
     this.dropMergedSettings();
     this.getMergedSettings();
     mergedSettings = this.mergedSettings;

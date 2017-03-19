@@ -2206,9 +2206,9 @@ anychart.core.SeriesBase.prototype.setupByJSON = function(config, opt_default) {
   this.meta(config['meta']);
   if ('data' in config)
     this.data(config['data'] || null);
-  this.labels().setup(config['labels']);
-  this.hoverLabels().setup(config['hoverLabels']);
-  this.selectLabels().setup(config['selectLabels']);
+  this.labels().setup(config['labels'], opt_default);
+  this.hoverLabels().setup(config['hoverLabels'], opt_default);
+  this.selectLabels().setup(config['selectLabels'], opt_default);
 
   if ('tooltip' in config)
     this.tooltip().setupByVal(config['tooltip'], opt_default);

@@ -2409,7 +2409,7 @@ anychart.charts.Sparkline.prototype.setupByJSON = function(config, opt_default) 
   if (config['maxLabels']) this.maxLabels().setupByJSON(config['maxLabels']);
   if (config['minLabels']) this.minLabels().setupByJSON(config['minLabels']);
   if (config['negativeLabels']) this.negativeLabels().setupByJSON(config['negativeLabels']);
-  if (config['labels']) this.labels().setup(config['labels']);
+  if (config['labels']) this.labels().setup(config['labels'], opt_default);
 };
 
 

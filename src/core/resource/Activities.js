@@ -692,7 +692,7 @@ anychart.core.resource.Activities.prototype.serialize = function() {
 anychart.core.resource.Activities.prototype.setupByJSON = function(config, opt_default) {
   anychart.core.resource.Activities.base(this, 'setupByJSON', config);
   anychart.core.settings.deserialize(this, anychart.core.resource.Activities.DESCRIPTORS, config);
-  this.labels().setup(config['labels']);
+  this.labels().setup(config['labels'], opt_default);
 };
 
 

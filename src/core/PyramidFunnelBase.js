@@ -3913,9 +3913,9 @@ anychart.core.PyramidFunnelBase.prototype.setupByJSON = function(config, opt_def
   this.hoverHatchFill(config['hoverHatchFill']);
   this.selectHatchFill(config['selectHatchFill']);
 
-  this.labels().setup(config['labels']);
-  this.hoverLabels().setup(config['hoverLabels']);
-  this.selectLabels().setup(config['selectLabels']);
+  this.labels().setup(config['labels'], opt_default);
+  this.hoverLabels().setup(config['hoverLabels'], opt_default);
+  this.selectLabels().setup(config['selectLabels'], opt_default);
 
   this.stroke(config['stroke']);
   this.hoverStroke(config['hoverStroke']);
