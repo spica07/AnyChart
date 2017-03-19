@@ -2424,7 +2424,6 @@ anychart.core.ui.LabelsFactory.Label.prototype.draw = function() {
   }
 
   if (this.checkInvalidationState(anychart.ConsistencyState.APPEARANCE | anychart.ConsistencyState.BOUNDS)) {
-    debugger;
     this.dropMergedSettings();
     this.getMergedSettings();
     mergedSettings = this.mergedSettings;
