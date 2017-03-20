@@ -263,9 +263,9 @@ anychart.core.resource.Activities.prototype.drawLabel = function(index, state, f
     element.resetSettings();
     element.currentLabelsFactory(stateFactory || mainFactory);
     element.setSettings(pointOverride, statePointOverride);
-    element.setOption('width', bounds.width);
-    element.setOption('height', bounds.height);
-    element.setOption('clip', bounds);
+    element['width'](bounds.width);
+    element['height'](bounds.height);
+    element['clip'](bounds);
     element.draw();
   } else {
     mainFactory.clear(index);

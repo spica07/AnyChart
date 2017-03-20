@@ -1122,7 +1122,7 @@ anychart.core.series.Map.prototype.createFormatProvider = function(opt_force) {
 
 
 /** @inheritDoc */
-anychart.core.series.Map.prototype.drawSingleFactoryElement = function(factory, index, positionProvider, formatProvider, stateFactory, pointOverride, statePointOverride, opt_position) {
+anychart.core.series.Map.prototype.drawSingleFactoryElement = function(factory, index, positionProvider, formatProvider, chartNormalFactory, seriesStateFactory, chartStateFactory, pointOverride, statePointOverride, opt_position) {
   var element = formatProvider ? factory.getLabel(/** @type {number} */(index)) : factory.getMarker(/** @type {number} */(index));
   if (element) {
     if (formatProvider)
@@ -1150,11 +1150,23 @@ anychart.core.series.Map.prototype.drawSingleFactoryElement = function(factory, 
       element.setSettings(autoAnchor, autoAnchor);
     }
   }
-  if (formatProvider)
-    element.currentLabelsFactory(stateFactory || factory);
-  else
-    element.currentMarkersFactory(stateFactory || factory);
-  element.setSettings(/** @type {Object} */(pointOverride), /** @type {Object} */(statePointOverride));
+  if (formatProvider) {
+    element.state('pointState', goog.isDef(statePointOverride) ? statePointOverride : null);
+    element.state('seriesState', seriesStateFactory);
+    element.state('chartState', chartStateFactory);
+    element.state('pointNormal', goog.isDef(pointOverride) ? pointOverride : null);
+    element.state('seriesNormal', factory);
+    element.state('chartNormal', chartNormalFactory);
+    element.state('seriesStateTheme', seriesStateFactory ? seriesStateFactory.themeSettings : null);
+    element.state('chartStateTheme', chartStateFactory ? chartStateFactory.themeSettings : null);
+    element.state('auto', element.autoSettings);
+    element.state('seriesNormalTheme', factory.themeSettings);
+    element.state('chartNormalTheme', chartNormalFactory ? chartNormalFactory.themeSettings : null);
+  } else {
+    element.currentMarkersFactory(seriesStateFactory || factory);
+    element.setSettings(/** @type {Object} */(pointOverride), /** @type {Object} */(statePointOverride));
+  }
+
   element.draw();
   return element;
 };

@@ -1208,8 +1208,7 @@ anychart.core.axes.Map.prototype.drawLabel_ = function(value, isMajor, index) {
   if (goog.isDef(labelChangedSettings['enabled']) && labelChangedSettings['enabled'] == null)
     delete labelChangedSettings['enabled'];
 
-  label.setSettings(parentLabels.getChangedSettings(), labelChangedSettings);
-  label.currentLabelsFactory(/** @type {anychart.core.ui.LabelsFactory} */(parentLabels));
+  label.stateOrder([labelChangedSettings, 'auto', parentLabels, labels.themeSettings, parentLabels.themeSettings]);
 };
 
 

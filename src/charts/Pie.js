@@ -1407,11 +1407,11 @@ anychart.charts.Pie.prototype.calculate_ = function(bounds) {
 
   var labels = this.labels();
   labels.suspendSignalsDispatching();
-  labels.setOption('cx', this.cx_);
-  labels.setOption('cy', this.cy_);
-  labels.setOption('parentRadius', this.radiusValue_);
-  labels.setOption('startAngle', this.startAngle_);
-  labels.setOption('sweepAngle', 360);
+  labels['cx'](this.cx_);
+  labels['cy'](this.cy_);
+  labels['parentRadius'](this.radiusValue_);
+  labels['startAngle'](this.startAngle_);
+  labels['sweepAngle'](360);
   labels.parentBounds(this.pieBounds_);
   labels.resumeSignalsDispatching(false);
 
@@ -1614,7 +1614,7 @@ anychart.charts.Pie.prototype.drawContent = function(bounds) {
         anychart.getFullTheme('pie.outsideLabels') :
         anychart.getFullTheme('pie.insideLabels');
     this.labels().setAutoColor(themePart['autoColor']);
-    this.labels().setOption('disablePointerEvents', themePart['disablePointerEvents']);
+    this.labels()['disablePointerEvents'](themePart['disablePointerEvents']);
     if (this.isOutsideLabels()) {
       this.calculateOutsideLabels();
     } else {
@@ -1686,7 +1686,11 @@ anychart.charts.Pie.prototype.updatePointOnAnimate = function(point) {
  * @param {boolean} isOutside Whether labels has outside position.
  */
 anychart.charts.Pie.prototype.updateLabelsOnAnimate = function(labelOpacity, connectorOpacity, isOutside) {
-  this.labels().suspendSignalsDispatching().fontOpacity(labelOpacity).draw().resumeSignalsDispatching(false);
+  var labels = this.labels();
+  labels.suspendSignalsDispatching();
+  labels['fontOpacity'](labelOpacity);
+  labels.draw();
+  labels.resumeSignalsDispatching(false);
   if (isOutside && this.drawnConnectors_) {
     for (var i in this.drawnConnectors_) {
       if (this.drawnConnectors_.hasOwnProperty(i))
@@ -2754,7 +2758,7 @@ anychart.charts.Pie.prototype.drawOutsideLabel_ = function(pointState, opt_updat
 
   var index = iterator.getIndex();
 
-  var labelsFactory = /** @type {anychart.core.ui.CircularLabelsFactory} */(hovered ? this.hoverLabels() : this.labels());
+  var labelsFactory = /** @type {anychart.core.ui.CircularLabelsFactory} */(hovered ? this.hoverLabels() : null);
 
   var label = this.labels().getLabel(index);
 
@@ -2797,7 +2801,7 @@ anychart.charts.Pie.prototype.drawOutsideLabel_ = function(pointState, opt_updat
 
     anchor = iterator.meta('anchor');
     if (goog.isDef(anchor))
-      label.anchor(/** @type {string} */(anchor));
+      label['anchor'](/** @type {string} */(anchor));
 
     if (!wasNoLabel)
       label.draw();
@@ -2810,7 +2814,7 @@ anychart.charts.Pie.prototype.drawOutsideLabel_ = function(pointState, opt_updat
     label = this.labels().add(formatProvider, positionProvider, index);
     anchor = iterator.meta('anchor');
     if (goog.isDef(anchor))
-      label.anchor(/** @type {string} */(anchor));
+      label['anchor'](/** @type {string} */(anchor));
     label.enabled(false);
   }
   if (opt_updateConnector)
@@ -2836,7 +2840,7 @@ anychart.charts.Pie.prototype.drawLabel_ = function(pointState, opt_updateConnec
   var sliceLabel = iterator.get('label');
   var hoverSliceLabel = hovered ? iterator.get('hoverLabel') : null;
   var index = iterator.getIndex();
-  var labelsFactory = /** @type {anychart.core.ui.CircularLabelsFactory} */(hovered ? this.hoverLabels() : this.labels());
+  var labelsFactory = /** @type {anychart.core.ui.CircularLabelsFactory} */(hovered ? this.hoverLabels() : null);
 
   var label = this.labels().getLabel(index);
 
@@ -3774,7 +3778,7 @@ anychart.charts.Pie.prototype.domainDefragmentation = function(domain) {
             sourcePieLabelsDomains.push(tmpDomain);
             prevDomain = tmpDomain;
           }
-          var isRightSide = label.anchor() == anychart.enums.Anchor.LEFT_CENTER;
+          var isRightSide = label['anchor']() == anychart.enums.Anchor.LEFT_CENTER;
           tmpDomain = new anychart.charts.Pie.PieOutsideLabelsDomain(isRightSide, this, sourcePieLabelsDomains);
           tmpDomain.softAddLabel(label);
         } else {
@@ -3907,7 +3911,7 @@ anychart.charts.Pie.prototype.calculateOutsideLabels = function() {
 
       if (!domain || domain.isNotIntersect(bounds)) {
         if (domain) leftDomains.push(domain);
-        isRightSide = label.anchor() == anychart.enums.Position.LEFT_CENTER;
+        isRightSide = label['anchor']() == anychart.enums.Position.LEFT_CENTER;
         domain = new anychart.charts.Pie.PieOutsideLabelsDomain(isRightSide, this, leftDomains);
         domain.addLabel(label);
       } else {
@@ -3945,7 +3949,7 @@ anychart.charts.Pie.prototype.calculateOutsideLabels = function() {
 
         if (notIntersection) {
           if (!domain) {
-            isRightSide = label.anchor() == anychart.enums.Position.LEFT_CENTER;
+            isRightSide = label['anchor']() == anychart.enums.Position.LEFT_CENTER;
             domain = new anychart.charts.Pie.PieOutsideLabelsDomain(isRightSide, this, []);
           }
           domain.softAddLabel(label);
@@ -3991,7 +3995,7 @@ anychart.charts.Pie.prototype.calculateOutsideLabels = function() {
 
       if (!domain || domain.isNotIntersect(bounds)) {
         if (domain) rightDomains.push(domain);
-        isRightSide = label.anchor() == anychart.enums.Position.LEFT_CENTER;
+        isRightSide = label['anchor']() == anychart.enums.Position.LEFT_CENTER;
         domain = new anychart.charts.Pie.PieOutsideLabelsDomain(isRightSide, this, rightDomains);
         domain.addLabel(label);
       } else {
@@ -4030,7 +4034,7 @@ anychart.charts.Pie.prototype.calculateOutsideLabels = function() {
 
         if (notIntersection) {
           if (!domain) {
-            isRightSide = label.anchor() == anychart.enums.Position.LEFT_CENTER;
+            isRightSide = label['anchor']() == anychart.enums.Position.LEFT_CENTER;
             domain = new anychart.charts.Pie.PieOutsideLabelsDomain(isRightSide, this, []);
           }
           domain.softAddLabel(label);

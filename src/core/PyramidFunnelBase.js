@@ -1226,7 +1226,7 @@ anychart.core.PyramidFunnelBase.prototype.drawContent = function(bounds) {
         anychart.getFullTheme('pie.insideLabels') :
         anychart.getFullTheme('pie.outsideLabels');
     this.labels().setAutoColor(themePart['autoColor']);
-    this.labels().setOption('disablePointerEvents', themePart['disablePointerEvents']);
+    this.labels()['disablePointerEvents'](themePart['disablePointerEvents']);
 
     if (!this.isInsideLabels()) {
       this.connectorLengthValue_ = anychart.utils.normalizeSize(
@@ -2304,7 +2304,7 @@ anychart.core.PyramidFunnelBase.prototype.drawLabel_ = function(pointState) {
   } else if (hovered) {
     labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(this.hoverLabels());
   } else {
-    labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(this.labels());
+    labelsFactory = null;
   }
 
   var label = this.labels().getLabel(index);

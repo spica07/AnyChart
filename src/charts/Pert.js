@@ -2657,8 +2657,8 @@ anychart.charts.Pert.prototype.drawContent = function(bounds) {
                 }
               });
               label.setSettings(/** @type {Object} */ (labelsSource.labels().textSettings()));
-              label.width(size);
-              label.height(size);
+              label['width'](size);
+              label['height'](size);
               milestone.relatedLabel = label;
             }
             milestone.left = left;
@@ -2801,10 +2801,10 @@ anychart.charts.Pert.prototype.drawContent = function(bounds) {
 
           work.upperLabel = upperLabel;
 
-          upperLabel.width(hyp);
-          upperLabel.height(bounds.height);
+          upperLabel['width'](hyp);
+          upperLabel['height'](bounds.height);
 
-          upperLabel.rotation(work.rotation);
+          upperLabel['rotation'](work.rotation);
           upperLabel.tag = {'w': work};
 
           var lowerLabel = this.tasks().lowerLabels().add(labelContextProvider, {
@@ -2813,10 +2813,10 @@ anychart.charts.Pert.prototype.drawContent = function(bounds) {
               'y': labelTop + pixelShift
             }
           });
-          lowerLabel.width(hyp);
-          lowerLabel.height(bounds.height);
+          lowerLabel['width'](hyp);
+          lowerLabel['height'](bounds.height);
           work.lowerLabel = lowerLabel;
-          lowerLabel.rotation(work.rotation);
+          lowerLabel['rotation'](work.rotation);
           lowerLabel.tag = {'w': work};
 
         }

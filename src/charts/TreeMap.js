@@ -2017,7 +2017,7 @@ anychart.charts.TreeMap.prototype.configureLabel = function(pointState, isHeader
   } else if (hovered) {
     labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(hoverFactory);
   } else {
-    labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(factory);
+    labelsFactory = null;
   }
 
   var pointLabel = node.get(labelType);
@@ -2115,7 +2115,7 @@ anychart.charts.TreeMap.prototype.drawLabel_ = function(pointState) {
   } else if (hovered) {
     labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(hoverFactory);
   } else {
-    labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(factory);
+    labelsFactory = null;
   }
 
   var adjustFontSize = labelsFactory.getOption('adjustFontSize');
@@ -2163,27 +2163,27 @@ anychart.charts.TreeMap.prototype.drawLabel_ = function(pointState) {
         if (isHeader) {
           dropText = true;
           textFormatter = labelsFactory.getTextFormatterInternal();
-          labelsFactory.setOption('textFormatter', anychart.charts.TreeMap.EMPTY_TEXT_FORMATTER);
-          label.setOption('width', bounds.width);
-          label.setOption('height', bounds.height);
+          labelsFactory['textFormatter'](anychart.charts.TreeMap.EMPTY_TEXT_FORMATTER);
+          label['width'](bounds.width);
+          label['height'](bounds.height);
         } else
           factory.clear(index);
       } else {
         if (label.width() != measuredBounds.width || label.height() != measuredBounds.height) {
           label.dropMergedSettings();
-          label.setOption('width', bounds.width);
-          label.setOption('height', bounds.height);
+          label['width'](bounds.width);
+          label['height'](bounds.height);
         }
       }
     } else {
-      label.setOption('width', bounds.width);
-      label.setOption('height', bounds.height);
+      label['width'](bounds.width);
+      label['height'](bounds.height);
     }
 
     if (displayMode != anychart.enums.LabelsDisplayMode.ALWAYS_SHOW) {
-      label.setOption('clip', bounds);
+      label['clip'](bounds);
     } else {
-      label.setOption('clip', null);
+      label['clip'](null);
     }
 
     if (isHeader) {
@@ -2195,7 +2195,7 @@ anychart.charts.TreeMap.prototype.drawLabel_ = function(pointState) {
       }
       if (emptyText) {
         textFormatter = labelsFactory.getTextFormatterInternal();
-        labelsFactory.setOption('textFormatter', anychart.charts.TreeMap.EMPTY_TEXT_FORMATTER);
+        labelsFactory['textFormatter'](anychart.charts.TreeMap.EMPTY_TEXT_FORMATTER);
         label.enabled(true);
       }
     }
@@ -2664,7 +2664,7 @@ anychart.charts.TreeMap.prototype.drawContent = function(bounds) {
     if (this.dataLayer_)
       this.dataLayer_.clip(this.dataBounds_);
     if (this.headers_)
-      this.headers_.setOption('clip', this.dataBounds_);
+      this.headers_['clip'](this.dataBounds_);
   }
 
   if (this.hasInvalidationState(anychart.ConsistencyState.TREEMAP_COLOR_RANGE)) {
@@ -2691,7 +2691,7 @@ anychart.charts.TreeMap.prototype.drawContent = function(bounds) {
       this.dataLayer_.parent(this.rootElement);
 
       this.headers().container(this.rootElement).zIndex(41);
-      this.headers().setOption('clip', this.dataBounds_);
+      this.headers()['clip'](this.dataBounds_);
       this.labels().container(this.rootElement).zIndex(40);
       this.markers().container(this.rootElement).zIndex(40);
     }

@@ -952,10 +952,10 @@ anychart.core.axes.Circular.prototype.drawLabel_ = function(index, angle, isMajo
 
   if (!autoRotate) {
     var sweepAngle = goog.isDef(this.sweepAngle_) ? this.sweepAngle_ : this.gauge_.sweepAngle();
-    var offsetX = label && goog.isDef(label.getOption('offsetX')) ? label.getOption('offsetX') : labels.getOption('offsetX');
+    var offsetX = label && goog.isDef(label['offsetX']()) ? label['offsetX']() : labels['offsetX']();
     angle += anychart.utils.normalizeSize(/** @type {number|string} */(offsetX), sweepAngle);
 
-    label.anchor(this.getAnchorForLabel_(angle));
+    label['anchor'](this.getAnchorForLabel_(angle));
   }
 };
 
@@ -1093,21 +1093,21 @@ anychart.core.axes.Circular.prototype.draw = function() {
   if (this.hasInvalidationState(anychart.ConsistencyState.AXIS_LABELS)) {
     var labels = this.labels();
     labels.parentBounds(this.gauge_.getGaugeBounds());
-    labels.setOption('cx', cx);
-    labels.setOption('cy', cy);
-    labels.setOption('startAngle', startAngle);
-    labels.setOption('sweepAngle', sweepAngle);
-    labels.setOption('parentRadius', this.gauge_.getPixRadius());
+    labels['cx'](cx);
+    labels['cy'](cy);
+    labels['startAngle'](startAngle);
+    labels['sweepAngle'](sweepAngle);
+    labels['parentRadius'](this.gauge_.getPixRadius());
     labels.clear();
     labelsDrawer = this.drawLabel_;
 
     var minorLabels = this.minorLabels();
     minorLabels.parentBounds(this.gauge_.getGaugeBounds());
-    minorLabels.setOption('cx', cx);
-    minorLabels.setOption('cy', cy);
-    minorLabels.setOption('startAngle', startAngle);
-    minorLabels.setOption('sweepAngle', sweepAngle);
-    minorLabels.setOption('parentRadius', this.gauge_.getPixRadius());
+    minorLabels['cx'](cx);
+    minorLabels['cy'](cy);
+    minorLabels['startAngle'](startAngle);
+    minorLabels['sweepAngle'](sweepAngle);
+    minorLabels['parentRadius'](this.gauge_.getPixRadius());
     minorLabels.clear();
     minorLabelsDrawer = this.drawLabel_;
     this.markConsistent(anychart.ConsistencyState.AXIS_LABELS);

@@ -907,25 +907,25 @@ anychart.core.ui.Callout.prototype.configureLabel = function(item, label, opt_po
   label.positionProvider(positionProvider);
 
   if (this.isHorizontal()) {
-    label.setOption('width', this.internalItemLength_);
-    label.setOption('height', this.internalItemSize_);
+    label['width'](this.internalItemLength_);
+    label['height'](this.internalItemSize_);
   } else {
-    label.setOption('width', this.internalItemSize_);
-    label.setOption('height', this.internalItemLength_);
+    label['width'](this.internalItemSize_);
+    label['height'](this.internalItemLength_);
   }
 
   switch (this.orientation()) {
     case anychart.enums.Orientation.TOP:
-      label.setOption('anchor', 'centerbottom');
+      label['anchor']('centerbottom');
       break;
     case anychart.enums.Orientation.RIGHT:
-      label.setOption('anchor', 'leftcenter');
+      label['anchor']('leftcenter');
       break;
     case anychart.enums.Orientation.BOTTOM:
-      label.setOption('anchor', 'centertop');
+      label['anchor']('centertop');
       break;
     case anychart.enums.Orientation.LEFT:
-      label.setOption('anchor', 'rightcenter');
+      label['anchor']('rightcenter');
       break;
   }
 

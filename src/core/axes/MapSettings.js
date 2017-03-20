@@ -535,7 +535,7 @@ anychart.core.axes.MapSettings.prototype.setupByJSON = function(config, opt_defa
     this.setThemeSettings(config);
   } else {
     anychart.core.settings.deserialize(this, this.SIMPLE_PROPS_DESCRIPTORS, config);
-    this.setOption('enabled', 'enabled' in config ? config['enabled'] : true);
+    this['enabled']('enabled' in config ? config['enabled'] : true);
   }
 
   this.title().setupByVal(config['title'], opt_default);

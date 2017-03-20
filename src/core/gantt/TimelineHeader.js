@@ -796,8 +796,8 @@ anychart.core.gantt.TimelineHeader.Level.prototype.draw = function() {
 
         label.suspendSignalsDispatching();
         var clipBounds = new anychart.math.Rect(left + sepThickness / 2, this.pixelBoundsCache_.top, right - left - sepThickness, this.pixelBoundsCache_.height);
-        label.setOption('clip', clipBounds);
-        label.setOption('height', this.pixelBoundsCache_.height);
+        label['clip'](clipBounds);
+        label['height'](this.pixelBoundsCache_.height);
         label.resumeSignalsDispatching(false);
         label.draw();
       }

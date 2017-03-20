@@ -613,7 +613,7 @@ anychart.core.heatMap.series.Base.prototype.configureLabel = function(pointState
   } else if (hovered) {
     labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(this.hoverLabels());
   } else {
-    labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(this.labels());
+    labelsFactory = null;
   }
 
   var label = this.labels().getLabel(index);
@@ -714,21 +714,21 @@ anychart.core.heatMap.series.Base.prototype.drawLabels = function() {
           if (chart.labelsDisplayMode() == anychart.enums.LabelsDisplayMode.DROP) {
             this.labels().clear(index);
           } else {
-            if (label.width() != bounds.width || label.height() != bounds.height) {
+            if (label['width'] != bounds.width || label['height'] != bounds.height) {
               label.dropMergedSettings();
-              label.setOption('width', bounds.width);
-              label.setOption('height', bounds.height);
+              label['width'](bounds.width);
+              label['height'](bounds.height);
             }
           }
         } else {
-          label.setOption('width', cellBounds.width);
-          label.setOption('height', cellBounds.height);
+          label['width'](cellBounds.width);
+          label['height'](cellBounds.height);
         }
 
         if (chart.labelsDisplayMode() != anychart.enums.LabelsDisplayMode.ALWAYS_SHOW) {
-          label.setOption('clip', cellBounds);
+          label['clip'](cellBounds);
         } else {
-          label.setOption('clip', null);
+          label['clip'](null);
         }
       }
     }
@@ -752,8 +752,8 @@ anychart.core.heatMap.series.Base.prototype.drawLabel = function(pointState) {
           /** @type {number} */(iterator.meta('y')) + thickness,
           /** @type {number} */(iterator.meta('width')) - thickness * 2,
           /** @type {number} */(iterator.meta('height')) - thickness * 2);
-      label.setOption('width', cellBounds.width);
-      label.setOption('height', cellBounds.height);
+      label['width'](cellBounds.width);
+      label['height'](cellBounds.height);
 
       var padding = mergedSettings['padding'];
 
@@ -771,19 +771,19 @@ anychart.core.heatMap.series.Base.prototype.drawLabel = function(pointState) {
 
       var chart = this.getChart();
       if (chart.labelsDisplayMode() != anychart.enums.LabelsDisplayMode.ALWAYS_SHOW) {
-        label.setOption('clip', cellBounds);
+        label['clip'](cellBounds);
       } else {
-        label.setOption('clip', null);
+        label['clip'](null);
       }
 
       if (!notOutOfCellBounds) {
         if (chart.labelsDisplayMode() == anychart.enums.LabelsDisplayMode.DROP) {
           this.labels().clear(label.getIndex());
         } else {
-          if (label.getOption('width') != bounds.width || label.getOption('height') != bounds.height) {
+          if (label['width'] != bounds.width || label['height'] != bounds.height) {
             label.dropMergedSettings();
-            label.setOption('width', bounds.width);
-            label.setOption('height', bounds.height);
+            label['width'](bounds.width);
+            label['height'](bounds.height);
           }
         }
       }

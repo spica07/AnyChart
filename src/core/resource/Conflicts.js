@@ -428,9 +428,9 @@ anychart.core.resource.Conflicts.prototype.drawLabel = function(index, formatPro
     element.resetSettings();
     // element.currentLabelsFactory(/*stateFactory || */mainFactory);
     element.setSettings(opt_settings);
-    element.setOption('width', bounds.width);
-    element.setOption('height', bounds.height);
-    element.setOption('clip', bounds);
+    element['width'](bounds.width);
+    element['height'](bounds.height);
+    element['clip'](bounds);
     element.draw();
   } else {
     mainFactory.clear(index);

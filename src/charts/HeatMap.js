@@ -1677,9 +1677,9 @@ anychart.charts.HeatMap.prototype.drawSeries_ = function() {
   hoverLabels = this.hoverLabels();
   selectLabels = this.selectLabels();
 
-  adjustFontSize = labels.adjustFontSize();
-  hoverAdjustFontSize = hoverLabels.adjustFontSize();
-  selectAdjustFontSize = selectLabels.adjustFontSize();
+  adjustFontSize = labels['adjustFontSize']();
+  hoverAdjustFontSize = hoverLabels['adjustFontSize']();
+  selectAdjustFontSize = selectLabels['adjustFontSize']();
 
   var normalAdjustFontSizeSetting = (adjustFontSize['width'] || adjustFontSize['height']);
   needAdjustFontSize = normalAdjustFontSizeSetting && labels.enabled();

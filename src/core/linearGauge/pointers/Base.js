@@ -1182,7 +1182,7 @@ anychart.core.linearGauge.pointers.Base.prototype.drawLabel = function(pointerSt
   } else if (hovered) {
     labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(this.hoverLabel());
   } else {
-    labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(this.label());
+    labelsFactory = null;
   }
 
   var label = this.label().getLabel(0);
