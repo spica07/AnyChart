@@ -16,7 +16,7 @@ goog.require('anychart.enums');
  *  </ul>
  * Chart can contain any number of series.
  * Each series is interactive, you can customize click and hover behavior and other params.
- * @param {boolean} opt_useCategoryScale
+ * @param {boolean=} opt_useCategoryScale
  * @extends {anychart.core.ChartWithAxes}
  * @constructor
  */
@@ -49,10 +49,6 @@ anychart.charts.Mosaic = function(opt_useCategoryScale) {
    * @private
    */
   this.pointsPadding_ = 0;
-
-  // Should be defined for proper xPointPosition calculation
-  this.barsPadding_ = 0;
-  this.barGroupsPadding_ = 0;
 
   this.defaultSeriesType(anychart.enums.MosaicSeriesType.MOSAIC);
 };
@@ -125,7 +121,7 @@ anychart.charts.Mosaic.prototype.SUPPORTED_CONSISTENCY_STATES =
  */
 anychart.charts.Mosaic.prototype.leftCategoriesScale = function() {
   if (!this.leftCategoriesScale_) {
-    this.leftCategoriesScale_ = /** @type anychart.scales.Ordinal */(this.createScaleByType('ordinal', true, false));
+    this.leftCategoriesScale_ = /** @type {anychart.scales.Ordinal} */(this.createScaleByType('ordinal', true, false));
     this.leftCategoriesScale_.listenSignals(this.categoriesScaleInvalidated, this);
   }
   return /** @type {!anychart.scales.Ordinal} */(this.leftCategoriesScale_);
@@ -138,7 +134,7 @@ anychart.charts.Mosaic.prototype.leftCategoriesScale = function() {
  */
 anychart.charts.Mosaic.prototype.rightCategoriesScale = function() {
   if (!this.rightCategoriesScale_) {
-    this.rightCategoriesScale_ = /** @type anychart.scales.Ordinal */(this.createScaleByType('ordinal', true, false));
+    this.rightCategoriesScale_ = /** @type {anychart.scales.Ordinal} */(this.createScaleByType('ordinal', true, false));
     this.rightCategoriesScale_.listenSignals(this.categoriesScaleInvalidated, this);
   }
   return /** @type {!anychart.scales.Ordinal} */(this.rightCategoriesScale_);
@@ -236,8 +232,8 @@ anychart.charts.Mosaic.prototype.calculate = function() {
     var j;
     var seriesData;
     var weights = [];
-    for (i = 0; i < this.drawingPlans_.length; i++) {
-      seriesData = this.drawingPlans_[i].data;
+    for (i = 0; i < this.drawingPlans.length; i++) {
+      seriesData = this.drawingPlans[i].data;
       for (j = 0; j < seriesData.length; j++) {
         var value = seriesData[j].data['value'];
         if (weights[j] == undefined) {
@@ -262,15 +258,15 @@ anychart.charts.Mosaic.prototype.calculate = function() {
  * Left and right categories scales values and weights calculation.
  */
 anychart.charts.Mosaic.prototype.calculateCategoriesScales = function() {
-  if (this.drawingPlans_.length) {
+  if (this.drawingPlans.length) {
     var values = [];
     var leftWeights = [];
     var rightWeights = [];
-    var rightIndex = this.drawingPlans_[0].data.length - 1;
-    for (var i = 0; i < this.drawingPlans_.length; i++) {
-      values.push(this.drawingPlans_[i].series.name());
-      leftWeights.push(this.drawingPlans_[i].data[0].data['value']);
-      rightWeights.push(this.drawingPlans_[i].data[rightIndex].data['value']);
+    var rightIndex = this.drawingPlans[0].data.length - 1;
+    for (var i = 0; i < this.drawingPlans.length; i++) {
+      values.push(this.drawingPlans[i].series.name());
+      leftWeights.push(this.drawingPlans[i].data[0].data['value']);
+      rightWeights.push(this.drawingPlans[i].data[rightIndex].data['value']);
     }
     this.leftCategoriesScale().values(values).weights(leftWeights);
     this.rightCategoriesScale().values(values).weights(rightWeights);
@@ -328,7 +324,7 @@ anychart.charts.Mosaic.prototype.serialize = function() {
   var json = anychart.charts.Mosaic.base(this, 'serialize');
   json['type'] = anychart.enums.ChartTypes.MOSAIC;
 
-  if(this.pointsPadding())
+  if (this.pointsPadding())
     json['pointsPadding'] = this.pointsPadding();
 
   return {'chart': json};

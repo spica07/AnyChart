@@ -174,9 +174,10 @@ anychart.scales.Ordinal.prototype.checkWeights = function() {
   if (!this.weights_.length) return false;
 
   // If all values are equal
-  for (var i = 1; i < this.weights_.length; i++)
+  for (var i = 1; i < this.weights_.length; i++) {
     if (this.weights_[i] != this.weights_[0])
       break;
+  }
 
   return i != this.weights_.length;
 };
@@ -194,7 +195,7 @@ anychart.scales.Ordinal.prototype.weights = function(opt_value) {
     else if (goog.isArray(opt_value))
       this.weights_ = goog.array.clone(opt_value);
 
-    if(!this.checkWeights())
+    if (!this.checkWeights())
       this.weights_ = [];
 
     this.resultWeights_ = [];

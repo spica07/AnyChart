@@ -85,7 +85,7 @@ anychart.core.drawers.Column.prototype.updatePointOnAnimate = function(point) {
  * @private
  */
 anychart.core.drawers.Column.prototype.drawPoint_ = function(point, shapes) {
-  if(point.get('value') == 0) return;
+  if (point.get('value') == 0) return;
 
   var x = /** @type {number} */(point.meta('x'));
   var zero = /** @type {number} */(point.meta('zero'))/* - pointsPadding*/;
