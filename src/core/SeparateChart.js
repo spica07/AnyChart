@@ -42,6 +42,28 @@ anychart.core.SeparateChart.prototype.SUPPORTED_CONSISTENCY_STATES =
     anychart.ConsistencyState.CHART_LEGEND;
 
 
+/**
+ * Sets chart type. Needed for proper serialization.
+ * @param {anychart.enums.ChartTypes} value
+ */
+anychart.core.SeparateChart.prototype.setType = function(value) {
+  /**
+   * @type {anychart.enums.ChartTypes}
+   * @private
+   */
+  this.type_ = value;
+};
+
+
+/**
+ * @inheritDoc
+ *
+ */
+anychart.core.SeparateChart.prototype.getType = function() {
+  return this.type_;
+};
+
+
 //----------------------------------------------------------------------------------------------------------------------
 //
 //  Legend.

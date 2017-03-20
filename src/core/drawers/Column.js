@@ -13,12 +13,6 @@ goog.require('anychart.enums');
  */
 anychart.core.drawers.Column = function(series) {
   anychart.core.drawers.Column.base(this, 'constructor', series);
-
-  /**
-   * Point padding.
-   * @type {number}
-   */
-  this.pointsPadding = this.series.chart.pointsPadding && this.series.chart.pointsPadding() || 0;
 };
 goog.inherits(anychart.core.drawers.Column, anychart.core.drawers.Base);
 anychart.core.drawers.AvailableDrawers[anychart.enums.SeriesDrawerTypes.COLUMN] = anychart.core.drawers.Column;
@@ -91,7 +85,8 @@ anychart.core.drawers.Column.prototype.drawPoint_ = function(point, shapes) {
   var zero = /** @type {number} */(point.meta('zero'))/* - pointsPadding*/;
   var y = /** @type {number} */(point.meta('value'))/* + pointsPadding*/;
 
-  this.pointWidth -= this.pointsPadding * 2;
+  var pointsPadding = this.series.chart.pointsPadding && this.series.chart.pointsPadding() || 0;
+  this.pointWidth -= pointsPadding * 2;
   var leftX = (x - this.pointWidth / 2);
   var rightX = leftX + this.pointWidth;
 
@@ -105,7 +100,7 @@ anychart.core.drawers.Column.prototype.drawPoint_ = function(point, shapes) {
 
   // Adjust vertical padding depend on available space
   var height = zero - y;
-  var vPadding = (height > this.pointsPadding * 2) ? this.pointsPadding : (height / 2 - 1);
+  var vPadding = (height > pointsPadding * 2) ? pointsPadding : (height / 2 - 1);
 
   zero -= vPadding;
   y += vPadding;

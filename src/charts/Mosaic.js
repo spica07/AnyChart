@@ -14,8 +14,6 @@ goog.require('anychart.enums');
  *      <li>{@link anychart.marimekko}</li>
  *      <li>{@link anychart.barmekko}</li>
  *  </ul>
- * Chart can contain any number of series.
- * Each series is interactive, you can customize click and hover behavior and other params.
  * @param {boolean=} opt_useCategoryScale
  * @extends {anychart.core.ChartWithAxes}
  * @constructor
@@ -61,12 +59,6 @@ goog.inherits(anychart.charts.Mosaic, anychart.core.ChartWithAxes);
 //  Infrastucture
 //
 //----------------------------------------------------------------------------------------------------------------------
-/** @inheritDoc */
-anychart.charts.Mosaic.prototype.getType = function() {
-  return anychart.enums.ChartTypes.MOSAIC;
-};
-
-
 /**
  * Series config for Mosaic chart.
  * @type {!Object.<string, anychart.core.series.TypeConfig>}
@@ -322,7 +314,7 @@ anychart.charts.Mosaic.prototype.normalizeSeriesType = function(type) {
 /** @inheritDoc */
 anychart.charts.Mosaic.prototype.serialize = function() {
   var json = anychart.charts.Mosaic.base(this, 'serialize');
-  json['type'] = anychart.enums.ChartTypes.MOSAIC;
+  json['type'] = this.getType();
 
   if (this.pointsPadding())
     json['pointsPadding'] = this.pointsPadding();

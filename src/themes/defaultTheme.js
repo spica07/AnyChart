@@ -2391,7 +2391,23 @@ goog.provide('anychart.themes.defaultTheme');
       'pointsPadding': 5
     },
     // merge with marimekko
-    'barmekko': {},
+    'barmekko': {
+      'scales': [
+        {
+          'type': 'ordinal'
+        },
+        {
+          'type': 'linear',
+          'stackMode': 'value'
+        },
+        {
+          'type': 'ordinal'
+        },
+        {
+          'type': 'ordinal'
+        }
+      ]
+    },
 
     // merge with chart
     'radar': {
