@@ -542,8 +542,8 @@ anychart.core.axes.MapSettings.prototype.setupByJSON = function(config, opt_defa
   this.ticks().setupByVal(config['ticks'], opt_default);
   this.minorTicks().setupByVal(config['minorTicks'], opt_default);
 
-  this.labels().setup(config['labels'], opt_default);
-  this.minorLabels().setup(config['minorLabels'], opt_default);
+  this.labels().setupByVal(config['labels'], opt_default);
+  this.minorLabels().setupByVal(config['minorLabels'], opt_default);
 
   this.left().setupByVal(config['left'], opt_default);
   this.top().setupByVal(config['top'], opt_default);

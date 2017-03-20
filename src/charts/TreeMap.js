@@ -2847,9 +2847,9 @@ anychart.charts.TreeMap.prototype.setupByJSON = function(config, opt_default) {
   this.hoverHeaders().setup(config['hoverHeaders']);
   this.headersDisplayMode(config['headersDisplayMode']);
 
-  this.labels().setup(config['labels'], opt_default);
-  this.hoverLabels().setup(config['hoverLabels'], opt_default);
-  this.selectLabels().setup(config['selectLabels'], opt_default);
+  this.labels().setupByVal(config['labels'], opt_default);
+  this.hoverLabels().setupByVal(config['hoverLabels'], opt_default);
+  this.selectLabels().setupByVal(config['selectLabels'], opt_default);
   this.labelsDisplayMode(config['labelsDisplayMode']);
 
   this.markers().setup(config['markers']);

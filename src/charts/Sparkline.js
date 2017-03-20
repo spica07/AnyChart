@@ -2404,12 +2404,12 @@ anychart.charts.Sparkline.prototype.setupByJSON = function(config, opt_default) 
   if (config['minMarkers']) this.minMarkers().setupByJSON(config['minMarkers']);
   if (config['negativeMarkers']) this.negativeMarkers().setupByJSON(config['negativeMarkers']);
   if (config['markers']) this.markers().setupByJSON(config['markers']);
-  if (config['firstLabels']) this.firstLabels().setupByJSON(config['firstLabels']);
-  if (config['lastLabels']) this.lastLabels().setupByJSON(config['lastLabels']);
-  if (config['maxLabels']) this.maxLabels().setupByJSON(config['maxLabels']);
-  if (config['minLabels']) this.minLabels().setupByJSON(config['minLabels']);
-  if (config['negativeLabels']) this.negativeLabels().setupByJSON(config['negativeLabels']);
-  if (config['labels']) this.labels().setup(config['labels'], opt_default);
+  if (config['firstLabels']) this.firstLabels().setupByVal(config['firstLabels'], opt_default);
+  if (config['lastLabels']) this.lastLabels().setupByVal(config['lastLabels'], opt_default);
+  if (config['maxLabels']) this.maxLabels().setupByVal(config['maxLabels'], opt_default);
+  if (config['minLabels']) this.minLabels().setupByVal(config['minLabels'], opt_default);
+  if (config['negativeLabels']) this.negativeLabels().setupByVal(config['negativeLabels'], opt_default);
+  if (config['labels']) this.labels().setupByVal(config['labels'], opt_default);
 };
 
 

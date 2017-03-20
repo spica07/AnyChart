@@ -76,9 +76,7 @@ anychart.core.ui.LabelsFactory = function() {
    * Own settings (Settings set by user with API).
    * @type {Object}
    */
-  this.ownSettings = {
-    'enabled': null
-  };
+  this.ownSettings = {};
 
   /**
    * Auto values of settings set by external controller.
@@ -285,7 +283,7 @@ anychart.core.settings.populate(anychart.core.ui.LabelsFactory, anychart.core.ui
  */
 anychart.core.ui.LabelsFactory.prototype.enabled = function(opt_value) {
   if (goog.isDef(opt_value)) {
-    var prevEnabledState = this.ownSettings['enabled'];
+    var prevEnabledState = this.getOption('enabled');
     this.ownSettings['enabled'] = opt_value;
     if (!goog.isNull(opt_value)) {
       if (goog.isNull(prevEnabledState) && !!opt_value) {
@@ -298,7 +296,7 @@ anychart.core.ui.LabelsFactory.prototype.enabled = function(opt_value) {
     }
     return this;
   }
-  return this.ownSettings['enabled'];
+  return this.getOption('enabled');
 };
 
 
@@ -505,6 +503,7 @@ anychart.core.ui.LabelsFactory.prototype.resolutionChainCache = function(opt_val
   }
   return this.resolutionChainCache_;
 };
+
 
 /**
  * Getter/setter for resolution low and high chain cache.
@@ -785,6 +784,7 @@ anychart.core.ui.LabelsFactory.prototype.add = function(formatProvider, position
   label.setFactory(this);
   label.state('pointNormal', label);
   label.state('seriesNormal', this);
+  label.state('seriesNormalTheme', this.themeSettings);
   label.resumeSignalsDispatching(false);
 
   return label;
@@ -1199,14 +1199,14 @@ anychart.core.ui.LabelsFactory.prototype.serialize = function() {
 
 /** @inheritDoc */
 anychart.core.ui.LabelsFactory.prototype.setupByJSON = function(config, opt_default) {
+  var enabledState = this.enabled();
+  anychart.core.ui.LabelsFactory.base(this, 'setupByJSON', config, opt_default);
+
   if (opt_default) {
     this.setThemeSettings(config);
   } else {
     anychart.core.settings.deserialize(this, this.TEXT_DESCRIPTORS, config);
     anychart.core.settings.deserialize(this, this.SIMPLE_PROPS_DESCRIPTORS, config);
-
-    var enabledState = this.enabled();
-    anychart.core.ui.LabelsFactory.base(this, 'setupByJSON', config, opt_default);
     this.enabled('enabled' in config ? config['enabled'] : enabledState);
   }
 
@@ -1382,6 +1382,7 @@ anychart.core.ui.LabelsFactory.Label.prototype.parentLabelsFactory = function(op
     if (this.state('seriesNormal') != opt_value) {
       this.setFactory(opt_value);
       this.state('seriesNormal', opt_value);
+      this.state('seriesNormalTheme', opt_value ? opt_value.themeSettings : null);
       this.invalidate(anychart.ConsistencyState.APPEARANCE, anychart.Signal.NEEDS_REDRAW);
     }
     return this;
@@ -1401,6 +1402,7 @@ anychart.core.ui.LabelsFactory.Label.prototype.currentLabelsFactory = function(o
   if (goog.isDef(opt_value)) {
     if (this.state('seriesState') != opt_value) {
       this.state('seriesState', opt_value);
+      this.state('seriesStateTheme', opt_value ? opt_value.themeSettings : null);
       this.invalidate(anychart.ConsistencyState.APPEARANCE, anychart.Signal.NEEDS_REDRAW);
     }
     return this;
@@ -2411,6 +2413,7 @@ anychart.core.ui.LabelsFactory.Label.prototype.draw = function() {
   if (!this.layer_) this.layer_ = acgraph.layer();
   this.layer_.tag = this.index_;
 
+  debugger;
   var enabled = this.getFinalSettings('enabled');
 
   if (this.checkInvalidationState(anychart.ConsistencyState.ENABLED)) {
@@ -2509,6 +2512,7 @@ anychart.core.ui.LabelsFactory.Label.prototype.draw = function() {
     else this.textElement.text(goog.isDef(text) ? String(text) : '');
 
     this.iterateDrawingPlans_(function(state, settings, index) {
+      debugger
       var isInit = index == 0;
       if (settings instanceof anychart.core.ui.LabelsFactory || settings instanceof anychart.core.ui.LabelsFactory.Label) {
         this.applyTextSettings.call(settings, this.textElement, isInit);

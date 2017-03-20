@@ -696,7 +696,7 @@ anychart.core.resource.TimeLine.prototype.labelsConfiguration = function(row, co
   label.cellBounds = bounds;
   label.sourceBounds = sourceBounds;
 
-  label.clip(bounds);
+  label['clip'](bounds);
   label.setSettings(settings);
 
   if (!this.choosenFormats_[row] && this.formatIndex_ != this.sourceFormats_[row].length - 1) {
@@ -757,7 +757,7 @@ anychart.core.resource.TimeLine.prototype.drawLabels = function(row) {
         y = bounds.top + bounds.height / 2;
 
         label.positionProvider({'value': {'x': x, 'y': y}});
-        label.settingsObj['width'] = labelBounds.width;
+        label.setOption('width', labelBounds.width);
       } else if (labelBounds.getRight() > parentBounds.getRight()) {
         bounds = labelBounds;
 
@@ -771,7 +771,7 @@ anychart.core.resource.TimeLine.prototype.drawLabels = function(row) {
         y = bounds.top + bounds.height / 2;
 
         label.positionProvider({'value': {'x': x, 'y': y}});
-        label.settingsObj['width'] = labelBounds.width;
+        label.setOption('width', labelBounds.width);
       } else if (hAlign != 'center') {
         x = bounds.left + bounds.width / 2;
         y = bounds.top + bounds.height / 2;
@@ -779,7 +779,7 @@ anychart.core.resource.TimeLine.prototype.drawLabels = function(row) {
         label.positionProvider({'value': {'x': x, 'y': y}});
       }
 
-      label.clip(label.cellBoundsWithPadding);
+      label['clip'](label.cellBoundsWithPadding);
     }
   }
   labels.dropCallsCache();
@@ -931,9 +931,8 @@ anychart.core.resource.TimeLine.prototype.draw = function() {
           var defaultPositionFormatter = /** @type {Function} */(anychart.getFullTheme('defaultLabelFactory.positionFormatter'));
 
           labels = new anychart.core.ui.LabelsFactory();
-          labels
-              .textFormatter(defaultTextFormatter)
-              .positionFormatter(defaultPositionFormatter);
+          labels['textFormatter'](defaultTextFormatter);
+          labels['positionFormatter'](defaultPositionFormatter);
 
           labels.enabled(true);
           labels.container(this.labelsLayer_);

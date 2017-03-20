@@ -2298,13 +2298,13 @@ anychart.core.PyramidFunnelBase.prototype.drawLabel_ = function(pointState) {
   var selectPointLabel = selected ? iterator.get('selectLabel') : null;
 
   var index = iterator.getIndex();
-  var labelsFactory;
+  var labelsFactory, stateFactory = null;
   if (selected) {
-    labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(this.selectLabels());
+    stateFactory = labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(this.selectLabels());
   } else if (hovered) {
-    labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(this.hoverLabels());
+    stateFactory = labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(this.hoverLabels());
   } else {
-    labelsFactory = null;
+    labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(this.labels());
   }
 
   var label = this.labels().getLabel(index);
@@ -2354,11 +2354,11 @@ anychart.core.PyramidFunnelBase.prototype.drawLabel_ = function(pointState) {
       label = this.labels().add(formatProvider, positionProvider, index);
     }
 
-    label.currentLabelsFactory(labelsFactory);
+    label.currentLabelsFactory(stateFactory);
     label.setSettings(/** @type {Object} */(pointLabel), /** @type {Object} */(hovered ? hoverPointLabel : selectPointLabel));
 
     if (iterator.meta('labelWidthForced')) {
-      label.width(anychart.utils.toNumber(iterator.meta('labelWidthForced')));
+      label['width'](anychart.utils.toNumber(iterator.meta('labelWidthForced')));
       // label height is automatically changed - fix label position
       var labelAnchorFromData = pointLabel && pointLabel['anchor'] ? pointLabel['anchor'] : null;
       var labelAnchorFromHoverData = hoverPointLabel && hoverPointLabel['anchor'] ? hoverPointLabel['anchor'] : null;
@@ -3913,9 +3913,9 @@ anychart.core.PyramidFunnelBase.prototype.setupByJSON = function(config, opt_def
   this.hoverHatchFill(config['hoverHatchFill']);
   this.selectHatchFill(config['selectHatchFill']);
 
-  this.labels().setup(config['labels'], opt_default);
-  this.hoverLabels().setup(config['hoverLabels'], opt_default);
-  this.selectLabels().setup(config['selectLabels'], opt_default);
+  this.labels().setupByVal(config['labels'], opt_default);
+  this.hoverLabels().setupByVal(config['hoverLabels'], opt_default);
+  this.selectLabels().setupByVal(config['selectLabels'], opt_default);
 
   this.stroke(config['stroke']);
   this.hoverStroke(config['hoverStroke']);

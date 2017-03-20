@@ -4429,8 +4429,8 @@ anychart.charts.Pie.prototype.setupByJSON = function(config, opt_default) {
   anychart.charts.Pie.base(this, 'setupByJSON', config, opt_default);
   this.group(config['group']);
   this.data(config['data']);
-  this.labels().setup(config['labels'], opt_default);
-  this.hoverLabels().setup(config['hoverLabels'], opt_default);
+  this.labels().setupByVal(config['labels'], opt_default);
+  this.hoverLabels().setupByVal(config['hoverLabels'], opt_default);
   this.palette(config['palette']);
   this.hatchFillPalette(config['hatchFillPalette']);
 

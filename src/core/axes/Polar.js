@@ -1270,8 +1270,8 @@ anychart.core.axes.Polar.prototype.serialize = function() {
 /** @inheritDoc */
 anychart.core.axes.Polar.prototype.setupByJSON = function(config, opt_default) {
   anychart.core.axes.Polar.base(this, 'setupByJSON', config, opt_default);
-  this.labels().setup(config['labels'], opt_default);
-  this.minorLabels().setup(config['minorLabels'], opt_default);
+  this.labels().setupByVal(config['labels'], opt_default);
+  this.minorLabels().setupByVal(config['minorLabels'], opt_default);
   this.ticks(config['ticks']);
   this.minorTicks(config['minorTicks']);
   //this.startAngle(config['startAngle']);
