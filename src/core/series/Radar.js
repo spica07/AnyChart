@@ -65,6 +65,11 @@ anychart.core.series.Radar.prototype.startDrawing = function() {
   this.radius = Math.min(bounds.width, bounds.height) / 2;
   this.cx = Math.round(bounds.left + bounds.width / 2);
   this.cy = Math.round(bounds.top + bounds.height / 2);
+  if (this.needsZero()) {
+    var zero = this.ratiosToPixelPairs(0, [0]);
+    this.zeroX = zero[0];
+    this.zeroY = zero[1];
+  }
   anychart.core.series.Radar.base(this, 'startDrawing');
 };
 
@@ -87,17 +92,6 @@ anychart.core.series.Radar.prototype.makeZeroMeta = function(rowInfo, yNames, yC
   //*/
   rowInfo.meta('zeroMissing', false);
   return pointMissing;
-};
-
-
-/** @inheritDoc */
-anychart.core.series.Radar.prototype.prepareMetaMakers = function() {
-  anychart.core.series.Radar.base(this, 'prepareMetaMakers');
-  if (this.needsZero()) {
-    var zero = this.ratiosToPixelPairs(0, [0]);
-    this.zeroX = zero[0];
-    this.zeroY = zero[1];
-  }
 };
 
 

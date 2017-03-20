@@ -153,19 +153,27 @@ anychart.core.drawers.Area.prototype.drawFirstPoint = function(point, state) {
   var zeroX = /** @type {number} */(point.meta('zeroX'));
   var zero = /** @type {number} */(point.meta('zero'));
 
-  var nextZeroX = /** @type {number} */(point.meta('nextZeroX'));
-  var nextZero = /** @type {number} */(point.meta('nextZero'));
-  var nextX = /** @type {number} */(point.meta('nextValueX'));
-  var nextY = /** @type {number} */(point.meta('nextValue'));
-  if (this.series.planIsStacked() && !isNaN(nextZero) && !isNaN(nextY)) {
-    var shape = /** @type {acgraph.vector.Path} */(shapes['stroke']);
-    anychart.core.drawers.move(shape, this.isVertical, x, y);
-    anychart.core.drawers.line(shape, this.isVertical, x, y);
-    this.drawSegmentStart_(shapes, nextX, nextY, nextZeroX, nextZero);
-    this.zeroesStack = [nextZeroX, nextZero];
+  if (this.series.planIsStacked()) {
+    var nextZeroX = /** @type {number} */(point.meta('nextZeroX'));
+    var nextZero = /** @type {number} */(point.meta('nextZero'));
+    var nextX = /** @type {number} */(point.meta('nextValueX'));
+    var nextY = /** @type {number} */(point.meta('nextValue'));
+    if (!isNaN(nextZero) && !isNaN(nextY)) {
+      var shape = /** @type {acgraph.vector.Path} */(shapes['stroke']);
+      anychart.core.drawers.move(shape, this.isVertical, x, y);
+      anychart.core.drawers.line(shape, this.isVertical, x, y);
+      this.drawSegmentStart_(shapes, nextX, nextY, nextZeroX, nextZero);
+      this.zeroesStack = [nextZeroX, nextZero];
+    } else {
+      this.drawSegmentStart_(shapes, x, y, zeroX, zero);
+      this.zeroesStack = [zeroX, zero];
+    }
   } else {
     this.drawSegmentStart_(shapes, x, y, zeroX, zero);
-    this.zeroesStack = [zeroX, zero];
+    /** @type {number} */
+    this.lastDrawnX = x;
+    /** @type {number} */
+    this.zeroY = zero;
   }
 
   if (isNaN(this.firstPointX_)) {
@@ -199,8 +207,8 @@ anychart.core.drawers.Area.prototype.drawSubsequentPoint = function(point, state
     }
   }
   this.drawSegmentContinuation_(shapes, x, y);
-  this.zeroesStack.push(zeroX, zero);
   if (this.series.planIsStacked()) {
+    this.zeroesStack.push(zeroX, zero);
     var nextZeroX = /** @type {number} */(point.meta('nextZeroX'));
     var nextZero = /** @type {number} */(point.meta('nextZero'));
     var nextX = /** @type {number} */(point.meta('nextValueX'));
@@ -210,6 +218,8 @@ anychart.core.drawers.Area.prototype.drawSubsequentPoint = function(point, state
       this.drawSegmentStart_(shapes, nextX, nextY, nextZeroX, nextZero);
       this.zeroesStack = [nextZeroX, nextZero];
     }
+  } else {
+    this.lastDrawnX = zeroX;
   }
 };
 
@@ -232,6 +242,11 @@ anychart.core.drawers.Area.prototype.finalizeSegment = function() {
     path.close();
     hatchPath.close();
     this.zeroesStack = null;
+  } else if (!isNaN(this.lastDrawnX)) {
+    anychart.core.drawers.line(path, this.isVertical, this.lastDrawnX, this.zeroY);
+    anychart.core.drawers.line(hatchPath, this.isVertical, this.lastDrawnX, this.zeroY);
+    path.close();
+    hatchPath.close();
   }
 };
 
@@ -241,7 +256,10 @@ anychart.core.drawers.Area.prototype.finalizeDrawing = function() {
   if (this.closed_ && !isNaN(this.firstPointX_) && (this.connectMissing || this.prevPointDrawn && !this.firstPointMissing_)) {
     var shapes = this.shapesManager.getShapesGroup(this.seriesState);
     this.drawSegmentContinuation_(shapes, this.firstPointX_, this.firstPointY_);
-    this.zeroesStack.push(this.firstPointZeroX_, this.firstPointZero_);
+    if (this.series.planIsStacked())
+      this.zeroesStack.push(this.firstPointZeroX_, this.firstPointZero_);
+    else
+      this.lastDrawnX = this.firstPointZeroX_;
   }
   anychart.core.drawers.Area.base(this, 'finalizeDrawing');
 };
