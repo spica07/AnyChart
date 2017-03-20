@@ -2373,10 +2373,18 @@ goog.provide('anychart.themes.defaultTheme');
         {
           'type': 'linear',
           'stackMode': 'percent'
+        },
+        {
+          'type': 'ordinal'
+        },
+        {
+          'type': 'ordinal'
         }
       ],
       'xScale': 0,
-      'yScale': 1
+      'yScale': 1,
+      'leftCategoriesScale': 2,
+      'rightCategoriesScale': 3
     },
     // merge with marimekko
     'mosaic': {

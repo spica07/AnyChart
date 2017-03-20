@@ -474,6 +474,10 @@ anychart.scales.Ordinal.prototype.serialize = function() {
   if (this.names_)
     json['names'] = this.names_;
   json['ticks'] = this.ticks().serialize();
+
+  if (this.weights_)
+    json['weights'] = this.weights_;
+
   return json;
 };
 
@@ -484,6 +488,7 @@ anychart.scales.Ordinal.prototype.setupByJSON = function(config, opt_default) {
   this.values(config['values']);
   this.ticks(config['ticks']);
   this.names(config['names']);
+  this.weights(config['weights']);
 };
 
 

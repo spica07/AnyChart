@@ -319,9 +319,7 @@ anychart.charts.Mosaic.prototype.normalizeSeriesType = function(type) {
 //  Serialization / Deserialization / Disposing
 //
 //----------------------------------------------------------------------------------------------------------------------
-/**
- * @inheritDoc
- */
+/** @inheritDoc */
 anychart.charts.Mosaic.prototype.serialize = function() {
   var json = anychart.charts.Mosaic.base(this, 'serialize');
   json['type'] = anychart.enums.ChartTypes.MOSAIC;
@@ -330,6 +328,15 @@ anychart.charts.Mosaic.prototype.serialize = function() {
     json['pointsPadding'] = this.pointsPadding();
 
   return {'chart': json};
+};
+
+
+/** @inheritDoc */
+anychart.charts.Mosaic.prototype.serializeWithScales = function(json, scales, scaleIds) {
+  this.serializeScale(json, 'leftCategoriesScale', /** @type {anychart.scales.Base} */(this.leftCategoriesScale()), scales, scaleIds);
+  this.serializeScale(json, 'rightCategoriesScale', /** @type {anychart.scales.Base} */(this.rightCategoriesScale()), scales, scaleIds);
+
+  anychart.charts.Mosaic.base(this, 'serializeWithScales', json, scales, scaleIds);
 };
 
 
