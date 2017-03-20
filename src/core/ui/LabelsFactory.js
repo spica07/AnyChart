@@ -296,7 +296,7 @@ anychart.core.ui.LabelsFactory.prototype.enabled = function(opt_value) {
     }
     return this;
   }
-  return this.getOption('enabled');
+  return /** @type {?boolean} */(this.getOption('enabled'));
 };
 
 

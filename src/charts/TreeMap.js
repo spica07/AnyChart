@@ -2011,13 +2011,13 @@ anychart.charts.TreeMap.prototype.configureLabel = function(pointState, isHeader
 
   var label = factory.getLabel(index);
 
-  var labelsFactory;
+  var labelsFactory, stateFactory = null;
   if (selected) {
-    labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(selectFactory);
+    stateFactory = labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(selectFactory);
   } else if (hovered) {
-    labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(hoverFactory);
+    stateFactory = labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(hoverFactory);
   } else {
-    labelsFactory = null;
+    labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(factory);
   }
 
   var pointLabel = node.get(labelType);
@@ -2064,7 +2064,7 @@ anychart.charts.TreeMap.prototype.configureLabel = function(pointState, isHeader
     }
 
     label.resetSettings();
-    label.currentLabelsFactory(/** @type {anychart.core.ui.LabelsFactory} */ (labelsFactory));
+    label.currentLabelsFactory(/** @type {anychart.core.ui.LabelsFactory} */ (stateFactory));
     label.setSettings(/** @type {Object} */(pointLabel), /** @type {Object} */(hovered ? hoverPointLabel : selectPointLabel));
     return label;
   } else if (label) {
@@ -2115,15 +2115,10 @@ anychart.charts.TreeMap.prototype.drawLabel_ = function(pointState) {
   } else if (hovered) {
     labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(hoverFactory);
   } else {
-    labelsFactory = null;
+    labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(factory);
   }
 
-  var adjustFontSize = labelsFactory.getOption('adjustFontSize');
-  var needAdjustFontSize = (adjustFontSize['width'] || adjustFontSize['height']) && labelsFactory.enabled();
-
   var displayMode = isHeader ? this.headersDisplayMode() : this.labelsDisplayMode();
-
-  var thickness;
   var fontSize;
   var label = /** @type {anychart.core.ui.LabelsFactory.Label} */ (this.configureLabel(pointState, isHeader));
   if (label) {
@@ -2138,7 +2133,7 @@ anychart.charts.TreeMap.prototype.drawLabel_ = function(pointState) {
           mergedSettings['adjustByWidth'],
           mergedSettings['adjustByHeight']));
     }
-    if (needAdjustFontSize) {
+    if (needAdjust) {
       factory.setAdjustFontSize(/** @type {number} */(fontSize));
     } else {
       factory.setAdjustFontSize(null);

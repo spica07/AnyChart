@@ -846,7 +846,7 @@ anychart.core.ui.Callout.prototype.configureSeriesLabel = function(label, series
     currentLabelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(series.hoverLabels());
   } else {
     stateLabel = null;
-    currentLabelsFactory = series.labels();
+    currentLabelsFactory = null;
   }
 
   var formatProvider = series.createFormatProvider(true);
@@ -900,7 +900,7 @@ anychart.core.ui.Callout.prototype.configureLabel = function(item, label, opt_po
   var currentSettings = calloutLabelsFactory.getChangedSettings();
   currentSettings['enabled'] = goog.isNull(calloutLabelsFactory.enabled()) ? parentSettings['enabled'] : calloutLabelsFactory.enabled();
 
-  label.setSettings(parentSettings, goog.object.extend(label.state('pointState'), currentSettings));
+  label.setSettings(parentSettings, label.state('pointState') ? goog.object.extend(label.state('pointState'), currentSettings) : currentSettings);
 
   var positionProvider = this.createPositionProvider(label.getIndex());
   positionProvider['connectorPoint'] = {'value': series.getMiddlePoint()};
