@@ -929,8 +929,10 @@ anychart.core.ui.LabelsFactory.prototype.getDimension = function(formatProviderO
     this.measureTextElement_.text(goog.isDefAndNotNull(text) ? String(text) : null);
   }
 
-  this.measureCustomLabel_.applyTextSettings.call(this, this.measureTextElement_, true);
-  this.measureCustomLabel_.applyTextSettings(this.measureTextElement_, false);
+  this.measureCustomLabel_.applyTextSettings(this.measureTextElement_, true, this.themeSettings);
+  this.measureCustomLabel_.applyTextSettings.call(this, this.measureTextElement_);
+  this.measureCustomLabel_.applyTextSettings(this.measureTextElement_);
+
 
   //define is width and height set from settings
   isWidthSet = !goog.isNull(widthSettings);
@@ -1969,6 +1971,13 @@ anychart.core.ui.LabelsFactory.Label.prototype.resetSettings = function() {
   }
 
   this.ownSettings = {};
+  this.states_ = {
+    'pointNormal': this
+  };
+  if (this.factory_) {
+    this.states_['seriesNormal'] = this.factory_;
+    this.states_['seriesNormalTheme'] = this.factory_.themeSettings;
+  }
   this.dropMergedSettings();
 };
 
@@ -2413,7 +2422,6 @@ anychart.core.ui.LabelsFactory.Label.prototype.draw = function() {
   if (!this.layer_) this.layer_ = acgraph.layer();
   this.layer_.tag = this.index_;
 
-  debugger;
   var enabled = this.getFinalSettings('enabled');
 
   if (this.checkInvalidationState(anychart.ConsistencyState.ENABLED)) {
@@ -2512,7 +2520,6 @@ anychart.core.ui.LabelsFactory.Label.prototype.draw = function() {
     else this.textElement.text(goog.isDef(text) ? String(text) : '');
 
     this.iterateDrawingPlans_(function(state, settings, index) {
-      debugger
       var isInit = index == 0;
       if (settings instanceof anychart.core.ui.LabelsFactory || settings instanceof anychart.core.ui.LabelsFactory.Label) {
         this.applyTextSettings.call(settings, this.textElement, isInit);

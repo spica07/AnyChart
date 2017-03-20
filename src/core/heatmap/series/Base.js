@@ -660,7 +660,7 @@ anychart.core.heatMap.series.Base.prototype.configureLabel = function(pointState
     if (opt_reset) {
       label.resetSettings();
       label.currentLabelsFactory(labelsFactory);
-      label.setSettings(/** @type {Object} */(pointLabel), /** @type {Object} */(hovered ? hoverPointLabel : selectPointLabel));
+      label.setSettings(/** @type {Object} */(pointLabel), /** @type {Object} */(hovered ? hoverPointLabel : selected ? selectPointLabel : null));
     }
 
     return label;
