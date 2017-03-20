@@ -13,6 +13,12 @@ goog.require('anychart.enums');
  */
 anychart.core.drawers.Column = function(series) {
   anychart.core.drawers.Column.base(this, 'constructor', series);
+
+  /**
+   * Point padding.
+   * @type {number}
+   */
+  this.pointsPadding = this.series.chart.pointsPadding && this.series.chart.pointsPadding() || 0;
 };
 goog.inherits(anychart.core.drawers.Column, anychart.core.drawers.Base);
 anychart.core.drawers.AvailableDrawers[anychart.enums.SeriesDrawerTypes.COLUMN] = anychart.core.drawers.Column;
@@ -79,33 +85,13 @@ anychart.core.drawers.Column.prototype.updatePointOnAnimate = function(point) {
  * @private
  */
 anychart.core.drawers.Column.prototype.drawPoint_ = function(point, shapes) {
-  //debugger;
-  var pointsPadding = 0;
-  var doublePadding = 0;
-  if (this.series.chart.pointsPadding) {
-    pointsPadding = chart.pointsPadding();
-    doublePadding = pointsPadding + pointsPadding;
-    this.pointWidth -= doublePadding;
-    // if(this.pointWidth >= 0)
-    //   this.pointWidth = 1;
-  }
+  if(point.get('value') == 0) return;
 
   var x = /** @type {number} */(point.meta('x'));
   var zero = /** @type {number} */(point.meta('zero'))/* - pointsPadding*/;
   var y = /** @type {number} */(point.meta('value'))/* + pointsPadding*/;
-  var height = zero - y;
 
-
-  if(height > 0) {
-    // if(height <= doublePadding) {
-    //   pointsPadding = (height - 2) / 2;
-    //   console.log(height, doublePadding, pointsPadding);
-    // }
-
-    zero -= pointsPadding;
-    y += pointsPadding;
-  }
-
+  this.pointWidth -= this.pointsPadding * 2;
   var leftX = (x - this.pointWidth / 2);
   var rightX = leftX + this.pointWidth;
 
@@ -116,6 +102,13 @@ anychart.core.drawers.Column.prototype.drawPoint_ = function(point, shapes) {
   }
   y = anychart.utils.applyPixelShift(y, thickness);
   zero = anychart.utils.applyPixelShift(zero, thickness);
+
+  // Adjust vertical padding depend on available space
+  var height = zero - y;
+  var vPadding = (height > this.pointsPadding * 2) ? this.pointsPadding : (height / 2 - 1);
+
+  zero -= vPadding;
+  y += vPadding;
 
   var path = /** @type {acgraph.vector.Path} */(shapes['path']);
   anychart.core.drawers.move(path, this.isVertical, leftX, y);
