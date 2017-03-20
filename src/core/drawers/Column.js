@@ -80,7 +80,7 @@ anychart.core.drawers.Column.prototype.updatePointOnAnimate = function(point) {
  */
 anychart.core.drawers.Column.prototype.drawPoint_ = function(point, shapes) {
   if (point.get('value') == 0) return;
-
+debugger;
   var x = /** @type {number} */(point.meta('x'));
   var zero = /** @type {number} */(point.meta('zero'))/* - pointsPadding*/;
   var y = /** @type {number} */(point.meta('value'))/* + pointsPadding*/;
@@ -98,12 +98,13 @@ anychart.core.drawers.Column.prototype.drawPoint_ = function(point, shapes) {
   y = anychart.utils.applyPixelShift(y, thickness);
   zero = anychart.utils.applyPixelShift(zero, thickness);
 
-  // Adjust vertical padding depend on available space
-  var height = zero - y;
-  var vPadding = (height > pointsPadding * 2) ? pointsPadding : (height / 2 - 1);
-
-  zero -= vPadding;
-  y += vPadding;
+  if(pointsPadding) {
+    // Adjust vertical padding depend on available space
+    var height = Math.abs(zero - y);
+    var vPadding = (height > pointsPadding * 2) ? pointsPadding : (height / 2 - 1);
+    zero -= vPadding;
+    y += vPadding;
+  }
 
   var path = /** @type {acgraph.vector.Path} */(shapes['path']);
   anychart.core.drawers.move(path, this.isVertical, leftX, y);
