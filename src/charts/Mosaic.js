@@ -156,26 +156,6 @@ anychart.charts.Mosaic.prototype.allowLegendCategoriesMode = function() {
 };
 
 
-/** @inheritDoc */
-anychart.charts.Mosaic.prototype.checkXScaleType = function(scale) {
-  // var res = (scale instanceof anychart.scales.ScatterBase);
-  // if (!res)
-  //   anychart.core.reporting.error(anychart.enums.ErrorCode.INCORRECT_SCALE_TYPE, undefined, ['Scatter chart scales', 'scatter', 'linear, log']);
-  // return res;
-  return true;
-};
-
-
-/** @inheritDoc */
-anychart.charts.Mosaic.prototype.checkYScaleType = function(scale) {
-  // var res = (scale instanceof anychart.scales.ScatterBase);
-  // if (!res)
-  //   anychart.core.reporting.error(anychart.enums.ErrorCode.INCORRECT_SCALE_TYPE, undefined, ['Scatter chart scales', 'scatter', 'linear, log']);
-  // return res;
-  return true;
-};
-
-
 //endregion
 //region --- Axes
 //----------------------------------------------------------------------------------------------------------------------
