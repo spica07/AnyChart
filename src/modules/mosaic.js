@@ -16,7 +16,7 @@ goog.require('anychart.modules.base');
  * anychart.scatter([20, 7, 10, 14])
  *    .container(stage).draw();
  * @param {...(anychart.data.View|anychart.data.Set|Array)} var_args Marker chart data.
- * @return {anychart.charts.Scatter} Chart with defaults for scatter series.
+ * @return {anychart.charts.Mosaic} Chart with defaults for scatter series.
  */
 anychart.mosaic = function(var_args) {
   var chart = new anychart.charts.Mosaic(true);

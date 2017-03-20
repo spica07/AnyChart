@@ -53,15 +53,15 @@ anychart.core.ChartWithOrthogonalScales = function(categorizeData) {
 
   /**
    * @type {number}
-   * @private
+   * @protected
    */
-  this.barGroupsPadding_;
+  this.barGroupsPadding_ = 0;
 
   /**
    * @type {number}
-   * @private
+   * @protected
    */
-  this.barsPadding_;
+  this.barsPadding_ = 0;
 
   /**
    * Y scales hash map by uid.
@@ -80,7 +80,7 @@ anychart.core.ChartWithOrthogonalScales = function(categorizeData) {
   /**
    * Drawing plans for each series.
    * @type {Array.<Object>}
-   * @private
+   * @protected
    */
   this.drawingPlans_ = [];
 

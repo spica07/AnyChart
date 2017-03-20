@@ -1,4 +1,5 @@
 goog.provide('anychart.charts.Mosaic');
+goog.require('anychart.core.ChartWithAxes');
 goog.require('anychart.core.series');
 goog.require('anychart.core.shapeManagers');
 goog.require('anychart.enums');
@@ -124,7 +125,7 @@ anychart.charts.Mosaic.prototype.SUPPORTED_CONSISTENCY_STATES =
  */
 anychart.charts.Mosaic.prototype.leftCategoriesScale = function() {
   if (!this.leftCategoriesScale_) {
-    this.leftCategoriesScale_ = this.createScaleByType('ordinal', true, false);
+    this.leftCategoriesScale_ = /** @type anychart.scales.Ordinal */(this.createScaleByType('ordinal', true, false));
     this.leftCategoriesScale_.listenSignals(this.categoriesScaleInvalidated, this);
   }
   return /** @type {!anychart.scales.Ordinal} */(this.leftCategoriesScale_);
@@ -137,7 +138,7 @@ anychart.charts.Mosaic.prototype.leftCategoriesScale = function() {
  */
 anychart.charts.Mosaic.prototype.rightCategoriesScale = function() {
   if (!this.rightCategoriesScale_) {
-    this.rightCategoriesScale_ = this.createScaleByType('ordinal', true, false);
+    this.rightCategoriesScale_ = /** @type anychart.scales.Ordinal */(this.createScaleByType('ordinal', true, false));
     this.rightCategoriesScale_.listenSignals(this.categoriesScaleInvalidated, this);
   }
   return /** @type {!anychart.scales.Ordinal} */(this.rightCategoriesScale_);
@@ -152,6 +153,9 @@ anychart.charts.Mosaic.prototype.rightCategoriesScale = function() {
 anychart.charts.Mosaic.prototype.categoriesScaleInvalidated = function(event) {
   this.suspendSignalsDispatching();
   if (event.hasSignal(anychart.Signal.NEEDS_RECALCULATION)) {
+    var state = anychart.ConsistencyState.SCALE_CHART_SCALES |
+        anychart.ConsistencyState.SCALE_CHART_Y_SCALES |
+        anychart.ConsistencyState.SCALE_CHART_SCALE_MAPS;
     this.invalidate(state, anychart.ConsistencyState.MOSAIC_CATEGORY_SCALE);
   }
   this.resumeSignalsDispatching(true);
@@ -192,7 +196,7 @@ anychart.charts.Mosaic.prototype.checkYScaleType = function(scale) {
 //
 //----------------------------------------------------------------------------------------------------------------------
 /** @inheritDoc */
-anychart.core.ChartWithAxes.prototype.setYAxisScale = function(axis) {
+anychart.charts.Mosaic.prototype.setYAxisScale = function(axis) {
   if (this.useCategoryScale_) {
     var straight = !this.xScale().inverted();
     if (axis.orientation() == anychart.enums.Orientation.LEFT || axis.orientation() == anychart.enums.Orientation.TOP)
