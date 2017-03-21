@@ -270,7 +270,9 @@ anychart.core.series.Cartesian.prototype.getColorResolutionContext = function(op
     return {
       'index': iterator.getIndex(),
       'sourceColor': source,
-      'iterator': iterator
+      'iterator': iterator,
+      'series': this,
+      'chart': this.chart
     };
   }
   return {
@@ -287,7 +289,9 @@ anychart.core.series.Cartesian.prototype.getHatchFillResolutionContext = functio
     return {
       'index': iterator.getIndex(),
       'sourceHatchFill': source,
-      'iterator': iterator
+      'iterator': iterator,
+      'series': this,
+      'chart': this.chart
     };
   }
   return {
