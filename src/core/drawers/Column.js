@@ -4,7 +4,6 @@ goog.require('anychart.core.drawers.Base');
 goog.require('anychart.enums');
 
 
-
 /**
  * Column drawer.
  * @param {anychart.core.series.Base} series
@@ -82,8 +81,8 @@ anychart.core.drawers.Column.prototype.drawPoint_ = function(point, shapes) {
   if (point.get('value') == 0) return;
 
   var x = /** @type {number} */(point.meta('x'));
-  var zero = /** @type {number} */(point.meta('zero'))/* - pointsPadding*/;
-  var y = /** @type {number} */(point.meta('value'))/* + pointsPadding*/;
+  var zero = /** @type {number} */(point.meta('zero'));
+  var y = /** @type {number} */(point.meta('value'));
 
   var pointsPadding = this.series.chart.pointsPadding && this.series.chart.pointsPadding() || 0;
   this.pointWidth -= pointsPadding * 2;
@@ -91,10 +90,22 @@ anychart.core.drawers.Column.prototype.drawPoint_ = function(point, shapes) {
   var rightX = leftX + this.pointWidth;
 
   var thickness = acgraph.vector.getThickness(/** @type {acgraph.vector.Stroke} */(shapes['path'].stroke()));
-  if (this.crispEdges) {
+
+  if (this.crispEdges /*|| this.fullWidth*/) {
     leftX = anychart.utils.applyPixelShift(leftX, thickness);
     rightX = anychart.utils.applyPixelShift(rightX, thickness);
   }
+
+  // if (this.fullWidth) {
+  //   var halfThickness = thickness / 2;
+  //   console.log(leftX, rightX, thickness, halfThickness);
+  //
+  //   leftX += halfThickness;
+  //   rightX -= halfThickness;
+  //   // zero -= this.isVertical ? -thicknessOffset : thicknessOffset;
+  //   // y += this.isVertical ? -thicknessOffset : thicknessOffset;
+  // }
+
   y = anychart.utils.applyPixelShift(y, thickness);
   zero = anychart.utils.applyPixelShift(zero, thickness);
 

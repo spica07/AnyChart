@@ -627,7 +627,7 @@ anychart.utils.getIntervalFromInfo = function(unit, count) {
  * @return {number}
  */
 anychart.utils.applyPixelShift = function(value, thickness, opt_invert) {
-  var shift = (thickness & 1) / 2;
+  var shift = (thickness % 1) / 2;
   if (value % 1 >= 0.5)
     return Math.ceil(value) - (opt_invert ? -shift : shift);
   else
