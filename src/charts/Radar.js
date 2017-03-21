@@ -21,6 +21,76 @@ anychart.charts.Radar = function() {
 goog.inherits(anychart.charts.Radar, anychart.core.RadarPolarChart);
 
 
+//region --- Series
+//------------------------------------------------------------------------------
+//
+//  Series
+//
+//------------------------------------------------------------------------------
+/**
+ * Series config for Radar chart.
+ * @type {!Object.<string, anychart.core.series.TypeConfig>}
+ */
+anychart.charts.Radar.prototype.seriesConfig = (function() {
+  var res = {};
+  var capabilities = (
+  anychart.core.series.Capabilities.ALLOW_INTERACTIVITY |
+  anychart.core.series.Capabilities.ALLOW_POINT_SETTINGS |
+  // anychart.core.series.Capabilities.ALLOW_ERROR |
+  anychart.core.series.Capabilities.SUPPORTS_MARKERS |
+  anychart.core.series.Capabilities.SUPPORTS_LABELS |
+  0);
+  res[anychart.enums.CartesianSeriesType.AREA] = {
+    drawerType: anychart.enums.SeriesDrawerTypes.AREA,
+    shapeManagerType: anychart.enums.ShapeManagerTypes.PER_SERIES,
+    shapesConfig: [
+      anychart.core.shapeManagers.pathFillConfig,
+      anychart.core.shapeManagers.pathStrokeConfig,
+      anychart.core.shapeManagers.pathHatchConfig
+    ],
+    secondaryShapesConfig: null,
+    postProcessor: null,
+    capabilities: capabilities,
+    anchoredPositionTop: 'value',
+    anchoredPositionBottom: 'zero'
+  };
+  res[anychart.enums.CartesianSeriesType.LINE] = {
+    drawerType: anychart.enums.SeriesDrawerTypes.LINE,
+    shapeManagerType: anychart.enums.ShapeManagerTypes.PER_SERIES,
+    shapesConfig: [
+      anychart.core.shapeManagers.pathStrokeConfig
+    ],
+    secondaryShapesConfig: null,
+    postProcessor: null,
+    capabilities: capabilities,
+    anchoredPositionTop: 'value',
+    anchoredPositionBottom: 'value'
+  };
+  res[anychart.enums.CartesianSeriesType.MARKER] = {
+    drawerType: anychart.enums.SeriesDrawerTypes.MARKER,
+    shapeManagerType: anychart.enums.ShapeManagerTypes.PER_POINT,
+    shapesConfig: [
+      anychart.core.shapeManagers.pathFillStrokeConfig,
+      anychart.core.shapeManagers.pathHatchConfig
+    ],
+    secondaryShapesConfig: null,
+    postProcessor: null,
+    capabilities: (
+    anychart.core.series.Capabilities.ALLOW_INTERACTIVITY |
+    anychart.core.series.Capabilities.ALLOW_POINT_SETTINGS |
+    // anychart.core.series.Capabilities.ALLOW_ERROR |
+    // anychart.core.series.Capabilities.SUPPORTS_MARKERS |
+    anychart.core.series.Capabilities.SUPPORTS_LABELS |
+    0),
+    anchoredPositionTop: 'value',
+    anchoredPositionBottom: 'value'
+  };
+  return res;
+})();
+anychart.core.ChartWithSeries.generateSeriesConstructors(anychart.charts.Radar, anychart.charts.Radar.prototype.seriesConfig);
+
+
+//endregion
 //region --- Infrastructure overrides
 //------------------------------------------------------------------------------
 //

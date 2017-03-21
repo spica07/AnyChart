@@ -3,7 +3,7 @@ goog.provide('anychart.charts.Polar');
 goog.require('anychart.core.RadarPolarChart');
 goog.require('anychart.core.axes.Polar');
 goog.require('anychart.core.grids.Polar');
-goog.require('anychart.core.series.Cartesian');
+goog.require('anychart.core.series.Polar');
 goog.require('anychart.enums');
 
 
@@ -22,6 +22,76 @@ anychart.charts.Polar = function() {
 goog.inherits(anychart.charts.Polar, anychart.core.RadarPolarChart);
 
 
+//region --- Series
+//------------------------------------------------------------------------------
+//
+//  Series
+//
+//------------------------------------------------------------------------------
+/**
+ * Series config for Radar chart.
+ * @type {!Object.<string, anychart.core.series.TypeConfig>}
+ */
+anychart.charts.Polar.prototype.seriesConfig = (function() {
+  var res = {};
+  var capabilities = (
+  anychart.core.series.Capabilities.ALLOW_INTERACTIVITY |
+  anychart.core.series.Capabilities.ALLOW_POINT_SETTINGS |
+  // anychart.core.series.Capabilities.ALLOW_ERROR |
+  anychart.core.series.Capabilities.SUPPORTS_MARKERS |
+  anychart.core.series.Capabilities.SUPPORTS_LABELS |
+  0);
+  res[anychart.enums.CartesianSeriesType.AREA] = {
+    drawerType: anychart.enums.SeriesDrawerTypes.AREA,
+    shapeManagerType: anychart.enums.ShapeManagerTypes.PER_SERIES,
+    shapesConfig: [
+      anychart.core.shapeManagers.pathFillConfig,
+      anychart.core.shapeManagers.pathStrokeConfig,
+      anychart.core.shapeManagers.pathHatchConfig
+    ],
+    secondaryShapesConfig: null,
+    postProcessor: null,
+    capabilities: capabilities,
+    anchoredPositionTop: 'value',
+    anchoredPositionBottom: 'zero'
+  };
+  res[anychart.enums.CartesianSeriesType.LINE] = {
+    drawerType: anychart.enums.SeriesDrawerTypes.POLAR_LINE,
+    shapeManagerType: anychart.enums.ShapeManagerTypes.PER_SERIES,
+    shapesConfig: [
+      anychart.core.shapeManagers.pathStrokeConfig
+    ],
+    secondaryShapesConfig: null,
+    postProcessor: null,
+    capabilities: capabilities,
+    anchoredPositionTop: 'value',
+    anchoredPositionBottom: 'value'
+  };
+  res[anychart.enums.CartesianSeriesType.MARKER] = {
+    drawerType: anychart.enums.SeriesDrawerTypes.MARKER,
+    shapeManagerType: anychart.enums.ShapeManagerTypes.PER_POINT,
+    shapesConfig: [
+      anychart.core.shapeManagers.pathFillStrokeConfig,
+      anychart.core.shapeManagers.pathHatchConfig
+    ],
+    secondaryShapesConfig: null,
+    postProcessor: null,
+    capabilities: (
+    anychart.core.series.Capabilities.ALLOW_INTERACTIVITY |
+    anychart.core.series.Capabilities.ALLOW_POINT_SETTINGS |
+    // anychart.core.series.Capabilities.ALLOW_ERROR |
+    // anychart.core.series.Capabilities.SUPPORTS_MARKERS |
+    anychart.core.series.Capabilities.SUPPORTS_LABELS |
+    0),
+    anchoredPositionTop: 'value',
+    anchoredPositionBottom: 'value'
+  };
+  return res;
+})();
+anychart.core.ChartWithSeries.generateSeriesConstructors(anychart.charts.Polar, anychart.charts.Polar.prototype.seriesConfig);
+
+
+//endregion
 //region --- Infrastructure overrides
 //------------------------------------------------------------------------------
 //
@@ -75,7 +145,7 @@ anychart.charts.Polar.prototype.createScaleByType = function(value, isXScale, re
 
 /** @inheritDoc */
 anychart.charts.Polar.prototype.createSeriesInstance = function(type, config) {
-  return new anychart.core.series.Cartesian(this, this, type, config, false);
+  return new anychart.core.series.Polar(this, this, type, config, false);
 };
 
 

@@ -315,6 +315,17 @@ anychart.core.shapeManagers.Base.prototype.getShapesGroup = function(state, opt_
 
 
 /**
+ * Returns a new object with all defined paths for the next point.
+ * @param {number} state - Shapes group state.
+ * @param {number=} opt_baseZIndex - zIndex that is used as a base zIndex for all shapes of the group.
+ * @return {Object.<string, acgraph.vector.Shape>}
+ */
+anychart.core.shapeManagers.Base.prototype.addShapesGroup = function(state, opt_baseZIndex) {
+  return this.getShapesGroup(state, undefined, opt_baseZIndex);
+};
+
+
+/**
  * Updates z indexed for the passed shapes group.
  * @param {number} newBaseZIndex
  * @param {(Object.<string, acgraph.vector.Shape>|Array.<Object.<string, acgraph.vector.Shape>>)=} opt_shapesGroup

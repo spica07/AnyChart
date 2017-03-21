@@ -1,4 +1,7 @@
 goog.provide('anychart.core.series.Radar');
+goog.require('anychart.core.drawers.Area');
+goog.require('anychart.core.drawers.Line');
+goog.require('anychart.core.drawers.Marker');
 goog.require('anychart.core.series.Cartesian');
 
 
@@ -21,21 +24,18 @@ goog.inherits(anychart.core.series.Radar, anychart.core.series.Cartesian);
 
 /**
  * @type {number}
- * @protected
  */
 anychart.core.series.Radar.prototype.radius;
 
 
 /**
  * @type {number}
- * @protected
  */
 anychart.core.series.Radar.prototype.cx;
 
 
 /**
  * @type {number}
- * @protected
  */
 anychart.core.series.Radar.prototype.cy;
 

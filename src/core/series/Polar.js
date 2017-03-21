@@ -1,4 +1,7 @@
 goog.provide('anychart.core.series.Polar');
+goog.require('anychart.core.drawers.Area');
+goog.require('anychart.core.drawers.Marker');
+goog.require('anychart.core.drawers.PolarLine');
 goog.require('anychart.core.series.Radar');
 
 
@@ -36,6 +39,38 @@ anychart.core.series.Polar.PROPERTY_DESCRIPTORS = (function() {
   return map;
 })();
 anychart.core.settings.populate(anychart.core.series.Polar, anychart.core.series.Polar.PROPERTY_DESCRIPTORS);
+
+
+/**
+ * Prepares xRatio part of point meta.
+ * @param {anychart.data.IRowInfo} rowInfo
+ * @param {Array.<string>} yNames
+ * @param {Array.<string|number>} yColumns
+ * @param {number} pointMissing
+ * @param {number} xRatio
+ * @return {number} - pointMissing updated value.
+ * @protected
+ */
+anychart.core.series.Polar.prototype.makeXRatioMeta = function(rowInfo, yNames, yColumns, pointMissing, xRatio) {
+  rowInfo.meta('xRatio', goog.math.modulo(xRatio, 1));
+  return pointMissing;
+};
+
+
+/** @inheritDoc */
+anychart.core.series.Polar.prototype.makePointsMetaFromMap = function(rowInfo, map, xRatio) {
+  anychart.core.series.Polar.base(this, 'makePointsMetaFromMap', rowInfo, map, xRatio);
+  for (var i in map) {
+    rowInfo.meta(i + 'Ratio', map[i]);
+  }
+};
+
+
+/** @inheritDoc */
+anychart.core.series.Polar.prototype.prepareMetaMakers = function() {
+  anychart.core.series.Polar.base(this, 'prepareMetaMakers');
+  this.metaMakers.push(this.makeXRatioMeta);
+};
 
 
 /** @inheritDoc */

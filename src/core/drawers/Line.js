@@ -61,37 +61,37 @@ anychart.core.drawers.Line.prototype.startDrawing = function(shapeManager) {
   /**
    * If the line should be closed to its first point.
    * @type {boolean}
-   * @private
+   * @protected
    */
-  this.closed_ = !!this.series.getOption('closed');
+  this.closed = !!this.series.getOption('closed');
 
   /**
    * If the first point is missing (for the closed mode).
    * @type {boolean}
-   * @private
+   * @protected
    */
-  this.firstPointMissing_ = false;
+  this.firstPointMissing = false;
 
   /**
    * First non-missing point X coord (for the closed mode).
    * @type {number}
-   * @private
+   * @protected
    */
-  this.firstPointX_ = NaN;
+  this.firstPointX = NaN;
 
   /**
    * First non-missing point Y coord (for the closed mode).
    * @type {number}
-   * @private
+   * @protected
    */
-  this.firstPointY_ = NaN;
+  this.firstPointY = NaN;
 };
 
 
 /** @inheritDoc */
 anychart.core.drawers.Line.prototype.drawMissingPoint = function(point, state) {
-  if (isNaN(this.firstPointX_))
-    this.firstPointMissing_ = true;
+  if (isNaN(this.firstPointX))
+    this.firstPointMissing = true;
 };
 
 
@@ -101,9 +101,9 @@ anychart.core.drawers.Line.prototype.drawFirstPoint = function(point, state) {
   var x = /** @type {number} */(point.meta('x'));
   var y = /** @type {number} */(point.meta('value'));
   anychart.core.drawers.move(/** @type {acgraph.vector.Path} */(shapes['stroke']), this.isVertical, x, y);
-  if (isNaN(this.firstPointX_)) {
-    this.firstPointX_ = x;
-    this.firstPointY_ = y;
+  if (isNaN(this.firstPointX)) {
+    this.firstPointX = x;
+    this.firstPointY = y;
   }
 };
 
@@ -119,9 +119,18 @@ anychart.core.drawers.Line.prototype.drawSubsequentPoint = function(point, state
 
 /** @inheritDoc */
 anychart.core.drawers.Line.prototype.finalizeDrawing = function() {
-  if (this.closed_ && !isNaN(this.firstPointX_) && (this.connectMissing || this.prevPointDrawn && !this.firstPointMissing_)) {
-    var shapes = this.shapesManager.getShapesGroup(this.seriesState);
-    anychart.core.drawers.line(/** @type {acgraph.vector.Path} */(shapes['stroke']), this.isVertical, this.firstPointX_, this.firstPointY_);
-  }
+  this.additionalFinalize();
   anychart.core.drawers.Line.base(this, 'finalizeDrawing');
+};
+
+
+/**
+ * Additional finalization.
+ * @protected
+ */
+anychart.core.drawers.Line.prototype.additionalFinalize = function() {
+  if (this.closed && !isNaN(this.firstPointX) && (this.connectMissing || this.prevPointDrawn && !this.firstPointMissing)) {
+    var shapes = this.shapesManager.getShapesGroup(this.seriesState);
+    anychart.core.drawers.line(/** @type {acgraph.vector.Path} */(shapes['stroke']), this.isVertical, this.firstPointX, this.firstPointY);
+  }
 };

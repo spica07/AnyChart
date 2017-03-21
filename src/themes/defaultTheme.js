@@ -2364,12 +2364,7 @@ goog.provide('anychart.themes.defaultTheme');
       'defaultSeriesType': 'line',
       'defaultSeriesSettings': {
         'base': {
-          'enabled': true,
-          'hatchFill': null,
-          'a11y': {
-            'enabled': true,
-            'titleFormatter': 'Series named {%SeriesName} with {%SeriesPointsCount} points. Min value is {%SeriesYMin}, max value is {%SeriesYMax}'
-          }
+          'clip': false
         },
         'area': {},
         'line': {},
@@ -2393,7 +2388,7 @@ goog.provide('anychart.themes.defaultTheme');
       'xScale': 0,
       'yScale': 1,
       'a11y': {
-        'titleFormatter': scatterA11yTitleFormatter
+        'titleFormatter': cartesianBaseA11yTitleFormatter
       }
     },
     // merge with chart
@@ -2401,8 +2396,6 @@ goog.provide('anychart.themes.defaultTheme');
       'defaultSeriesType': 'marker',
       'defaultSeriesSettings': {
         'base': {
-          'enabled': true,
-          'hatchFill': null,
           'closed': true
         },
         'area': {},
@@ -2418,52 +2411,10 @@ goog.provide('anychart.themes.defaultTheme');
       'minorGrids': [],
       'scales': [
         {
-          'type': 'linear',
-          'maxTicksCount': 1000,
-          'inverted': false,
-          'maximum': null,
-          'minimum': null,
-          'minimumGap': 0.1,
-          'maximumGap': 0.1,
-          'softMinimum': null,
-          'softMaximum': null,
-          'ticks': {
-            'mode': 'linear',
-            'base': 0,
-            'minCount': 4,
-            'maxCount': 6
-          },
-          'minorTicks': {
-            'mode': 'linear',
-            'base': 0,
-            'count': 5
-          },
-          'stackMode': 'none',
-          'stickToZero': true
+          'type': 'linear'
         },
         {
-          'type': 'linear',
-          'maxTicksCount': 1000,
-          'inverted': false,
-          'maximum': null,
-          'minimum': null,
-          'minimumGap': 0.1,
-          'maximumGap': 0.1,
-          'softMinimum': null,
-          'softMaximum': null,
-          'ticks': {
-            'mode': 'linear',
-            'base': 0,
-            'minCount': 4,
-            'maxCount': 6
-          },
-          'minorTicks': {
-            'mode': 'linear',
-            'base': 0,
-            'count': 5
-          },
-          'stackMode': 'none',
-          'stickToZero': true
+          'type': 'linear'
         }
       ],
       'xScale': 0,
