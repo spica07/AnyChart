@@ -880,10 +880,10 @@ anychart.core.ui.Tooltip.prototype.showAsUnion_ = function(points, clientX, clie
       return;
 
     var unionContext = {
-      'clientX': clientX,
-      'clientY': clientY,
-      'formattedValues': [],
-      'points': []
+      'clientX': {value: clientX, type: anychart.enums.TokenType.NUMBER},
+      'clientY': {value: clientY, type: anychart.enums.TokenType.NUMBER},
+      'formattedValues': {value: [], type: anychart.enums.TokenType.UNKNOWN},
+      'points': {value: [], type: anychart.enums.TokenType.UNKNOWN}
     };
 
     var allPoints = [];
@@ -902,8 +902,8 @@ anychart.core.ui.Tooltip.prototype.showAsUnion_ = function(points, clientX, clie
         }
 
         var contextProvider = series.createTooltipContextProvider();
-        unionContext['formattedValues'].push(tooltip.getFormattedContent_(contextProvider));
-        unionContext['points'].push(contextProvider);
+        unionContext['formattedValues'].value.push(tooltip.getFormattedContent_(contextProvider));
+        unionContext['points'].value.push(contextProvider);
 
         if (goog.isArray(point['points'])) {
           allPoints.push({
@@ -918,9 +918,9 @@ anychart.core.ui.Tooltip.prototype.showAsUnion_ = function(points, clientX, clie
     }
 
     if (allPoints.length == points.length)
-      unionContext['allPoints'] = allPoints;
+      unionContext['allPoints'] = {value: allPoints, type: anychart.enums.TokenType.UNKNOWN};
 
-    if (!unionContext['formattedValues'].length) {
+    if (!unionContext['formattedValues'].value.length) {
       return;
     }
 
@@ -932,10 +932,10 @@ anychart.core.ui.Tooltip.prototype.showAsUnion_ = function(points, clientX, clie
     var statisticsSource = this.tooltipInUse_.check(anychart.core.ui.Tooltip.Capabilities.CAN_CHANGE_DISPLAY_MODE) ? chart :
         hoveredSeries || (points[0] && points[0]['series']) || void 0;
 
-    var unionContextProvider = new anychart.core.utils.GenericContextProvider(unionContext, {
-      'clientX': anychart.enums.TokenType.NUMBER,
-      'clientY': anychart.enums.TokenType.NUMBER
-    }, statisticsSource);
+    var unionContextProvider = new anychart.core.FormatContext(unionContext);
+    if (statisticsSource)
+      unionContextProvider.statisticsSources([statisticsSource]);
+    unionContextProvider.propagate();
 
     this.tooltipInUse_.contentInternal().text(this.getFormattedContent_(unionContextProvider, true));
     this.tooltipInUse_.title().autoText(this.getFormattedTitle(unionContextProvider));

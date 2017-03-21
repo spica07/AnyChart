@@ -1,6 +1,7 @@
 goog.provide('anychart.core.axes.Linear');
 goog.require('acgraph');
 goog.require('anychart.color');
+goog.require('anychart.core.FormatContext');
 goog.require('anychart.core.IStandaloneBackend');
 goog.require('anychart.core.VisualBase');
 goog.require('anychart.core.axes.Ticks');
@@ -41,6 +42,13 @@ anychart.core.axes.Linear = function() {
    * @protected
    */
   this.line;
+
+  /**
+   *
+   * @type {anychart.core.FormatContext}
+   * @private
+   */
+  this.formatProvider_ = null;
 
   /**
    * Constant to save space.
@@ -1631,7 +1639,39 @@ anychart.core.axes.Linear.prototype.drawLine = function() {
  * @protected
  */
 anychart.core.axes.Linear.prototype.getLabelsFormatProvider = function(index, value) {
-  return new anychart.core.utils.AxisLabelsContextProvider(this, index, value);
+  if (!this.formatProvider_)
+    this.formatProvider_ = new anychart.core.FormatContext();
+
+  var scale = this.scale();
+
+  var labelText, labelValue;
+  var addRange = true;
+  if (scale instanceof anychart.scales.Ordinal) {
+    labelText = scale.ticks().names()[index];
+    labelValue = value;
+    addRange = false;
+  } else if (scale instanceof anychart.scales.DateTime) {
+    labelText = anychart.format.date(/** @type {number} */(value));
+    labelValue = value;
+  } else {
+    labelText = parseFloat(value);
+    labelValue = parseFloat(value);
+  }
+
+  var values = {
+    'axis': {value: this, type: anychart.enums.TokenType.UNKNOWN},
+    'index': {value: index, type: anychart.enums.TokenType.NUMBER},
+    'value': {value: parseFloat(value), type: anychart.enums.TokenType.NUMBER},
+    'tickValue': {value: parseFloat(value), type: anychart.enums.TokenType.NUMBER},
+    'scale': {value: scale, type: anychart.enums.TokenType.UNKNOWN}
+  };
+  
+  if (addRange) {
+    values['min'] = {value: goog.isDef(scale.max) ? scale.max : null, type: anychart.enums.TokenType.NUMBER};
+    values['max'] = {value: goog.isDef(scale.min) ? scale.min : null, type: anychart.enums.TokenType.NUMBER};
+  }
+  
+  return this.formatProvider_.propagate(values);
 };
 
 

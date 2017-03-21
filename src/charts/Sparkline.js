@@ -2,6 +2,7 @@ goog.provide('anychart.charts.Sparkline');
 
 goog.require('anychart'); // otherwise we can't use anychart.chartTypesMap object.
 goog.require('anychart.core.Chart');
+goog.require('anychart.core.FormatContext');
 goog.require('anychart.core.axisMarkers.Line');
 goog.require('anychart.core.axisMarkers.Range');
 goog.require('anychart.core.axisMarkers.Text');
@@ -11,7 +12,6 @@ goog.require('anychart.core.ui.LabelsFactory');
 goog.require('anychart.core.ui.MarkersFactory');
 goog.require('anychart.core.utils.IInteractiveSeries');
 goog.require('anychart.core.utils.InteractivityState');
-goog.require('anychart.core.utils.PointContextProvider');
 goog.require('anychart.data.Set');
 goog.require('anychart.enums');
 goog.require('anychart.scales');
@@ -270,8 +270,21 @@ anychart.charts.Sparkline.prototype.selectionMode = function() {
  */
 anychart.charts.Sparkline.prototype.createFormatProvider = function() {
   if (!this.pointProvider_)
-    this.pointProvider_ = new anychart.core.utils.PointContextProvider(this, ['x', 'value']);
-  this.pointProvider_.applyReferenceValues();
+    this.pointProvider_ = new anychart.core.FormatContext();
+
+  var iterator = this.getIterator();
+  this.pointProvider_
+      .dataSource(iterator)
+      .statisticsSources([this]);
+
+  var values = {
+    'x': {value: iterator.get('x'), type: anychart.enums.TokenType.STRING},
+    'value': {value: iterator.get('value'), type: anychart.enums.TokenType.NUMBER},
+    'index': {value: iterator.getIndex(), type: anychart.enums.TokenType.NUMBER},
+    'chart': {value: this, type: anychart.enums.TokenType.UNKNOWN}
+  };
+
+  this.pointProvider_.propagate(values);
   return this.pointProvider_;
 };
 

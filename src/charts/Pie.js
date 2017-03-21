@@ -4,6 +4,7 @@ goog.require('anychart.animations.AnimationSerialQueue');
 goog.require('anychart.animations.PieAnimation');
 goog.require('anychart.animations.PieLabelAnimation');
 goog.require('anychart.color');
+goog.require('anychart.core.FormatContext');
 goog.require('anychart.core.PiePoint');
 goog.require('anychart.core.SeparateChart');
 goog.require('anychart.core.reporting');
@@ -11,7 +12,6 @@ goog.require('anychart.core.ui.CircularLabelsFactory');
 goog.require('anychart.core.ui.Tooltip');
 goog.require('anychart.core.utils.IInteractiveSeries');
 goog.require('anychart.core.utils.PieInteractivityState');
-goog.require('anychart.core.utils.PointContextProvider');
 goog.require('anychart.core.utils.TypedLayer');
 goog.require('anychart.data.Set');
 goog.require('anychart.enums');
@@ -35,7 +35,7 @@ anychart.charts.Pie = function(opt_data, opt_csvSettings) {
 
   /**
    * Pie point provider.
-   * @type {anychart.core.utils.PointContextProvider}
+   * @type {anychart.core.FormatContext}
    * @private
    */
   this.pointProvider_;
@@ -1954,7 +1954,7 @@ anychart.charts.Pie.prototype.draw3DSlices_ = function(opt_sliceIndex, opt_updat
               -1 :
               anychart.math.round(Math.sin(goog.math.toRadians(this.getCenterAngle_(side.start, side.end))), 7));
           break;
-        // for start or end side
+          // for start or end side
         default:
           side.sortWeight = anychart.math.round(Math.sin(goog.math.toRadians(side.angle)), 7);
           break;
@@ -2127,7 +2127,7 @@ anychart.charts.Pie.prototype.colorize3DSlice_ = function(pointState) {
     side = this.sides3D_[i];
     if (side.index == index) {
       var uniqueValue = (side.type == anychart.charts.Pie.Side3DType.FRONT ||
-          side.type == anychart.charts.Pie.Side3DType.BACK) ? side.start : '';
+      side.type == anychart.charts.Pie.Side3DType.BACK) ? side.start : '';
       this.colorize3DPath_(side.type + 'Path' + uniqueValue, pointState);
     }
   }
@@ -2844,7 +2844,7 @@ anychart.charts.Pie.prototype.drawLabel_ = function(pointState, opt_updateConnec
   var labelHoverEnabledState = hoverSliceLabel && goog.isDef(hoverSliceLabel['enabled']) ? hoverSliceLabel['enabled'] : null;
 
   var positionProvider = this.createPositionProvider();
-  var formatProvider = this.createFormatProvider(true);
+  var formatProvider = this.createFormatProvider();
 
   var isFitToSlice = true;
   if ((!hovered || (hovered && !this.forceHoverLabels_)) && !this.insideLabelsOverlap_) {
@@ -3696,15 +3696,36 @@ anychart.charts.Pie.prototype.calculate = function() {
 
 /**
  * Create pie label format provider.
- * @param {boolean=} opt_force create context provider forcibly.
  * @return {Object} Object with info for labels formatting.
  * @protected
  */
-anychart.charts.Pie.prototype.createFormatProvider = function(opt_force) {
-  if (!this.pointProvider_ || opt_force)
-    this.pointProvider_ = new anychart.core.utils.PointContextProvider(this, ['x', 'value', 'name']);
-  this.pointProvider_.pointInternal = this.getPoint(this.getIterator().getIndex());
-  this.pointProvider_.applyReferenceValues();
+anychart.charts.Pie.prototype.createFormatProvider = function() {
+  var iterator = this.getIterator();
+
+  if (!this.pointProvider_)
+    this.pointProvider_ = new anychart.core.FormatContext();
+
+  this.pointProvider_
+      .dataSource(iterator)
+      .statisticsSources([this.getPoint(iterator.getIndex()), this]);
+
+  var values = { //TODO (A.Kudryavtsev): Check types!!!
+    'x': {value: iterator.get('x'), type: anychart.enums.TokenType.STRING},
+    'value': {value: iterator.get('value'), type: anychart.enums.TokenType.NUMBER},
+    'name': {value: iterator.get('name'), type: anychart.enums.TokenType.STRING},
+    'index': {value: iterator.getIndex(), type: anychart.enums.TokenType.NUMBER},
+    'chart': {value: this, type: anychart.enums.TokenType.UNKNOWN}
+  };
+
+  if (iterator.meta('groupedPoint')) {
+    values['name'] = {value: 'Other points', type: anychart.enums.TokenType.STRING};
+    values['groupedPoint'] = {value: true, type: anychart.enums.TokenType.STRING};
+    values['names'] = {value: iterator.meta('names'), type: anychart.enums.TokenType.UNKNOWN};
+    values['values'] = {value: iterator.meta('values'), type: anychart.enums.TokenType.UNKNOWN};
+  }
+
+  this.pointProvider_.propagate(values);
+
   return this.pointProvider_;
 };
 

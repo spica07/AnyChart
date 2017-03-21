@@ -4,6 +4,7 @@ goog.require('anychart.animations.AnimationSerialQueue');
 goog.require('anychart.animations.PyramidFunnelAnimation');
 goog.require('anychart.animations.PyramidFunnelLabelAnimation');
 goog.require('anychart.color');
+goog.require('anychart.core.FormatContext');
 goog.require('anychart.core.Point');
 goog.require('anychart.core.SeparateChart');
 goog.require('anychart.core.reporting');
@@ -12,7 +13,6 @@ goog.require('anychart.core.ui.MarkersFactory');
 goog.require('anychart.core.ui.Tooltip');
 goog.require('anychart.core.utils.IInteractiveSeries');
 goog.require('anychart.core.utils.InteractivityState');
-goog.require('anychart.core.utils.PointContextProvider');
 goog.require('anychart.core.utils.TypedLayer');
 goog.require('anychart.data.Set');
 goog.require('anychart.enums');
@@ -207,7 +207,7 @@ anychart.core.PyramidFunnelBase = function(opt_data, opt_csvSettings) {
 
   /**
    * Chart point provider.
-   * @type {anychart.core.utils.PointContextProvider}
+   * @type {anychart.core.FormatContext}
    * @private
    */
   this.pointProvider_;
@@ -3595,15 +3595,28 @@ anychart.core.PyramidFunnelBase.prototype.calculate = function() {
 
 /**
  * Create chart label/tooltip format provider.
- * @param {boolean=} opt_force create context provider forcibly.
  * @return {Object} Object with info for labels/tooltip formatting.
  * @protected
  */
-anychart.core.PyramidFunnelBase.prototype.createFormatProvider = function(opt_force) {
-  if (!this.pointProvider_ || opt_force) {
-    this.pointProvider_ = new anychart.core.utils.PointContextProvider(this, ['x', 'value', 'name']);
-  }
-  this.pointProvider_.applyReferenceValues();
+anychart.core.PyramidFunnelBase.prototype.createFormatProvider = function() {
+  var iterator = this.getIterator();
+
+  if (!this.pointProvider_)
+    this.pointProvider_ = new anychart.core.FormatContext();
+
+  this.pointProvider_
+      .dataSource(iterator)
+      .statisticsSources([this.getPoint(iterator.getIndex()), this]);
+
+  var values = {
+    'x': {value: iterator.get('x'), type: anychart.enums.TokenType.STRING},
+    'value': {value: iterator.get('value'), type: anychart.enums.TokenType.NUMBER},
+    'name': {value: iterator.get('name'), type: anychart.enums.TokenType.STRING},
+    'index': {value: iterator.getIndex(), type: anychart.enums.TokenType.NUMBER},
+    'chart': {value: this, type: anychart.enums.TokenType.UNKNOWN}
+  };
+
+  this.pointProvider_.propagate(values);
 
   return this.pointProvider_;
 };

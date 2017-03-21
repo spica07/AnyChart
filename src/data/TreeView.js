@@ -1,5 +1,7 @@
 goog.provide('anychart.data.TreeView');
+
 goog.require('anychart.core.Base');
+goog.require('anychart.data.ITreeDataInfo');
 goog.require('anychart.data.Traverser');
 
 
@@ -344,6 +346,7 @@ anychart.data.TreeView.prototype.serializeWithoutMeta = function() {
  * @param {anychart.data.Tree.DataItem} dataItem Data item to map.
  * @param {?anychart.data.TreeView.DataItem} parentView Parent mapped data item or tree.
  * @constructor
+ * @implements {anychart.data.ITreeDataInfo}
  */
 anychart.data.TreeView.DataItem = function(treeView, dataItem, parentView) {
   /**
@@ -530,9 +533,7 @@ anychart.data.TreeView.DataItem.prototype.getChildAt = function(index) {
 
 
 /**
- * Gets value from data by path specified using mapping.
- * @param {...*} var_args - Arguments.
- * @return {*} - Value or undefined if path is invalid.
+ * @inheritDoc
  */
 anychart.data.TreeView.DataItem.prototype.get = function(var_args) {
   if (arguments.length) {
@@ -665,10 +666,7 @@ anychart.data.TreeView.DataItem.prototype.meta = function(key, opt_value) {
 
 
 /**
- * Gets value from meta by path specified.
- * Works totally the same way as get().
- * @param {...*} var_args - Arguments.
- * @return {*} - Value or undefined if path is invalid.
+ * @inheritDoc
  */
 anychart.data.TreeView.DataItem.prototype.getMeta = function(var_args) {
   if (arguments.length) {

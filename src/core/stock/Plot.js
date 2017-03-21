@@ -1,4 +1,6 @@
 goog.provide('anychart.core.stock.Plot');
+
+goog.require('anychart.core.FormatContext');
 goog.require('anychart.core.IPlot');
 goog.require('anychart.core.VisualBaseWithBounds');
 goog.require('anychart.core.annotations.PlotController');
@@ -10,7 +12,6 @@ goog.require('anychart.core.series.Stock');
 goog.require('anychart.core.stock.indicators');
 goog.require('anychart.core.ui.Background');
 goog.require('anychart.core.ui.Legend');
-goog.require('anychart.core.utils.GenericContextProvider');
 goog.require('anychart.enums');
 goog.require('anychart.palettes');
 goog.require('anychart.scales.Linear');
@@ -1616,18 +1617,15 @@ anychart.core.stock.Plot.prototype.getLegendAutoText = function(legendFormatter,
       formatter = anychart.core.utils.TokenParser.getInstance().getTextFormatter(formatter);
     if (goog.isFunction(formatter)) {
       var grouping = /** @type {anychart.core.stock.Grouping} */(this.chart_.grouping());
-      var context = new anychart.core.utils.GenericContextProvider({
-        'value': opt_titleValue,
-        'hoveredDate': opt_titleValue,
-        'dataIntervalUnit': grouping.getCurrentDataInterval()['unit'],
-        'dataIntervalUnitCount': grouping.getCurrentDataInterval()['count'],
-        'isGrouped': grouping.isGrouped()
-      }, {
-        'value': anychart.enums.TokenType.DATE_TIME,
-        'hoveredDate': anychart.enums.TokenType.DATE_TIME,
-        'dataIntervalUnit': anychart.enums.TokenType.STRING,
-        'dataIntervalUnitCount': anychart.enums.TokenType.STRING
-      });
+
+      var values = {
+        'value': {value: opt_titleValue, type: anychart.enums.TokenType.DATE_TIME},
+        'hoveredDate': {value: opt_titleValue, type: anychart.enums.TokenType.DATE_TIME},
+        'dataIntervalUnit': {value: grouping.getCurrentDataInterval()['unit'], type: anychart.enums.TokenType.STRING},
+        'dataIntervalUnitCount': {value: grouping.getCurrentDataInterval()['count'], type: anychart.enums.TokenType.STRING},
+        'isGrouped': {value: grouping.isGrouped()}
+      };
+      var context = (new anychart.core.FormatContext(values)).propagate();
       return formatter.call(context, context);
     }
   }
