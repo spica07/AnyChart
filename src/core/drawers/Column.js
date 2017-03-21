@@ -4,6 +4,7 @@ goog.require('anychart.core.drawers.Base');
 goog.require('anychart.enums');
 
 
+
 /**
  * Column drawer.
  * @param {anychart.core.series.Base} series
@@ -91,20 +92,15 @@ anychart.core.drawers.Column.prototype.drawPoint_ = function(point, shapes) {
 
   var thickness = acgraph.vector.getThickness(/** @type {acgraph.vector.Stroke} */(shapes['path'].stroke()));
 
-  if (this.crispEdges /*|| this.fullWidth*/) {
+  if (this.crispEdges) {
     leftX = anychart.utils.applyPixelShift(leftX, thickness);
     rightX = anychart.utils.applyPixelShift(rightX, thickness);
-  }
 
-  // if (this.fullWidth) {
-  //   var halfThickness = thickness / 2;
-  //   console.log(leftX, rightX, thickness, halfThickness);
-  //
-  //   leftX += halfThickness;
-  //   rightX -= halfThickness;
-  //   // zero -= this.isVertical ? -thicknessOffset : thicknessOffset;
-  //   // y += this.isVertical ? -thicknessOffset : thicknessOffset;
-  // }
+  } else if (this.fullWidth) {
+    var halfThickness = thickness / 2;
+    leftX += halfThickness;
+    rightX -= halfThickness;
+  }
 
   y = anychart.utils.applyPixelShift(y, thickness);
   zero = anychart.utils.applyPixelShift(zero, thickness);

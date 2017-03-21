@@ -2421,7 +2421,7 @@ goog.provide('anychart.themes.defaultTheme');
            */
           'fill': function() {
             var color = this['chart'].palette().itemAt(this['iterator'].currentIndex);
-            return returnSourceColor85(this, color);
+            return returnSourceColor85(/** @type {Object} */(this), color);
           },
           /**
            * @this {*}
@@ -2429,7 +2429,7 @@ goog.provide('anychart.themes.defaultTheme');
            */
           'hoverFill': function() {
             var color = this['chart'].palette().itemAt(this['iterator'].currentIndex);
-            return returnSourceColor65(this, color);
+            return returnSourceColor65(/** @type {Object} */(this), color);
           },
           /**
            * @this {*}
@@ -2437,7 +2437,7 @@ goog.provide('anychart.themes.defaultTheme');
            */
           'stroke': function() {
             var color = this['chart'].palette().itemAt(this['iterator'].currentIndex);
-            return returnStrokeSourceColor(this, color);
+            return returnStrokeSourceColor(/** @type {Object} */(this), color);
           }
         }
       }
