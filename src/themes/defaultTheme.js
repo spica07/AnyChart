@@ -180,7 +180,7 @@ goog.provide('anychart.themes.defaultTheme');
    * @return {*}
    */
   var returnSourceColor65 = function(context, opt_color) {
-    var color = opt_color ? opt_color : context['sourceColor'];
+    var color = opt_color ? opt_color : this['sourceColor'];
     return global['anychart']['color']['setOpacity'](color, 0.65, true);
   };
 
@@ -200,7 +200,7 @@ goog.provide('anychart.themes.defaultTheme');
    * @return {*}
    */
   var returnSourceColor85 = function(context, opt_color) {
-    var color = opt_color ? opt_color : context['sourceColor'];
+    var color = opt_color ? opt_color : this['sourceColor'];
     return global['anychart']['color']['setOpacity'](color, 0.85, true);
   };
 
@@ -229,7 +229,7 @@ goog.provide('anychart.themes.defaultTheme');
    * @return {*}
    */
   var returnStrokeSourceColor = function(context, opt_color) {
-    var color = opt_color ? opt_color : context['sourceColor'];
+    var color = opt_color ? opt_color : this['sourceColor'];
     return global['anychart']['color']['setThickness'](color, 1.5);
   };
 
