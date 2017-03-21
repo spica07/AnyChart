@@ -2066,7 +2066,7 @@ anychart.charts.Sparkline.prototype.getFinalLabel = function(usePointSettings) {
     }
 
     label.resetSettings();
-    label.currentLabelsFactory(this.labelsInternal_);
+    // label.currentLabelsFactory(this.labelsInternal_);
     label.setSettings(/** @type {Object} */(finalSettings));
     res = label;
   } else if (label) {

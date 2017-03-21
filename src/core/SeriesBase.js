@@ -1423,21 +1423,22 @@ anychart.core.SeriesBase.prototype.configureLabel = function(pointState, opt_res
 
   var selected = this.state.isStateContains(pointState, anychart.PointState.SELECT);
   var hovered = !selected && this.state.isStateContains(pointState, anychart.PointState.HOVER);
-  var isDraw, labelsFactory, pointLabel, stateLabel, labelEnabledState, stateLabelEnabledState;
+  var isDraw, labelsFactory, stateLabelsFactory, pointLabel, stateLabel, labelEnabledState, stateLabelEnabledState;
 
   pointLabel = iterator.get('label');
   labelEnabledState = pointLabel && goog.isDef(pointLabel['enabled']) ? pointLabel['enabled'] : null;
   if (selected) {
     stateLabel = iterator.get('selectLabel');
     stateLabelEnabledState = stateLabel && goog.isDef(stateLabel['enabled']) ? stateLabel['enabled'] : null;
-    labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(this.selectLabels());
+    stateLabelsFactory = labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(this.selectLabels());
   } else if (hovered) {
     stateLabel = iterator.get('hoverLabel');
     stateLabelEnabledState = stateLabel && goog.isDef(stateLabel['enabled']) ? stateLabel['enabled'] : null;
-    labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(this.hoverLabels());
+    stateLabelsFactory = labelsFactory = /** @type {anychart.core.ui.LabelsFactory} */(this.hoverLabels());
   } else {
     stateLabel = null;
     labelsFactory = this.labels_;
+    stateLabelsFactory = null;
   }
 
   if (selected || hovered) {
@@ -1470,7 +1471,7 @@ anychart.core.SeriesBase.prototype.configureLabel = function(pointState, opt_res
 
     if (opt_reset) {
       label.resetSettings();
-      label.currentLabelsFactory(labelsFactory);
+      label.currentLabelsFactory(stateLabelsFactory);
       label.setSettings(/** @type {Object} */(pointLabel), /** @type {Object} */(stateLabel));
     }
 

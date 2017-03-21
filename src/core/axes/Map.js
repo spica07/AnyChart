@@ -724,7 +724,7 @@ anychart.core.axes.Map.prototype.getOverlappedLabels_ = function() {
         var minorTickVal, minorRatio;
 
         var parentMinorLabels = this.parent().minorLabels();
-        var minorLabelsEnabledState = this.labels().enabled();
+        var minorLabelsEnabledState = this.minorLabels().enabled();
         var isMinorLabels = minorLabelsEnabledState == void 0 ? parentMinorLabels.enabled() : minorLabelsEnabledState;
 
         while (i < ticksArrLen || j < minorTicksArrLen) {
@@ -1582,6 +1582,7 @@ anychart.core.axes.Map.prototype.draw = function() {
     this.markConsistent(anychart.ConsistencyState.AXIS_LABELS);
   }
 
+  debugger;
   if (goog.isDef(ticksDrawer) || goog.isDef(minorTicksDrawer) || labelsEnabled || minorLabelsEnabled) {
     var i, j, overlappedLabels, needDrawLabels, needDrawMinorLabels;
 

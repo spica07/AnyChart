@@ -95,7 +95,9 @@ goog.inherits(anychart.core.ui.LabelsFactory, anychart.core.VisualBase);
  * Supported consistency states.
  * @type {number}
  */
-anychart.core.ui.LabelsFactory.prototype.SUPPORTED_SIGNALS = anychart.core.Text.prototype.SUPPORTED_SIGNALS;
+anychart.core.ui.LabelsFactory.prototype.SUPPORTED_SIGNALS =
+    anychart.core.VisualBase.prototype.SUPPORTED_SIGNALS |
+    anychart.Signal.BOUNDS_CHANGED;
 
 
 /**
@@ -103,7 +105,8 @@ anychart.core.ui.LabelsFactory.prototype.SUPPORTED_SIGNALS = anychart.core.Text.
  * @type {number}
  */
 anychart.core.ui.LabelsFactory.prototype.SUPPORTED_CONSISTENCY_STATES =
-    anychart.core.Text.prototype.SUPPORTED_CONSISTENCY_STATES |
+    anychart.core.VisualBase.prototype.SUPPORTED_CONSISTENCY_STATES |
+    anychart.ConsistencyState.APPEARANCE |
     anychart.ConsistencyState.LABELS_FACTORY_BACKGROUND |
     anychart.ConsistencyState.LABELS_FACTORY_HANDLERS |
     anychart.ConsistencyState.LABELS_FACTORY_CLIP |
@@ -1320,7 +1323,9 @@ goog.inherits(anychart.core.ui.LabelsFactory.Label, anychart.core.VisualBase);
  * Supported signals.
  * @type {number}
  */
-anychart.core.ui.LabelsFactory.Label.prototype.SUPPORTED_SIGNALS = anychart.core.Text.prototype.SUPPORTED_SIGNALS;
+anychart.core.ui.LabelsFactory.Label.prototype.SUPPORTED_SIGNALS =
+    anychart.core.VisualBase.prototype.SUPPORTED_SIGNALS |
+    anychart.Signal.BOUNDS_CHANGED;
 
 
 /**
@@ -1328,7 +1333,8 @@ anychart.core.ui.LabelsFactory.Label.prototype.SUPPORTED_SIGNALS = anychart.core
  * @type {number}
  */
 anychart.core.ui.LabelsFactory.Label.prototype.SUPPORTED_CONSISTENCY_STATES =
-    anychart.core.Text.prototype.SUPPORTED_CONSISTENCY_STATES |
+    anychart.core.VisualBase.prototype.SUPPORTED_CONSISTENCY_STATES |
+    anychart.ConsistencyState.APPEARANCE |
     anychart.ConsistencyState.LABELS_FACTORY_CLIP |
     anychart.ConsistencyState.LABELS_FACTORY_CONNECTOR;
 
