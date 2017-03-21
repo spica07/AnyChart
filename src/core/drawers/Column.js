@@ -98,7 +98,7 @@ anychart.core.drawers.Column.prototype.drawPoint_ = function(point, shapes) {
   y = anychart.utils.applyPixelShift(y, thickness);
   zero = anychart.utils.applyPixelShift(zero, thickness);
 
-  if(pointsPadding) {
+  if (pointsPadding) {
     // Adjust vertical padding depend on available space
     var height = Math.abs(zero - y);
     var vPadding = (height > pointsPadding * 2) ? pointsPadding : (height / 2 - 1);

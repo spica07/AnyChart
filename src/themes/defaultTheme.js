@@ -175,13 +175,12 @@ goog.provide('anychart.themes.defaultTheme');
 
 
   /**
-   * @param context {Object}
-   * @param opt_color {*}
-   * @this {*}
-   * @returns {*}
+   * @param {Object} context
+   * @param {*=} opt_color
+   * @return {*}
    */
   var returnSourceColor65 = function(context, opt_color) {
-    var color = opt_color ? opt_color : this['sourceColor'];
+    var color = opt_color ? opt_color : context['sourceColor'];
     return global['anychart']['color']['setOpacity'](color, 0.65, true);
   };
 
@@ -196,13 +195,12 @@ goog.provide('anychart.themes.defaultTheme');
 
 
   /**
-   * @param context {Object}
-   * @param opt_color {*}
-   * @this {*}
-   * @returns {*}
+   * @param {Object} context
+   * @param {*=} opt_color
+   * @return {*}
    */
   var returnSourceColor85 = function(context, opt_color) {
-    var color = opt_color ? opt_color : this['sourceColor'];
+    var color = opt_color ? opt_color : context['sourceColor'];
     return global['anychart']['color']['setOpacity'](color, 0.85, true);
   };
 
@@ -226,13 +224,12 @@ goog.provide('anychart.themes.defaultTheme');
 
 
   /**
-   * @param context {Object}
-   * @param opt_color {*}
-   * @this {*}
-   * @returns {*}
+   * @param {Object} context
+   * @param {*=} opt_color
+   * @return {*}
    */
   var returnStrokeSourceColor = function(context, opt_color) {
-    var color = opt_color ? opt_color : this['sourceColor'];
+    var color = opt_color ? opt_color : context['sourceColor'];
     return global['anychart']['color']['setThickness'](color, 1.5);
   };
 
@@ -2438,10 +2435,9 @@ goog.provide('anychart.themes.defaultTheme');
            * @this {*}
            * @return {*}
            */
-          'stroke': function(){
-              var color = this['chart'].palette().itemAt(this['iterator'].currentIndex);
-              return returnStrokeSourceColor(this, color);
-            //}
+          'stroke': function() {
+            var color = this['chart'].palette().itemAt(this['iterator'].currentIndex);
+            return returnStrokeSourceColor(this, color);
           }
         }
       }
