@@ -1007,7 +1007,7 @@ anychart.core.ui.LabelsFactory.prototype.getDimensionInternal = function(outerBo
   outerBounds.left = position.x;
   outerBounds.top = position.y;
 
-  return /** @type {anychart.math.Rect} */(outerBounds)
+  return /** @type {anychart.math.Rect} */(outerBounds);
 };
 
 
@@ -1491,7 +1491,7 @@ anychart.core.ui.LabelsFactory.Label.prototype.stateOrder = function(nameOrSet, 
  * @return {boolean} .
  */
 anychart.core.ui.LabelsFactory.Label.prototype.checkInvalidationState = function(state) {
-  return /** @type {boolean} */(this.iterateDrawingPlans_(function(state, settings) {
+  return /** @type {boolean} */(this.iterateDrawingPlans_(function(stateOrStateName, settings) {
     if (settings instanceof anychart.core.ui.LabelsFactory.Label || settings instanceof anychart.core.ui.LabelsFactory) {
       if (settings.hasInvalidationState(state))
         return true;
@@ -1974,6 +1974,7 @@ anychart.core.ui.LabelsFactory.Label.prototype.resetSettings = function() {
   this.states_ = {
     'pointNormal': this
   };
+  delete this.resolutionChainCache_;
   if (this.factory_) {
     this.states_['seriesNormal'] = this.factory_;
     this.states_['seriesNormalTheme'] = this.factory_.themeSettings;

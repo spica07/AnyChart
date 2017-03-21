@@ -2004,8 +2004,8 @@ anychart.core.series.Base.prototype.drawFactoryElement = function(seriesFactoryG
     chartStateFactory = (state == anychart.PointState.NORMAL || !chartFactoryGetters) ? null : chartFactoryGetters[state].call(this.chart);
 
     isDraw = goog.isNull(statePointOverrideEnabled) ? // has no state marker or null "enabled" in it ?
-        (!seriesStateFactory || goog.isNull(seriesStateFactory.enabled())) ? // has no state stateFactory or null "enabled" in it ?
-            (!chartStateFactory || goog.isNull(chartStateFactory.enabled())) ? // has no state stateFactory or null "enabled" in it ?
+        (!seriesStateFactory || goog.isNull(seriesStateFactory.enabled()) || !goog.isDef(seriesStateFactory.enabled())) ? // has no state stateFactory or null "enabled" in it ?
+            (!chartStateFactory || goog.isNull(chartStateFactory.enabled()) || !goog.isDef(chartStateFactory.enabled())) ? // has no state stateFactory or null "enabled" in it ?
                 goog.isNull(pointOverrideEnabled) ? // has no marker in point or null "enabled" in it ?
                     mainFactory.enabled() :
                     pointOverrideEnabled :
@@ -2271,7 +2271,6 @@ anychart.core.series.Base.prototype.selectLabels = function(opt_value) {
  */
 anychart.core.series.Base.prototype.labelsInvalidated_ = function(event) {
   if (event.hasSignal(anychart.Signal.NEEDS_REDRAW)) {
-    debugger;
     this.invalidate(anychart.ConsistencyState.SERIES_LABELS, anychart.Signal.NEEDS_REDRAW | anychart.Signal.NEED_UPDATE_OVERLAP);
   }
 };
@@ -2734,8 +2733,9 @@ anychart.core.series.Base.prototype.draw = function() {
       this.hasInvalidationState(
           anychart.ConsistencyState.SERIES_MARKERS |
           anychart.ConsistencyState.SERIES_LABELS |
-          anychart.ConsistencyState.SERIES_OUTLIERS))
+          anychart.ConsistencyState.SERIES_OUTLIERS)) {
     this.setAutoColor(this.autoSettings['color']);
+  }
 
   if (this.hasInvalidationState(anychart.ConsistencyState.SERIES_SHAPE_MANAGER)) {
     this.recreateShapeManager();

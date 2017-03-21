@@ -299,27 +299,27 @@ anychart.core.series.Map.prototype.getLabelsPosition = function(pointState) {
   var hoverPointLabel = hovered ? iterator.get('hoverLabel') : null;
   var selectPointLabel = selected ? iterator.get('selectLabel') : null;
 
-  var labelPosition = pointLabel && pointLabel['position'] ? pointLabel['position'] : null;
-  var labelHoverPosition = hoverPointLabel && hoverPointLabel['position'] ? hoverPointLabel['position'] : null;
-  var labelSelectPosition = selectPointLabel && selectPointLabel['position'] ? selectPointLabel['position'] : null;
+  var labelPosition = pointLabel && goog.isDef(pointLabel['position']) ? pointLabel['position'] : void 0;
+  var labelHoverPosition = hoverPointLabel && goog.isDef(hoverPointLabel['position']) ? hoverPointLabel['position'] : void 0;
+  var labelSelectPosition = selectPointLabel && goog.isDef(selectPointLabel['position']) ? selectPointLabel['position'] : void 0;
 
   return /** @type {string} */(hovered || selected ?
       hovered ?
-          labelHoverPosition ?
+          goog.isDef(labelHoverPosition) ?
               labelHoverPosition :
-              this.hoverLabels().getOption('position') ?
+              goog.isDef(this.hoverLabels().getOption('position')) ?
                   this.hoverLabels().getOption('position') :
-                  labelPosition ?
+                  goog.isDef(labelPosition) ?
                       labelPosition :
                       this.labels().getOption('position') :
-          labelSelectPosition ?
+          goog.isDef(labelSelectPosition) ?
               labelSelectPosition :
-              this.selectLabels().getOption('position') ?
+              goog.isDef(this.selectLabels().getOption('position')) ?
                   this.selectLabels().getOption('position') :
-                  labelPosition ?
+                  goog.isDef(labelPosition) ?
                       labelPosition :
                       this.labels().getOption('position') :
-      labelPosition ?
+      goog.isDef(labelPosition) ?
           labelPosition :
           this.labels().getOption('position'));
 };
