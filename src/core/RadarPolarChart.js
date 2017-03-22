@@ -665,7 +665,8 @@ anychart.core.RadarPolarChart.prototype.serializeAxis_ = function(item, scales, 
  */
 anychart.core.RadarPolarChart.prototype.serializeGrid_ = function(item, scales, scaleIds, axesIds) {
   var config = item.serialize();
-  this.serializeScale(config, 'scale', /** @type {anychart.scales.Base} */(item.scale()), scales, scaleIds);
+  this.serializeScale(config, 'scale', /** @type {anychart.scales.Base} */(item.xScale()), scales, scaleIds);
+  this.serializeScale(config, 'scale', /** @type {anychart.scales.Base} */(item.yScale()), scales, scaleIds);
   var axis = /** @type {anychart.core.axes.Linear} */(item.axis());
   if (axis) {
     var axisIndex = goog.array.indexOf(axesIds, goog.getUid(axis));

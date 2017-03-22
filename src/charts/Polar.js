@@ -35,14 +35,14 @@ goog.inherits(anychart.charts.Polar, anychart.core.RadarPolarChart);
 anychart.charts.Polar.prototype.seriesConfig = (function() {
   var res = {};
   var capabilities = (
-  anychart.core.series.Capabilities.ALLOW_INTERACTIVITY |
-  anychart.core.series.Capabilities.ALLOW_POINT_SETTINGS |
-  // anychart.core.series.Capabilities.ALLOW_ERROR |
-  anychart.core.series.Capabilities.SUPPORTS_MARKERS |
-  anychart.core.series.Capabilities.SUPPORTS_LABELS |
-  0);
+      anychart.core.series.Capabilities.ALLOW_INTERACTIVITY |
+      anychart.core.series.Capabilities.ALLOW_POINT_SETTINGS |
+      // anychart.core.series.Capabilities.ALLOW_ERROR |
+      anychart.core.series.Capabilities.SUPPORTS_MARKERS |
+      anychart.core.series.Capabilities.SUPPORTS_LABELS |
+      0);
   res[anychart.enums.CartesianSeriesType.AREA] = {
-    drawerType: anychart.enums.SeriesDrawerTypes.AREA,
+    drawerType: anychart.enums.SeriesDrawerTypes.POLAR_AREA,
     shapeManagerType: anychart.enums.ShapeManagerTypes.PER_SERIES,
     shapesConfig: [
       anychart.core.shapeManagers.pathFillConfig,
@@ -77,12 +77,12 @@ anychart.charts.Polar.prototype.seriesConfig = (function() {
     secondaryShapesConfig: null,
     postProcessor: null,
     capabilities: (
-    anychart.core.series.Capabilities.ALLOW_INTERACTIVITY |
-    anychart.core.series.Capabilities.ALLOW_POINT_SETTINGS |
-    // anychart.core.series.Capabilities.ALLOW_ERROR |
-    // anychart.core.series.Capabilities.SUPPORTS_MARKERS |
-    anychart.core.series.Capabilities.SUPPORTS_LABELS |
-    0),
+        anychart.core.series.Capabilities.ALLOW_INTERACTIVITY |
+        anychart.core.series.Capabilities.ALLOW_POINT_SETTINGS |
+        // anychart.core.series.Capabilities.ALLOW_ERROR |
+        // anychart.core.series.Capabilities.SUPPORTS_MARKERS |
+        anychart.core.series.Capabilities.SUPPORTS_LABELS |
+        0),
     anchoredPositionTop: 'value',
     anchoredPositionBottom: 'value'
   };

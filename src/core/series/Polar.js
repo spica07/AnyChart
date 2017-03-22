@@ -1,6 +1,6 @@
 goog.provide('anychart.core.series.Polar');
-goog.require('anychart.core.drawers.Area');
 goog.require('anychart.core.drawers.Marker');
+goog.require('anychart.core.drawers.PolarArea');
 goog.require('anychart.core.drawers.PolarLine');
 goog.require('anychart.core.series.Radar');
 

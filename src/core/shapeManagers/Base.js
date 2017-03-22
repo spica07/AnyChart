@@ -372,6 +372,7 @@ anychart.core.shapeManagers.Base.prototype.updateColors = function(state, opt_sh
  * Updates coloring for the passed shapes group.
  * @param {number} state
  * @param {Object.<string, acgraph.vector.Shape>} shapesGroup
+ * @private
  */
 anychart.core.shapeManagers.Base.prototype.updateColors_ = function(state, shapesGroup) {
   for (var name in shapesGroup) {

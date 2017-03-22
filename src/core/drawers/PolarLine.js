@@ -1,7 +1,9 @@
 goog.provide('anychart.core.drawers.PolarLine');
 goog.require('anychart.core.drawers');
-goog.require('anychart.core.drawers.Base');
-goog.require('anychart.enums');
+goog.require('anychart.core.drawers.Line');
+goog.require('anychart.math');
+goog.require('goog.math');
+
 
 
 /**
@@ -28,27 +30,27 @@ anychart.core.drawers.PolarLine.prototype.startDrawing = function(shapeManager) 
   var series = (/** @type {anychart.core.series.Polar} */(this.series));
   /**
    * @type {number}
-   * @private
+   * @protected
    */
   this.cx = series.cx;
   /**
    * @type {number}
-   * @private
+   * @protected
    */
   this.cy = series.cy;
   /**
    * @type {number}
-   * @private
+   * @protected
    */
   this.radius = series.radius;
   /**
    * @type {number}
-   * @private
+   * @protected
    */
   this.zeroAngle = goog.math.toRadians(goog.math.modulo((/** @type {number} */(series.getOption('startAngle'))) - 90, 360));
   /**
    * @type {boolean}
-   * @private
+   * @protected
    */
   this.counterClockwise = this.series.planIsXScaleInverted();
 };
@@ -65,13 +67,13 @@ anychart.core.drawers.PolarLine.prototype.drawFirstPoint = function(point, state
   if (isNaN(this.firstPointX)) {
     this.firstPointX = x;
     this.firstPointY = y;
-    this.firstPointXRatio_ = xRatio;
-    this.firstPointYRatio_ = yRatio;
+    this.firstPointXRatio = xRatio;
+    this.firstPointYRatio = yRatio;
   }
-  this.lastX_ = x;
-  this.lastY_ = y;
-  this.lastXRatio_ = xRatio;
-  this.lastYRatio_ = yRatio;
+  this.lastX = x;
+  this.lastY = y;
+  this.lastXRatio = xRatio;
+  this.lastYRatio = yRatio;
   this.suppressNextNewPath_ = true;
 };
 
@@ -89,7 +91,7 @@ anychart.core.drawers.PolarLine.prototype.drawSubsequentPoint = function(point, 
 /** @inheritDoc */
 anychart.core.drawers.PolarLine.prototype.additionalFinalize = function() {
   if (this.closed && !isNaN(this.firstPointX) && (this.connectMissing || this.prevPointDrawn && !this.firstPointMissing)) {
-    this.lineTo_(this.firstPointX, this.firstPointY, this.firstPointXRatio_, this.firstPointYRatio_);
+    this.lineTo_(this.firstPointX, this.firstPointY, this.firstPointXRatio, this.firstPointYRatio);
   }
 };
 
@@ -105,13 +107,13 @@ anychart.core.drawers.PolarLine.prototype.additionalFinalize = function() {
 anychart.core.drawers.PolarLine.prototype.lineTo_ = function(x, y, xRatio, yRatio) {
   var shapes = this.shapesManager.getShapesGroup(this.seriesState);
   var path = /** @type {acgraph.vector.Path} */(shapes['stroke']);
-  var params = anychart.math.getPolarLineParams(this.lastX_, this.lastY_, this.lastXRatio_, this.lastYRatio_,
+  var params = anychart.math.getPolarLineParams(this.lastX, this.lastY, this.lastXRatio, this.lastYRatio,
       x, y, xRatio, yRatio, this.cx, this.cy, this.radius, this.zeroAngle, this.counterClockwise);
   if (this.suppressNextNewPath_ && params.length)
     params[0] = 0;
   this.suppressNextNewPath_ = false;
-  var prevX = this.lastX_;
-  var prevY = this.lastY_;
+  var prevX = this.lastX;
+  var prevY = this.lastY;
   for (var i = 0; i < params.length; i += 7) {
     if (params[i]) {
       shapes = this.shapesManager.addShapesGroup(this.seriesState);
@@ -120,8 +122,8 @@ anychart.core.drawers.PolarLine.prototype.lineTo_ = function(x, y, xRatio, yRati
     }
     path.curveTo(params[i + 1], params[i + 2], params[i + 3], params[i + 4], prevX = params[i + 5], prevY = params[i + 6]);
   }
-  this.lastX_ = x;
-  this.lastY_ = y;
-  this.lastXRatio_ = xRatio;
-  this.lastYRatio_ = yRatio;
+  this.lastX = x;
+  this.lastY = y;
+  this.lastXRatio = xRatio;
+  this.lastYRatio = yRatio;
 };

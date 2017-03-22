@@ -7,6 +7,7 @@ goog.require('anychart.core.series.Radar');
 goog.require('anychart.enums');
 
 
+
 /**
  * Radar chart class.<br/>
  * To get the chart use method {@link anychart.radar}.<br/>
@@ -34,12 +35,12 @@ goog.inherits(anychart.charts.Radar, anychart.core.RadarPolarChart);
 anychart.charts.Radar.prototype.seriesConfig = (function() {
   var res = {};
   var capabilities = (
-  anychart.core.series.Capabilities.ALLOW_INTERACTIVITY |
-  anychart.core.series.Capabilities.ALLOW_POINT_SETTINGS |
-  // anychart.core.series.Capabilities.ALLOW_ERROR |
-  anychart.core.series.Capabilities.SUPPORTS_MARKERS |
-  anychart.core.series.Capabilities.SUPPORTS_LABELS |
-  0);
+      anychart.core.series.Capabilities.ALLOW_INTERACTIVITY |
+      anychart.core.series.Capabilities.ALLOW_POINT_SETTINGS |
+      // anychart.core.series.Capabilities.ALLOW_ERROR |
+      anychart.core.series.Capabilities.SUPPORTS_MARKERS |
+      anychart.core.series.Capabilities.SUPPORTS_LABELS |
+      0);
   res[anychart.enums.CartesianSeriesType.AREA] = {
     drawerType: anychart.enums.SeriesDrawerTypes.AREA,
     shapeManagerType: anychart.enums.ShapeManagerTypes.PER_SERIES,
@@ -76,12 +77,12 @@ anychart.charts.Radar.prototype.seriesConfig = (function() {
     secondaryShapesConfig: null,
     postProcessor: null,
     capabilities: (
-    anychart.core.series.Capabilities.ALLOW_INTERACTIVITY |
-    anychart.core.series.Capabilities.ALLOW_POINT_SETTINGS |
-    // anychart.core.series.Capabilities.ALLOW_ERROR |
-    // anychart.core.series.Capabilities.SUPPORTS_MARKERS |
-    anychart.core.series.Capabilities.SUPPORTS_LABELS |
-    0),
+        anychart.core.series.Capabilities.ALLOW_INTERACTIVITY |
+        anychart.core.series.Capabilities.ALLOW_POINT_SETTINGS |
+        // anychart.core.series.Capabilities.ALLOW_ERROR |
+        // anychart.core.series.Capabilities.SUPPORTS_MARKERS |
+        anychart.core.series.Capabilities.SUPPORTS_LABELS |
+        0),
     anchoredPositionTop: 'value',
     anchoredPositionBottom: 'value'
   };

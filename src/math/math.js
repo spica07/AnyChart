@@ -614,7 +614,6 @@ anychart.math.getPolarLineParams = function(fromX, fromY, fromXRatio, fromYRatio
 
 
 /**
- * 
  * @param {number} aX
  * @param {number} aY
  * @param {number} aXRatio
