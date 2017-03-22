@@ -635,10 +635,10 @@ anychart.core.settings.orientationNormalizer = function(val) {
 
 /**
  * Array normalizer for adjustFontSize.
+ * @param {Array.<boolean|Array.<boolean>|Object>} args
  * @return {Object}
  */
-anychart.core.settings.adjustFontSizeNormalizer = function() {
-  var args = arguments;
+anychart.core.settings.adjustFontSizeNormalizer = function(args) {
   var arg1 = args[0];
   if (args.length == 1) {
     if (goog.isArray(arg1)) {

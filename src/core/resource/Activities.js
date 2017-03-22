@@ -239,7 +239,7 @@ anychart.core.resource.Activities.prototype.drawLabel = function(index, state, f
           null));
 
   var isDraw = goog.isNull(statePointOverrideEnabled) ? // has no state marker or null "enabled" in it ?
-      (!stateFactory || goog.isNull(stateFactory.enabled())) ? // has no state stateFactory or null "enabled" in it ?
+      (!stateFactory || goog.isNull(stateFactory.enabled()) || !goog.isDef(stateFactory.enabled())) ? // has no state stateFactory or null "enabled" in it ?
           goog.isNull(pointOverrideEnabled) ? // has no marker in point or null "enabled" in it ?
               mainFactory.enabled() :
               pointOverrideEnabled :

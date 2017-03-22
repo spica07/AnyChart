@@ -4272,10 +4272,10 @@ anychart.charts.Map.prototype.drillDown_ = function(id, target) {
     newScene.colorRange(sourceColorRange.serialize());
 
     var colorRange = /** @type {anychart.core.ui.ColorRange} */(newScene.colorRange());
-    colorRange.labels()['textFormatter'](/** @type {Function|string} */(sourceColorRange.labels().getOption('textFormatter')));
-    colorRange.labels()['positionFormatter'](/** @type {Function} */(sourceColorRange.labels().getOption('positionFormatter')));
-    colorRange.minorLabels()['textFormatter'](/** @type {Function|string} */(sourceColorRange.minorLabels().getOption('textFormatter')));
-    colorRange.minorLabels()['positionFormatter'](/** @type {Function} */(sourceColorRange.minorLabels().getOption('positionFormatter')));
+    colorRange.labels()['textFormatter'](/** @type {Function|string} */(sourceColorRange.labels()['textFormatter']));
+    colorRange.labels()['positionFormatter'](/** @type {Function} */(sourceColorRange.labels()['positionFormatter']));
+    colorRange.minorLabels()['textFormatter'](/** @type {Function|string} */(sourceColorRange.minorLabels()['textFormatter']));
+    colorRange.minorLabels()['positionFormatter'](/** @type {Function} */(sourceColorRange.minorLabels()['positionFormatter']));
   }
 
   if (!mapDiff['legend']) {

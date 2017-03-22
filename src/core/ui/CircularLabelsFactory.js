@@ -215,8 +215,8 @@ anychart.core.ui.CircularLabelsFactory.Label.prototype.drawLabel = function(boun
   var radiusY = goog.isDef(formattedPosition['radiusY']) ? formattedPosition['radiusY'] : radius;
   var cx = 0;
   var cy = 0;
-  var factoryCx = this.getOption('cx');
-  var factoryCy = this.getOption('cy');
+  var factoryCx = factory.getOption('cx');
+  var factoryCy = factory.getOption('cy');
   var factorySweepAngle = /** @type {number} */(factory.getOption('sweepAngle'));
   var factoryParentRadius = /** @type {number} */(factory.getOption('parentRadius'));
 
