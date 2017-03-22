@@ -2002,11 +2002,15 @@ anychart.core.series.Base.prototype.drawFactoryElement = function(seriesFactoryG
     seriesStateFactory = (state == anychart.PointState.NORMAL) ? null : seriesFactoryGetters[state].call(this);
     chartStateFactory = (state == anychart.PointState.NORMAL || !chartFactoryGetters) ? null : chartFactoryGetters[state].call(this.chart);
 
+
+    debugger;
     isDraw = goog.isNull(statePointOverrideEnabled) ? // has no state marker or null "enabled" in it ?
         (!seriesStateFactory || goog.isNull(seriesStateFactory.enabled()) || !goog.isDef(seriesStateFactory.enabled())) ? // has no state stateFactory or null "enabled" in it ?
             (!chartStateFactory || goog.isNull(chartStateFactory.enabled()) || !goog.isDef(chartStateFactory.enabled())) ? // has no state stateFactory or null "enabled" in it ?
                 goog.isNull(pointOverrideEnabled) ? // has no marker in point or null "enabled" in it ?
-                    mainFactory.enabled() :
+                    goog.isNull(mainFactory.enabled()) || !goog.isDef(mainFactory.enabled()) ?
+                        chartNormalFactory.enabled() :
+                        mainFactory.enabled() :
                     pointOverrideEnabled :
                 chartStateFactory.enabled() :
             seriesStateFactory.enabled() :
@@ -2180,7 +2184,6 @@ anychart.core.series.Base.prototype.drawSingleFactoryElement = function(factory,
     element.state('seriesNormalTheme', factory.themeSettings);
     element.state('chartNormalTheme', chartNormalFactory ? chartNormalFactory.themeSettings : null);
 
-    debugger;
     var anchor = element.getFinalSettings('anchor');
     if (goog.isDef(opt_position) && formatProvider && anchor == anychart.enums.Anchor.AUTO) {
       this.resolveAutoAnchor(opt_position, element);

@@ -726,7 +726,7 @@ anychart.core.ChartWithSeries.prototype.hatchFillPaletteInvalidated_ = function(
 anychart.core.ChartWithSeries.prototype.labels = function(opt_value) {
   if (!this.labels_) {
     this.labels_ = new anychart.core.ui.LabelsFactory();
-    this.labels_.setParentEventTarget(this);
+    this.labels_.markConsistent(anychart.ConsistencyState.ALL);
     this.labels_.listenSignals(this.labelsInvalidated_, this);
   }
 
@@ -787,6 +787,7 @@ anychart.core.ChartWithSeries.prototype.selectLabels = function(opt_value) {
  */
 anychart.core.ChartWithSeries.prototype.labelsInvalidated_ = function(event) {
   if (event.hasSignal(anychart.Signal.NEEDS_REDRAW)) {
+    this.labels_.markConsistent(anychart.ConsistencyState.ALL);
     this.invalidateSeriesLabels();
     this.invalidate(anychart.ConsistencyState.SERIES_CHART_SERIES, anychart.Signal.NEEDS_REDRAW);
   }
@@ -1103,6 +1104,9 @@ anychart.core.ChartWithSeries.prototype.setupByJSON = function(config, opt_defau
   this.markerPalette(config['markerPalette']);
   this.hatchFillPalette(config['hatchFillPalette']);
   this.defaultSeriesSettings(config['defaultSeriesSettings']);
+  this.labels().setupByVal(config['labels'], opt_default);
+  this.hoverLabels().setupByVal(config['hoverLabels'], opt_default);
+  this.selectLabels().setupByVal(config['selectLabels'], opt_default);
 };
 
 
@@ -1119,6 +1123,16 @@ anychart.core.ChartWithSeries.prototype.serialize = function() {
   json['markerPalette'] = this.markerPalette().serialize();
   json['hatchFillPalette'] = this.hatchFillPalette().serialize();
 
+  json['labels'] = this.labels().serialize();
+  json['hoverLabels'] = this.hoverLabels().getChangedSettings();
+  json['selectLabels'] = this.selectLabels().getChangedSettings();
+  if (goog.isNull(json['hoverLabels']['enabled'])) {
+    delete json['hoverLabels']['enabled'];
+  }
+  if (goog.isNull(json['selectLabels']['enabled'])) {
+    delete json['selectLabels']['enabled'];
+  }
+
   return json;
 };
 
@@ -1132,10 +1146,21 @@ anychart.core.ChartWithSeries.prototype.disposeInternal = function() {
   goog.dispose(this.hatchFillPalette_);
   this.hatchFillPalette_ = null;
 
+  goog.disposeAll(this.labels_, this.hoverLabels_, this.selectLabels_);
+
   anychart.core.ChartWithSeries.base(this, 'disposeInternal');
 };
 
 
 //endregion
+
+//exports
+(function() {
+  var proto = anychart.core.ChartWithSeries.prototype;
+
+  proto['labels'] = proto.labels;
+  proto['hoverLabels'] = proto.hoverLabels;
+  proto['selectLabels'] = proto.selectLabels;
+})();
 
 

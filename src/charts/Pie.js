@@ -2850,8 +2850,6 @@ anychart.charts.Pie.prototype.drawLabel_ = function(pointState, opt_updateConnec
   var positionProvider = this.createPositionProvider();
   var formatProvider = this.createFormatProvider(true);
 
-  debugger;
-
   var isFitToSlice = true;
   if ((!hovered || (hovered && !this.forceHoverLabels_)) && !this.insideLabelsOverlap_) {
     var start = /** @type {number} */ (iterator.meta('start'));

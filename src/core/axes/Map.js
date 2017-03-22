@@ -1582,7 +1582,6 @@ anychart.core.axes.Map.prototype.draw = function() {
     this.markConsistent(anychart.ConsistencyState.AXIS_LABELS);
   }
 
-  debugger;
   if (goog.isDef(ticksDrawer) || goog.isDef(minorTicksDrawer) || labelsEnabled || minorLabelsEnabled) {
     var i, j, overlappedLabels, needDrawLabels, needDrawMinorLabels;
 

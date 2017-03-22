@@ -1137,20 +1137,6 @@ anychart.core.series.Map.prototype.drawSingleFactoryElement = function(factory, 
   element.resetSettings();
   if (formatProvider) {
     element.autoAnchor(/** @type {anychart.enums.Anchor} */(this.getIterator().meta('labelAnchor')));
-  } else {
-    var rotation = /** @type {number} */(element.getFinalSettings('rotation'));
-    if (!goog.isDef(rotation) || goog.isNull(rotation) || isNaN(rotation)) {
-      var autoRotation = {'rotation': /** @type {number} */(this.getIterator().meta('markerRotation'))};
-      element.setSettings(autoRotation, autoRotation);
-    }
-
-    var anchor = /** @type {anychart.enums.Anchor} */(element.getFinalSettings('anchor'));
-    if (!goog.isDef(anchor) || goog.isNull(anchor)) {
-      var autoAnchor = {'anchor': /** @type {anychart.enums.Anchor} */(this.getIterator().meta('markerAnchor'))};
-      element.setSettings(autoAnchor, autoAnchor);
-    }
-  }
-  if (formatProvider) {
     element.state('pointState', goog.isDef(statePointOverride) ? statePointOverride : null);
     element.state('seriesState', seriesStateFactory);
     element.state('chartState', chartStateFactory);
@@ -1165,6 +1151,17 @@ anychart.core.series.Map.prototype.drawSingleFactoryElement = function(factory, 
   } else {
     element.currentMarkersFactory(seriesStateFactory || factory);
     element.setSettings(/** @type {Object} */(pointOverride), /** @type {Object} */(statePointOverride));
+    var rotation = /** @type {number} */(element.getFinalSettings('rotation'));
+    if (!goog.isDef(rotation) || goog.isNull(rotation) || isNaN(rotation)) {
+      var autoRotation = {'rotation': /** @type {number} */(this.getIterator().meta('markerRotation'))};
+      element.setSettings(autoRotation, autoRotation);
+    }
+
+    var anchor = /** @type {anychart.enums.Anchor} */(element.getFinalSettings('anchor'));
+    if (!goog.isDef(anchor) || goog.isNull(anchor)) {
+      var autoAnchor = {'anchor': /** @type {anychart.enums.Anchor} */(this.getIterator().meta('markerAnchor'))};
+      element.setSettings(autoAnchor, autoAnchor);
+    }
   }
 
   element.draw();

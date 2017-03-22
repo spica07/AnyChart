@@ -587,6 +587,7 @@ anychart.themes.merging.mergingMap_ = [
       'defaultAxis.labels',
       'defaultAxis.minorLabels',
       'chart.defaultAnnotationSettings.base.labels',
+      'chart.labels',
       'chart.defaultSeriesSettings.base.labels',
       'pieFunnelPyramidBase.labels',
       'defaultTimeline.labels',

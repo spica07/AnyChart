@@ -1232,6 +1232,7 @@ goog.provide('anychart.themes.defaultTheme');
           'hoverHatchFill': null,
           'selectHatchFill': null,
           'labels': {
+            'enabled': null,
             'anchor': 'auto',
             'position': 'value'
           },
@@ -1668,7 +1669,10 @@ goog.provide('anychart.themes.defaultTheme');
           'offsetY': 0
         },
         'label': {}
-      }
+      },
+      'labels': {},
+      'hoverLabels': {},
+      'selectLabels': {}
     },
 
     'cartesianBase': {
@@ -2731,7 +2735,7 @@ goog.provide('anychart.themes.defaultTheme');
           'hatchFill': false,
           'labels': {
             'anchor': 'centerBottom',
-            'enabled': false,
+            'enabled': null,
             'adjustFontSize': {
               'width': true,
               'height': true
