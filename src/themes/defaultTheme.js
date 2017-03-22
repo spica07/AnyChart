@@ -1670,7 +1670,7 @@ goog.provide('anychart.themes.defaultTheme');
         },
         'label': {}
       },
-      'labels': {},
+      'labels': {'enabled': false},
       'hoverLabels': {'enabled': null},
       'selectLabels': {'enabled': null}
     },
