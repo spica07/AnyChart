@@ -112,8 +112,8 @@ anychart.core.drawers.Column.prototype.drawPoint_ = function(point, shapes) {
     // Adjust vertical padding depend on available space
     var height = Math.abs(zero - y);
     var vPadding = (height > pointsPadding * 2) ? pointsPadding : (height / 2 - 1);
-    zero -= vPadding;
-    y += vPadding;
+    zero -= this.isVertical ? -vPadding : vPadding;
+    y += this.isVertical ? -vPadding : vPadding;
   }
 
   var path = /** @type {acgraph.vector.Path} */(shapes['path']);
