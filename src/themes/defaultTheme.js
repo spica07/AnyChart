@@ -2373,7 +2373,22 @@ goog.provide('anychart.themes.defaultTheme');
       },
       'xAxis': {
         'scale': 0,
-        'zIndex': 25
+        'zIndex': 25,
+        'labels': {
+          'zIndex': 25
+        },
+        'minorLabels': {
+          'zIndex': 25
+        },
+        'ticks': {
+          'zIndex': 25
+        },
+        'minorTicks': {
+          'zIndex': 25
+        }
+      },
+      'yAxis': {
+        'scale': 1
       },
       'startAngle': 0,
       'grids': [{}, {'layout': 'circuit'}],
@@ -2397,7 +2412,8 @@ goog.provide('anychart.themes.defaultTheme');
       'defaultSeriesType': 'marker',
       'defaultSeriesSettings': {
         'base': {
-          'closed': true
+          'closed': true,
+          'clip': false
         },
         'area': {},
         'line': {},
@@ -2405,7 +2421,22 @@ goog.provide('anychart.themes.defaultTheme');
       },
       'xAxis': {
         'scale': 0,
-        'zIndex': 25
+        'zIndex': 25,
+        'labels': {
+          'zIndex': 25
+        },
+        'minorLabels': {
+          'zIndex': 25
+        },
+        'ticks': {
+          'zIndex': 25
+        },
+        'minorTicks': {
+          'zIndex': 25
+        }
+      },
+      'yAxis': {
+        'scale': 1
       },
       'startAngle': 0,
       'grids': [{}, {'layout': 'circuit'}],

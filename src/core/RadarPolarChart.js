@@ -600,6 +600,13 @@ anychart.core.RadarPolarChart.prototype.getSeriesStatus = function(event) {
 //
 //------------------------------------------------------------------------------
 /** @inheritDoc */
+anychart.core.RadarPolarChart.prototype.serialize = function() {
+  var json = anychart.core.RadarPolarChart.base(this, 'serialize');
+  return {'chart': json};
+};
+
+
+/** @inheritDoc */
 anychart.core.RadarPolarChart.prototype.setupByJSONWithScales = function(config, scalesInstances) {
   anychart.core.RadarPolarChart.base(this, 'setupByJSONWithScales', config, scalesInstances);
 
@@ -712,7 +719,6 @@ anychart.core.RadarPolarChart.prototype.serializeGrid_ = function(item, scales, 
   proto['markerPalette'] = proto.markerPalette;//doc|ex
   proto['hatchFillPalette'] = proto.hatchFillPalette;
   proto['startAngle'] = proto.startAngle;//doc|ex
-  proto['getType'] = proto.getType;
   proto['defaultSeriesType'] = proto.defaultSeriesType;
   proto['addSeries'] = proto.addSeries;
   proto['getSeriesAt'] = proto.getSeriesAt;
