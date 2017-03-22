@@ -2021,6 +2021,7 @@ anychart.core.ui.LabelsFactory.Label.prototype.resetSettings = function() {
   this.states_ = {
     'pointNormal': this
   };
+  this.drawingPlan_ = null;
   delete this.resolutionChainCache_;
   if (this.factory_) {
     this.states_['seriesNormal'] = this.factory_;
@@ -2328,12 +2329,8 @@ anychart.core.ui.LabelsFactory.Label.prototype.clear = function() {
 anychart.core.ui.LabelsFactory.Label.prototype.drawLabel = function(bounds, parentBounds) {
   var positionFormatter = this.mergedSettings['positionFormatter'];
   var anchor = anychart.enums.normalizeAnchor(this.mergedSettings['anchor']);
-  var isAutoAnchor = anchor === anychart.enums.Anchor.AUTO;
-  var isVertical = false;
-  if (isAutoAnchor) {
-    anchor = this.autoAnchor();
-    isVertical = this.autoVertical();
-  }
+  var isVertical = this.autoVertical();
+
   var offsetX = this.mergedSettings['offsetX'];
   var offsetY = this.mergedSettings['offsetY'];
 
@@ -2504,7 +2501,6 @@ anychart.core.ui.LabelsFactory.Label.prototype.draw = function() {
   }
 
   if (this.checkInvalidationState(anychart.ConsistencyState.APPEARANCE | anychart.ConsistencyState.BOUNDS)) {
-    debugger;
     this.dropMergedSettings();
     this.getMergedSettings();
     mergedSettings = this.mergedSettings;

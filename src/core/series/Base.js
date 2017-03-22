@@ -2167,9 +2167,6 @@ anychart.core.series.Base.prototype.drawSingleFactoryElement = function(factory,
       element = factory.add(positionProvider, index);
   }
   element.resetSettings();
-  if (goog.isDef(opt_position) && formatProvider) {
-    this.resolveAutoAnchor(opt_position, element);
-  }
   if (formatProvider) {
     element.state('pointState', goog.isDef(statePointOverride) ? statePointOverride : null);
     element.state('seriesState', seriesStateFactory);
@@ -2182,7 +2179,15 @@ anychart.core.series.Base.prototype.drawSingleFactoryElement = function(factory,
     element.state('auto', element.autoSettings);
     element.state('seriesNormalTheme', factory.themeSettings);
     element.state('chartNormalTheme', chartNormalFactory ? chartNormalFactory.themeSettings : null);
+
+    var anchor = element.getFinalSettings('anchor');
+    if (goog.isDef(opt_position) && formatProvider && anchor == anychart.enums.Anchor.AUTO) {
+      this.resolveAutoAnchor(opt_position, element);
+    }
   } else {
+    if (goog.isDef(opt_position) && formatProvider) {
+      this.resolveAutoAnchor(opt_position, element);
+    }
     element.currentMarkersFactory(seriesStateFactory || factory);
     element.setSettings(/** @type {Object} */(pointOverride), /** @type {Object} */(statePointOverride));
   }
