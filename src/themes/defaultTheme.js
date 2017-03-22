@@ -2398,7 +2398,12 @@ goog.provide('anychart.themes.defaultTheme');
       'xScale': 0,
       'yScale': 1,
       'leftCategoriesScale': 2,
-      'rightCategoriesScale': 3
+      'rightCategoriesScale': 3,
+      'defaultAnnotationSettings': {},
+      'annotations': {
+        'annotationsList': [],
+        'zIndex': 2000
+      }
     },
     // merge with marimekko
     'mosaic': {

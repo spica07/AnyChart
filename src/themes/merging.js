@@ -1323,7 +1323,28 @@ anychart.themes.merging.mergingMap_ = [
       'mosaic',
       'barmekko'
     ]
-  }
+  },
+  {
+    defaultObj: 'marimekko.defaultAnnotationSettings.base',
+    targets: [
+      'marimekko.defaultAnnotationSettings.ray',
+      'marimekko.defaultAnnotationSettings.line',
+      'marimekko.defaultAnnotationSettings.infiniteLine',
+      'marimekko.defaultAnnotationSettings.verticalLine',
+      'marimekko.defaultAnnotationSettings.horizontalLine',
+      'marimekko.defaultAnnotationSettings.rectangle',
+      'marimekko.defaultAnnotationSettings.ellipse',
+      'marimekko.defaultAnnotationSettings.triangle',
+      'marimekko.defaultAnnotationSettings.trendChannel',
+      'marimekko.defaultAnnotationSettings.andrewsPitchfork',
+      'marimekko.defaultAnnotationSettings.fibonacciFan',
+      'marimekko.defaultAnnotationSettings.fibonacciArc',
+      'marimekko.defaultAnnotationSettings.fibonacciRetracement',
+      'marimekko.defaultAnnotationSettings.fibonacciTimezones',
+      'marimekko.defaultAnnotationSettings.marker',
+      'marimekko.defaultAnnotationSettings.label'
+    ]
+  },
 ];
 
 
