@@ -262,10 +262,7 @@ anychart.charts.Mosaic.prototype.pointsPadding = function(opt_value) {
   if (goog.isDef(opt_value) && this.pointsPadding_ != opt_value) {
     opt_value = anychart.utils.toNumber(opt_value);
     this.pointsPadding_ = isNaN(opt_value) ? 0 : (opt_value >= 0 ? opt_value : -opt_value);
-
-    // todo: what ConsistencyState to use?
     this.invalidate(anychart.ConsistencyState.ALL, anychart.Signal.NEEDS_REDRAW);
-
     return this;
   }
   return this.pointsPadding_;

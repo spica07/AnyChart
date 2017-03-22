@@ -235,11 +235,13 @@ goog.provide('anychart.themes.defaultTheme');
 
 
   /**
-   * @this {*}
+   * @param {Object} context
+   * @param {*=} opt_color
    * @return {*}
    */
-  var returnStrokeSourceColor1 = function() {
-    return global['anychart']['color']['setThickness'](this['sourceColor'], 1);
+  var returnStrokeSourceColor1 = function(context, opt_color) {
+    var color = opt_color ? opt_color : this['sourceColor'];
+    return global['anychart']['color']['setThickness'](color, 1);
   };
 
 
@@ -2369,6 +2371,11 @@ goog.provide('anychart.themes.defaultTheme');
     // merge with chart
     'marimekko': {
       'defaultSeriesType': 'mosaic',
+      'defaultSeriesSettings': {
+        'mosaic': {
+          'stroke': returnStrokeSourceColor1
+        }
+      },
       'series': [],
       'xAxes': [{}],
       'yAxes': [{}],
@@ -2437,7 +2444,7 @@ goog.provide('anychart.themes.defaultTheme');
            */
           'stroke': function() {
             var color = this['chart'].palette().itemAt(this['iterator'].currentIndex);
-            return returnStrokeSourceColor(/** @type {Object} */(this), color);
+            return returnStrokeSourceColor1(/** @type {Object} */(this), color);
           }
         }
       }

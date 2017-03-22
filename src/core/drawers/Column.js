@@ -92,14 +92,17 @@ anychart.core.drawers.Column.prototype.drawPoint_ = function(point, shapes) {
 
   var thickness = acgraph.vector.getThickness(/** @type {acgraph.vector.Stroke} */(shapes['path'].stroke()));
 
-  if (this.crispEdges) {
-    leftX = anychart.utils.applyPixelShift(leftX, thickness);
-    rightX = anychart.utils.applyPixelShift(rightX, thickness);
-
-  } else if (this.fullWidth) {
+  if (this.fullWidth) {
     var halfThickness = thickness / 2;
     leftX += halfThickness;
     rightX -= halfThickness;
+    y += this.isVertical ? -halfThickness : halfThickness;
+    zero -= this.isVertical ? -halfThickness : halfThickness;
+  }
+
+  if (this.crispEdges || this.fullWidth) {
+    leftX = anychart.utils.applyPixelShift(leftX, thickness);
+    rightX = anychart.utils.applyPixelShift(rightX, thickness);
   }
 
   y = anychart.utils.applyPixelShift(y, thickness);
