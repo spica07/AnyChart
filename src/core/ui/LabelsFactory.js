@@ -2018,6 +2018,7 @@ anychart.core.ui.LabelsFactory.Label.prototype.resetSettings = function() {
   }
 
   this.ownSettings = {};
+  this.autoSettings = {};
   this.states_ = {
     'pointNormal': this
   };

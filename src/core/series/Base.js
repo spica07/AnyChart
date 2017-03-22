@@ -2180,6 +2180,7 @@ anychart.core.series.Base.prototype.drawSingleFactoryElement = function(factory,
     element.state('seriesNormalTheme', factory.themeSettings);
     element.state('chartNormalTheme', chartNormalFactory ? chartNormalFactory.themeSettings : null);
 
+    debugger;
     var anchor = element.getFinalSettings('anchor');
     if (goog.isDef(opt_position) && formatProvider && anchor == anychart.enums.Anchor.AUTO) {
       this.resolveAutoAnchor(opt_position, element);
