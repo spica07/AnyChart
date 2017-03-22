@@ -4675,6 +4675,7 @@
         "selectable": {"type": ["boolean", "null"]},
         "disablePointerEvents": {"type": ["boolean", "null"]},
         "useHtml": {"type": ["boolean", "null"]},
+        "textFormatter": {"type": "string"},
 
         "allowLeaveScreen": {"type": "boolean"}
       }

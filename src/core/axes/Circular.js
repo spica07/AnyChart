@@ -5,7 +5,6 @@ goog.require('anychart.core.FormatContext');
 goog.require('anychart.core.VisualBase');
 goog.require('anychart.core.axes.CircularTicks');
 goog.require('anychart.core.ui.CircularLabelsFactory');
-goog.require('anychart.core.utils.AxisLabelsContextProvider');
 goog.require('anychart.enums');
 goog.require('anychart.math.Rect');
 goog.require('anychart.scales.Base');
@@ -44,12 +43,6 @@ anychart.core.axes.Circular = function() {
    * @private
    */
   this.minorLabelsBoundsWithoutTransform_ = [];
-
-  /**
-   * @type {anychart.core.FormatContext}
-   * @private
-   */
-  this.formatProvider_ = null;
 
   /**
    * Constant to save space.
@@ -880,9 +873,6 @@ anychart.core.axes.Circular.prototype.getLabelBounds_ = function(index, isMajor)
  * @private
  */
 anychart.core.axes.Circular.prototype.getLabelsFormatProvider_ = function(index, value) {
-  if (!this.formatProvider_)
-    this.formatProvider_ = new anychart.core.FormatContext();
-
   var scale = this.scale();
 
   var values = {
@@ -895,7 +885,18 @@ anychart.core.axes.Circular.prototype.getLabelsFormatProvider_ = function(index,
     'scale': {value: scale, type: anychart.enums.TokenType.UNKNOWN}
   };
 
-  return this.formatProvider_.propagate(values);
+  var aliases = {};
+  aliases[anychart.enums.StringToken.AXIS_SCALE_MAX] = 'max';
+  aliases[anychart.enums.StringToken.AXIS_SCALE_MIN] = 'max';
+
+  var tokenCustomValues = {};
+  tokenCustomValues[anychart.enums.StringToken.AXIS_NAME] = {value: this.title().text(), type: anychart.enums.TokenType.STRING};
+
+  var context = new anychart.core.FormatContext(values);
+  context.tokenAliases(aliases);
+  context.tokenCustomValues(tokenCustomValues);
+
+  return context.propagate();
 };
 
 

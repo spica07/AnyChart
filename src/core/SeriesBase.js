@@ -2,6 +2,7 @@ goog.provide('anychart.core.SeriesBase');
 goog.require('acgraph');
 goog.require('anychart.color');
 goog.require('anychart.core.BubblePoint');
+goog.require('anychart.core.FormatContext');
 goog.require('anychart.core.SeriesPoint');
 goog.require('anychart.core.VisualBaseWithBounds');
 goog.require('anychart.core.reporting');
@@ -9,7 +10,6 @@ goog.require('anychart.core.ui.LabelsFactory');
 goog.require('anychart.core.ui.Tooltip');
 goog.require('anychart.core.utils.IInteractiveSeries');
 goog.require('anychart.core.utils.InteractivityState');
-goog.require('anychart.core.utils.LegendContextProvider');
 goog.require('anychart.core.utils.LegendItemSettings');
 goog.require('anychart.core.utils.SeriesA11y');
 goog.require('anychart.data');
@@ -668,13 +668,21 @@ anychart.core.SeriesBase.prototype.tooltip = function(opt_value) {
 //----------------------------------------------------------------------------------------------------------------------
 /**
  * Creates context provider for legend items text formatter function.
- * @return {anychart.core.utils.LegendContextProvider} Legend context provider.
+ * @return {anychart.core.FormatContext} Legend context provider.
  * @protected
  */
 anychart.core.SeriesBase.prototype.createLegendContextProvider = function() {
-  if (!this.legendProvider_)
-    this.legendProvider_ = new anychart.core.utils.LegendContextProvider(this);
-  return this.legendProvider_;
+  if (!this.legendProvider_) {
+    this.legendProvider_ = new anychart.core.FormatContext();
+
+    var statisticsSources = [this];
+    if (this.chart)
+      statisticsSources.push(this.chart);
+
+    this.legendProvider_.statisticsSources(statisticsSources);
+  }
+
+  return this.legendProvider_; //nothing to propagate().
 };
 
 

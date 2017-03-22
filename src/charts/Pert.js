@@ -1,11 +1,11 @@
 goog.provide('anychart.charts.Pert');
 
+goog.require('anychart.core.FormatContext');
 goog.require('anychart.core.SeparateChart');
 goog.require('anychart.core.pert.CriticalPath');
 goog.require('anychart.core.pert.Milestones');
 goog.require('anychart.core.pert.Tasks');
 goog.require('anychart.core.ui.Tooltip');
-goog.require('anychart.core.utils.PertPointContextProvider');
 goog.require('anychart.core.utils.TypedLayer');
 goog.require('anychart.data.Tree');
 goog.require('goog.array');
@@ -68,7 +68,7 @@ anychart.charts.Pert = function() {
 
   /**
    * Format provider.
-   * @private {anychart.core.utils.PertPointContextProvider}
+   * @private {anychart.core.FormatContext}
    */
   this.formatProvider_ = null;
 
@@ -440,16 +440,64 @@ anychart.charts.Pert.prototype.usesTreeData = function() {
  * @param {anychart.charts.Pert.Work=} opt_work - Work data.
  * @param {anychart.charts.Pert.ActivityData=} opt_activityData - Activity data.
  * @param {anychart.charts.Pert.Milestone=} opt_milestone - Milestone data.
- * @return {anychart.core.utils.PertPointContextProvider} - Format provider.
+ * @return {anychart.core.FormatContext} - Format provider.
  */
 anychart.charts.Pert.prototype.createFormatProvider = function(opt_force, opt_work, opt_activityData, opt_milestone) {
   if (!this.formatProvider_ || opt_force)
-    this.formatProvider_ = new anychart.core.utils.PertPointContextProvider(this);
-  this.formatProvider_.work = opt_work;
-  this.formatProvider_.activityData = opt_activityData;
-  this.formatProvider_.milestone = opt_milestone;
-  this.formatProvider_.applyReferenceValues();
-  return this.formatProvider_;
+    this.formatProvider_ = new anychart.core.FormatContext();
+
+  var values = {};
+
+  if (opt_work) {
+    values['item'] = {value: opt_work.item, type: anychart.enums.TokenType.UNKNOWN};
+    values[anychart.enums.DataField.NAME] = {value: opt_work.item.get(anychart.enums.DataField.NAME), type: anychart.enums.TokenType.STRING};
+
+    var pessimistic = opt_work.item.get(anychart.enums.DataField.PESSIMISTIC);
+    if (goog.isDef(pessimistic))
+      values[anychart.enums.DataField.PESSIMISTIC] = {value: +pessimistic, type: anychart.enums.TokenType.NUMBER};
+
+    var optimistic = opt_work.item.get(anychart.enums.DataField.OPTIMISTIC);
+    if (goog.isDef(optimistic))
+      values[anychart.enums.DataField.OPTIMISTIC] = {value: +optimistic, type: anychart.enums.TokenType.NUMBER};
+
+    var mostLikely = opt_work.item.get(anychart.enums.DataField.MOST_LIKELY);
+    if (goog.isDef(mostLikely))
+      values[anychart.enums.DataField.MOST_LIKELY] = {value: +mostLikely, type: anychart.enums.TokenType.NUMBER};
+
+    var duration = opt_work.item.get(anychart.enums.DataField.DURATION);
+    if (goog.isDef(duration))
+      values[anychart.enums.DataField.DURATION] = {value: +duration, type: anychart.enums.TokenType.NUMBER};
+
+    values['successors'] = {value: opt_work.successors, type: anychart.enums.TokenType.UNKNOWN};
+    values['predecessors'] = {value: opt_work.predecessors, type: anychart.enums.TokenType.UNKNOWN};
+  }
+
+  if (opt_activityData) {
+    values['earliestStart'] = {value: opt_activityData.earliestStart, type: anychart.enums.TokenType.NUMBER};
+    values['earliestFinish'] = {value: opt_activityData.earliestFinish, type: anychart.enums.TokenType.NUMBER};
+    values['latestStart'] = {value: opt_activityData.latestStart, type: anychart.enums.TokenType.NUMBER};
+    values['latestFinish'] = {value: opt_activityData.latestFinish, type: anychart.enums.TokenType.NUMBER};
+    if (!goog.isDef(this[anychart.enums.DataField.DURATION]))
+      values[anychart.enums.DataField.DURATION] = {value: opt_activityData.duration, type: anychart.enums.TokenType.NUMBER};
+    values['slack'] = {value: opt_activityData.slack, type: anychart.enums.TokenType.NUMBER};
+    values['variance'] = {value: opt_activityData.variance, type: anychart.enums.TokenType.NUMBER};
+  }
+
+  if (opt_milestone) {
+    values['successors'] = {value: opt_milestone.successors, type: anychart.enums.TokenType.UNKNOWN};
+    values['predecessors'] = {value: opt_milestone.predecessors, type: anychart.enums.TokenType.UNKNOWN};
+    values['isCritical'] = {value: opt_milestone.isCritical, type: anychart.enums.TokenType.STRING};
+    if (opt_milestone.creator)
+      values['creator'] = {value: opt_milestone.creator.item, type: anychart.enums.TokenType.UNKNOWN};
+    values['isStart'] = {value: opt_milestone.isStart, type: anychart.enums.TokenType.STRING};
+    values['index'] = {value: opt_milestone.index, type: anychart.enums.TokenType.NUMBER};
+  }
+
+  this.formatProvider_
+      .dataSource(values['item'])
+      .statisticsSources([this]);
+
+  return /** @type {anychart.core.FormatContext} */ (this.formatProvider_.propagate(values));
 };
 //endregion
 

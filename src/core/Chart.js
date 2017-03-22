@@ -7,6 +7,7 @@ goog.provide('anychart.core.Chart');
 
 goog.require('acgraph');
 goog.require('anychart.compatibility');
+goog.require('anychart.core.FormatContext');
 goog.require('anychart.core.VisualBaseWithBounds');
 goog.require('anychart.core.reporting');
 goog.require('anychart.core.ui.Background');
@@ -17,7 +18,6 @@ goog.require('anychart.core.ui.Title');
 goog.require('anychart.core.ui.Tooltip');
 goog.require('anychart.core.utils.Animation');
 goog.require('anychart.core.utils.ChartA11y');
-goog.require('anychart.core.utils.ChartContextProvider');
 goog.require('anychart.core.utils.Interactivity');
 goog.require('anychart.core.utils.InteractivityState');
 goog.require('anychart.core.utils.Margin');
@@ -108,7 +108,7 @@ anychart.core.Chart = function() {
 
   /**
    * Chart context provider.
-   * @type {anychart.core.utils.ChartContextProvider}
+   * @type {anychart.core.FormatContext}
    * @private
    */
   this.chartContextProvider_ = null;
@@ -1168,13 +1168,21 @@ anychart.core.Chart.prototype.doAnimation = goog.nullFunction;
 //----------------------------------------------------------------------------------------------------------------------
 /**
  * Creates tooltip context provider.
- * @return {!anychart.core.utils.ChartContextProvider}
+ * @return {anychart.core.FormatContext}
  */
 anychart.core.Chart.prototype.createChartContextProvider = function() {
   if (!this.chartContextProvider_) {
-    this.chartContextProvider_ = new anychart.core.utils.ChartContextProvider(this);
+    this.chartContextProvider_ = new anychart.core.FormatContext();
   }
-  return this.chartContextProvider_;
+
+  var values = {
+    'chart': {value: this, type: anychart.enums.TokenType.UNKNOWN}
+  };
+
+  this.chartContextProvider_
+      .statisticsSources([this]);
+
+  return /** @type {anychart.core.FormatContext} */ (this.chartContextProvider_.propagate(values));
 };
 
 

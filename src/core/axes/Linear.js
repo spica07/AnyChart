@@ -8,7 +8,6 @@ goog.require('anychart.core.axes.Ticks');
 goog.require('anychart.core.reporting');
 goog.require('anychart.core.ui.LabelsFactory');
 goog.require('anychart.core.ui.Title');
-goog.require('anychart.core.utils.AxisLabelsContextProvider');
 goog.require('anychart.core.utils.Padding');
 goog.require('anychart.enums');
 goog.require('anychart.math.Rect');
@@ -42,13 +41,6 @@ anychart.core.axes.Linear = function() {
    * @protected
    */
   this.line;
-
-  /**
-   *
-   * @type {anychart.core.FormatContext}
-   * @private
-   */
-  this.formatProvider_ = null;
 
   /**
    * Constant to save space.
@@ -1639,9 +1631,6 @@ anychart.core.axes.Linear.prototype.drawLine = function() {
  * @protected
  */
 anychart.core.axes.Linear.prototype.getLabelsFormatProvider = function(index, value) {
-  if (!this.formatProvider_)
-    this.formatProvider_ = new anychart.core.FormatContext();
-
   var scale = this.scale();
 
   var labelText, labelValue;
@@ -1661,8 +1650,8 @@ anychart.core.axes.Linear.prototype.getLabelsFormatProvider = function(index, va
   var values = {
     'axis': {value: this, type: anychart.enums.TokenType.UNKNOWN},
     'index': {value: index, type: anychart.enums.TokenType.NUMBER},
-    'value': {value: parseFloat(value), type: anychart.enums.TokenType.NUMBER},
-    'tickValue': {value: parseFloat(value), type: anychart.enums.TokenType.NUMBER},
+    'value': {value: labelText, type: anychart.enums.TokenType.NUMBER},
+    'tickValue': {value: labelValue, type: anychart.enums.TokenType.NUMBER},
     'scale': {value: scale, type: anychart.enums.TokenType.UNKNOWN}
   };
   
@@ -1670,8 +1659,19 @@ anychart.core.axes.Linear.prototype.getLabelsFormatProvider = function(index, va
     values['min'] = {value: goog.isDef(scale.max) ? scale.max : null, type: anychart.enums.TokenType.NUMBER};
     values['max'] = {value: goog.isDef(scale.min) ? scale.min : null, type: anychart.enums.TokenType.NUMBER};
   }
+
+  var aliases = {};
+  aliases[anychart.enums.StringToken.AXIS_SCALE_MAX] = 'max';
+  aliases[anychart.enums.StringToken.AXIS_SCALE_MIN] = 'max';
+
+  var tokenCustomValues = {};
+  tokenCustomValues[anychart.enums.StringToken.AXIS_NAME] = {value: this.title().text(), type: anychart.enums.TokenType.STRING};
+
+  var context = new anychart.core.FormatContext(values);
+  context.tokenAliases(aliases);
+  context.tokenCustomValues(tokenCustomValues);
   
-  return this.formatProvider_.propagate(values);
+  return context.propagate();
 };
 
 

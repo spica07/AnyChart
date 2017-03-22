@@ -226,9 +226,13 @@ anychart.core.contexts.FormatContext.prototype.getTokenValueInternal = function(
 
   var aliasName = (name in this.storage_.tokenAliases) ? this.storage_.tokenAliases[name] : statName;
 
-  var valueSource = this.storage_.values[origName] || this.storage_.tokenCustomValues[origName] ||
-      this.storage_.values[aliasName] || this.storage_.tokenCustomValues[aliasName] ||
-      this.storage_.values[statName] || this.storage_.tokenCustomValues[statName];
+  // var valueSource = this.storage_.values[origName] || this.storage_.tokenCustomValues[origName] ||
+  //     this.storage_.values[aliasName] || this.storage_.tokenCustomValues[aliasName] ||
+  //     this.storage_.values[statName] || this.storage_.tokenCustomValues[statName];
+
+  var valueSource = this.storage_.tokenCustomValues[aliasName] || this.storage_.values[aliasName] ||
+      this.storage_.tokenCustomValues[origName] || this.storage_.values[origName] ||
+      this.storage_.tokenCustomValues[statName] || this.storage_.values[statName];
 
   return valueSource ? valueSource.value : this.getStat(statName);
 };
@@ -244,9 +248,13 @@ anychart.core.contexts.FormatContext.prototype.getTokenTypeInternal = function(n
   var statName = origName.charAt(0).toLowerCase() + origName.slice(1);
   var aliasName = (name in this.storage_.tokenAliases) ? this.storage_.tokenAliases[name] : statName;
 
-  var typeSource = this.storage_.values[origName] || this.storage_.tokenCustomValues[origName] ||
-      this.storage_.values[aliasName] || this.storage_.tokenCustomValues[aliasName] ||
-      this.storage_.values[statName] || this.storage_.tokenCustomValues[statName];
+  // var typeSource = this.storage_.values[origName] || this.storage_.tokenCustomValues[origName] ||
+  //     this.storage_.values[aliasName] || this.storage_.tokenCustomValues[aliasName] ||
+  //     this.storage_.values[statName] || this.storage_.tokenCustomValues[statName];
+
+  var valueSource = this.storage_.tokenCustomValues[aliasName] || this.storage_.values[aliasName] ||
+      this.storage_.tokenCustomValues[origName] || this.storage_.values[origName] ||
+      this.storage_.tokenCustomValues[statName] || this.storage_.values[statName];
 
   var type = typeSource && goog.isDef(typeSource.type) ? typeSource.type : anychart.enums.TokenType.STRING;
 

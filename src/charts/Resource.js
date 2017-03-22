@@ -1,5 +1,6 @@
 goog.provide('anychart.charts.Resource');
 goog.require('anychart.core.Chart');
+goog.require('anychart.core.FormatContext');
 goog.require('anychart.core.resource.Activities');
 goog.require('anychart.core.resource.Conflicts');
 goog.require('anychart.core.resource.Grid');
@@ -12,7 +13,6 @@ goog.require('anychart.core.ui.Scroller');
 goog.require('anychart.core.utils.IInteractiveSeries');
 goog.require('anychart.core.utils.InteractivityState');
 goog.require('anychart.core.utils.Padding');
-goog.require('anychart.core.utils.ResourceChartContextProvider');
 goog.require('anychart.core.utils.TypedLayer');
 goog.require('anychart.data');
 goog.require('anychart.data.Iterator');
@@ -1933,19 +1933,62 @@ anychart.charts.Resource.prototype.useUnionTooltipAsSingle = function() {
 
 /**
  * Creates tooltip context provider.
- * @return {!anychart.core.utils.ResourceChartContextProvider}
+ * @return {anychart.core.FormatContext}
  */
 anychart.charts.Resource.prototype.createTooltipContextProvider = function() {
   if (!this.tooltipContext) {
     /**
      * Tooltip context cache.
-     * @type {anychart.core.utils.ResourceChartContextProvider}
+     * @type {anychart.core.FormatContext}
      * @protected
      */
-    this.tooltipContext = new anychart.core.utils.ResourceChartContextProvider(this);
+    this.tooltipContext = anychart.core.FormatContext();
   }
-  this.tooltipContext.applyReferenceValues();
-  return this.tooltipContext;
+
+  var iter = this.getIterator();
+  var resourceIndex = iter.getResourceIndex();
+  var activityIndex = iter.getActivityIndex();
+  var resource = this.getResource(resourceIndex);
+  var activity = resource.getActivity(activityIndex);
+  var iterator = this.getDataIterator();
+  iterator.select(resourceIndex);
+  var start = Infinity;
+  var end = -Infinity;
+  var intervals = [];
+  for (var i = 0; i < activity.intervals.length; i++) {
+    var interval = activity.intervals[i];
+    start = Math.min(start, interval.start);
+    end = Math.max(end, interval.end);
+    intervals.push({
+      'start': interval.start,
+      'end': interval.end,
+      'minutesPerDay': interval.minutesPerDay
+    });
+  }
+
+  var values = {
+    'chart': {value: this, type: anychart.enums.TokenType.UNKNOWN},
+    'resourceIndex': {value: resourceIndex, type: anychart.enums.TokenType.NUMBER},
+    'activityIndex': {value: activityIndex, type: anychart.enums.TokenType.NUMBER},
+    'activity': {value: activity.data, type: anychart.enums.TokenType.UNKNOWN},
+    'name': {value: activity.data['name'], type: anychart.enums.TokenType.STRING},
+    'intervals': {value: intervals, type: anychart.enums.TokenType.UNKNOWN},
+    'start': {value: start, type: anychart.enums.TokenType.NUMBER},
+    'end': {value: end, type: anychart.enums.TokenType.NUMBER},
+    'minutesPerDay': {value: (intervals.length == 1) ? intervals[0]['minutesPerDay'] : NaN, type: anychart.enums.TokenType.NUMBER},
+  };
+
+  var tokenCustomValues = {
+    '%start': {value: new Date(start), type: anychart.enums.TokenType.DATE_TIME},
+    '%end': {value: new Date(end), type: anychart.enums.TokenType.DATE_TIME}
+  };
+
+  this.tooltipContext
+      .statisticsSources([this])
+      .dataSource(iterator)
+      .tokenCustomValues(tokenCustomValues);
+
+  return /** @type {anychart.core.FormatContext} */ (this.tooltipContext.propagate(values));
 };
 
 

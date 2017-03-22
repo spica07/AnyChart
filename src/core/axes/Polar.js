@@ -1,12 +1,12 @@
 goog.provide('anychart.core.axes.Polar');
 goog.require('acgraph');
 goog.require('anychart.color');
+goog.require('anychart.core.FormatContext');
 goog.require('anychart.core.IStandaloneBackend');
 goog.require('anychart.core.VisualBase');
 goog.require('anychart.core.axes.RadialTicks');
 goog.require('anychart.core.reporting');
 goog.require('anychart.core.ui.LabelsFactory');
-goog.require('anychart.core.utils.AxisLabelsContextProvider');
 goog.require('anychart.core.utils.Bounds');
 goog.require('anychart.enums');
 goog.require('anychart.math.Rect');
@@ -953,7 +953,40 @@ anychart.core.axes.Polar.prototype.getLabelBounds_ = function(index, isMajor) {
  * @private
  */
 anychart.core.axes.Polar.prototype.getLabelsFormatProvider_ = function(index, value) {
-  return new anychart.core.utils.AxisLabelsContextProvider(this, index, value);
+  var scale = this.scale();
+
+  var labelText, labelValue;
+
+  if (scale instanceof anychart.scales.DateTime) {
+    labelText = anychart.format.date(/** @type {number} */(value));
+    labelValue = value;
+  } else {
+    labelText = parseFloat(value);
+    labelValue = parseFloat(value);
+  }
+
+  var values = {
+    'axis': {value: this, type: anychart.enums.TokenType.UNKNOWN},
+    'index': {value: index, type: anychart.enums.TokenType.NUMBER},
+    'value': {value: labelText, type: anychart.enums.TokenType.NUMBER},
+    'tickValue': {value: labelValue, type: anychart.enums.TokenType.NUMBER},
+    'min': {value: goog.isDef(scale.max) ? scale.max : null, type: anychart.enums.TokenType.NUMBER},
+    'max': {value: goog.isDef(scale.min) ? scale.min : null, type: anychart.enums.TokenType.NUMBER},
+    'scale': {value: scale, type: anychart.enums.TokenType.UNKNOWN}
+  };
+
+  var aliases = {};
+  aliases[anychart.enums.StringToken.AXIS_SCALE_MAX] = 'max';
+  aliases[anychart.enums.StringToken.AXIS_SCALE_MIN] = 'max';
+
+  var tokenCustomValues = {};
+  tokenCustomValues[anychart.enums.StringToken.AXIS_NAME] = {value: this.title().text(), type: anychart.enums.TokenType.STRING};
+
+  var context = new anychart.core.FormatContext(values);
+  context.tokenAliases(aliases);
+  context.tokenCustomValues(tokenCustomValues);
+
+  return context.propagate();
 };
 
 

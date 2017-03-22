@@ -1,6 +1,7 @@
 goog.provide('anychart.core.series.Base');
 goog.require('acgraph');
 goog.require('anychart.color');
+goog.require('anychart.core.FormatContext');
 goog.require('anychart.core.IChart');
 goog.require('anychart.core.IPlot');
 goog.require('anychart.core.VisualBaseWithBounds');
@@ -18,11 +19,9 @@ goog.require('anychart.core.ui.Tooltip');
 goog.require('anychart.core.utils.Error');
 goog.require('anychart.core.utils.ISeriesWithError');
 goog.require('anychart.core.utils.InteractivityState');
-goog.require('anychart.core.utils.LegendContextProvider');
 goog.require('anychart.core.utils.LegendItemSettings');
 goog.require('anychart.core.utils.Padding');
 goog.require('anychart.core.utils.SeriesA11y');
-goog.require('anychart.core.utils.SeriesPointContextProvider');
 goog.require('anychart.core.utils.TokenParser');
 goog.require('anychart.enums');
 goog.require('anychart.math.Rect');
@@ -2897,7 +2896,6 @@ anychart.core.series.Base.prototype.draw = function() {
   }
 
   if (this.hasInvalidationState(anychart.ConsistencyState.A11Y)) {
-    //SeriesPointContextProvider is pretty suitable in this case.
     this.a11y().applyA11y(this.createTooltipContextProvider());
     this.markConsistent(anychart.ConsistencyState.A11Y);
   }
@@ -3297,15 +3295,21 @@ anychart.core.series.Base.prototype.makeMissing = function(rowInfo, yNames) {
  * @protected
  */
 anychart.core.series.Base.prototype.createLabelsContextProvider = function() {
-  var provider = new anychart.core.utils.SeriesPointContextProvider(this, this.getYValueNames(), this.supportsError());
-  provider.applyReferenceValues();
+  // var provider = new anychart.core.utils.SeriesPointContextProvider(this, this.getYValueNames(), this.supportsError());
+  var provider = new anychart.core.FormatContext();
+
+  var iterator = this.getIterator();
+  var values = {
+
+  };
+
   return provider;
 };
 
 
 /**
  * Creates tooltip context provider.
- * @return {!anychart.core.utils.SeriesPointContextProvider}
+ * @return {!anychart.core.FormatContext}
  */
 anychart.core.series.Base.prototype.createTooltipContextProvider = function() {
   if (!this.tooltipContext) {
@@ -3327,14 +3331,9 @@ anychart.core.series.Base.prototype.createTooltipContextProvider = function() {
  * @protected
  */
 anychart.core.series.Base.prototype.createLegendContextProvider = function() {
-  if (!this.legendProvider) {
-    /**
-     * Legend context cache.
-     * @type {Object}
-     */
-    this.legendProvider = new anychart.core.utils.LegendContextProvider(this);
-  }
-  return this.legendProvider;
+  if (!this.legendProvider_)
+    this.legendProvider_ = new anychart.core.FormatContext(void 0, void 0, [this, this.chart]);
+  return this.legendProvider_; //nothing to propagate().
 };
 
 
