@@ -3,6 +3,7 @@ goog.require('anychart.core.drawers.Area');
 goog.require('anychart.core.drawers.Line');
 goog.require('anychart.core.drawers.Marker');
 goog.require('anychart.core.series.Cartesian');
+goog.require('anychart.math');
 
 
 
@@ -101,7 +102,7 @@ anychart.core.series.Radar.prototype.ratiosToPixelPairs = function(x, ys) {
   var startAngle = /** @type {number} */(this.getOption('startAngle'));
   for (var i = 0; i < ys.length; i++) {
     var y = ys[i];
-    var angle = goog.math.toRadians(goog.math.modulo(startAngle - 90 + 360 * x, 360));
+    var angle = anychart.math.round(goog.math.toRadians(goog.math.modulo(startAngle - 90 + 360 * x, 360)), 4);
     var radius = this.radius * y;
     result.push(
         this.cx + radius * Math.cos(angle),
