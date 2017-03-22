@@ -588,13 +588,10 @@ anychart.themes.merging.mergingMap_ = [
       'defaultAxis.minorLabels',
       'chart.defaultAnnotationSettings.base.labels',
       'chart.labels',
-      'chart.defaultSeriesSettings.base.labels',
-      'pieFunnelPyramidBase.labels',
       'defaultTimeline.labels',
       'defaultDataGrid.defaultColumnSettings.cellTextSettings',
       'standalones.labelsFactory',
       'heatMap.labels',
-      'map.defaultSeriesSettings.base.labels',
       'map.axesSettings.labels',
       'map.axesSettings.minorLabels',
       'treeMap.headers',
@@ -608,6 +605,12 @@ anychart.themes.merging.mergingMap_ = [
       'defaultTimeline.header.lowLevel.labels',
       'resource.activities.labels',
       'resource.conflicts.labels'
+    ]
+  },
+  {
+    defaultObj: 'chart.labels',
+    targets: [
+      'chart.defaultSeriesSettings.base.labels'
     ]
   },
   {

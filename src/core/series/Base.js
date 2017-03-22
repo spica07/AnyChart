@@ -2002,8 +2002,6 @@ anychart.core.series.Base.prototype.drawFactoryElement = function(seriesFactoryG
     seriesStateFactory = (state == anychart.PointState.NORMAL) ? null : seriesFactoryGetters[state].call(this);
     chartStateFactory = (state == anychart.PointState.NORMAL || !chartFactoryGetters) ? null : chartFactoryGetters[state].call(this.chart);
 
-
-    debugger;
     isDraw = goog.isNull(statePointOverrideEnabled) ? // has no state marker or null "enabled" in it ?
         (!seriesStateFactory || goog.isNull(seriesStateFactory.enabled()) || !goog.isDef(seriesStateFactory.enabled())) ? // has no state stateFactory or null "enabled" in it ?
             (!chartStateFactory || goog.isNull(chartStateFactory.enabled()) || !goog.isDef(chartStateFactory.enabled())) ? // has no state stateFactory or null "enabled" in it ?

@@ -1671,8 +1671,8 @@ goog.provide('anychart.themes.defaultTheme');
         'label': {}
       },
       'labels': {},
-      'hoverLabels': {},
-      'selectLabels': {}
+      'hoverLabels': {'enabled': null},
+      'selectLabels': {'enabled': null}
     },
 
     'cartesianBase': {

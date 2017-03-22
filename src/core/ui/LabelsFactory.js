@@ -287,7 +287,6 @@ anychart.core.settings.populate(anychart.core.ui.LabelsFactory, anychart.core.ui
  * @return {!anychart.core.ui.LabelsFactory|boolean|null} .
  */
 anychart.core.ui.LabelsFactory.prototype.enabled = function(opt_value) {
-  debugger;
   if (goog.isDef(opt_value)) {
     var prevEnabledState = this.getOption('enabled');
     this.ownSettings['enabled'] = opt_value;
