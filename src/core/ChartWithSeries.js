@@ -428,7 +428,7 @@ anychart.core.ChartWithSeries.prototype.seriesInvalidated = function(event) {
     if (this.legend().itemsSourceMode() == anychart.enums.LegendItemsSourceMode.CATEGORIES) {
       state |= anychart.ConsistencyState.CHART_LEGEND;
     }
-    this.annotations().invalidateAnnotations();
+    this.invalidateAnnotations();
   }
   if (event.hasSignal(anychart.Signal.NEEDS_RECALCULATION)) {
     state |= anychart.ConsistencyState.SCALE_CHART_SCALES |
@@ -946,6 +946,12 @@ anychart.core.ChartWithSeries.prototype.data = function(opt_value) {
 //  Drawing
 //
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * Invalidates annotations if they exist.
+ */
+anychart.core.ChartWithSeries.prototype.invalidateAnnotations = function() {};
+
+
 /**
  * @inheritDoc
  */
