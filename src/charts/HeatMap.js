@@ -1063,9 +1063,6 @@ anychart.charts.HeatMap.prototype.createSeries_ = function(data, opt_csvSettings
   instance.markers().setAutoFill((/** @type {anychart.core.heatMap.series.Base} */ (instance)).getMarkerFill());
   instance.markers().setAutoStroke(/** @type {acgraph.vector.Stroke} */((/** @type {anychart.core.heatMap.series.Base} */ (instance)).getMarkerStroke()));
 
-  if (anychart.DEFAULT_THEME != 'v6')
-    instance.labels().setAutoColor(anychart.color.darken(/** @type {(acgraph.vector.Fill|acgraph.vector.Stroke)} */(instance.color())));
-
   instance.a11y(/** @type {boolean|Object|undefined} */(anychart.getFullTheme(this.getType() + '.defaultSeriesSettings.base.a11y')));
 
   instance.listenSignals(this.seriesInvalidated_, this);

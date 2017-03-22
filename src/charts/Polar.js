@@ -587,8 +587,6 @@ anychart.charts.Polar.prototype.createSeriesByType_ = function(type, data, opt_c
       // this else would be only if instance is Marker series
       instance.type(markerType);
     }
-    if (anychart.DEFAULT_THEME != 'v6')
-      instance.labels().setAutoColor(anychart.color.darken(instance.color()));
     instance.setup(this.defaultSeriesSettings()[type]);
     instance.listenSignals(this.seriesInvalidated_, this);
     this.invalidate(

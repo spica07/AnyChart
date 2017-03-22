@@ -482,21 +482,6 @@ anychart.core.ui.LabelsFactory.prototype.setAdjustFontSize = function(value) {
 };
 
 
-/**
- * Sets labels color that parent series have set for it.
- * @param {string} value Auto color distributed by the series.
- * @return {anychart.core.ui.LabelsFactory} Itself for chaining call.
- */
-anychart.core.ui.LabelsFactory.prototype.setAutoColor = function(value) {
-  var needInvalidate = this.getOption('fontColor') != value;
-  this.autoSettings['fontColor'] = value;
-  if (needInvalidate)
-    this.invalidate(anychart.ConsistencyState.BOUNDS);
-
-  return this;
-};
-
-
 //endregion
 //region --- IResolvable implementation
 /** @inheritDoc */

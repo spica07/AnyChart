@@ -928,7 +928,6 @@ anychart.core.series.Base.prototype.setAutoPointWidth = function(value) {
  */
 anychart.core.series.Base.prototype.setAutoColor = function(value) {
   this.autoSettings['color'] = value;
-  this.labels().setAutoColor(this.getLabelsColor());
   this.markers().setAutoFill(this.getMarkerFill());
   this.markers().setAutoStroke(this.getMarkerStroke());
   this.outlierMarkers().setAutoFill(this.getOutliersFill());

@@ -855,7 +855,6 @@ anychart.core.SeriesBase.prototype.getLabelsColor = function() {
  */
 anychart.core.SeriesBase.prototype.setAutoColor = function(value) {
   this.autoColor_ = value;
-  this.labels().setAutoColor(this.getLabelsColor());
   this.setAutoMarkerColor();
 };
 

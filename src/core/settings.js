@@ -642,15 +642,15 @@ anychart.core.settings.adjustFontSizeNormalizer = function() {
   var arg1 = args[0];
   if (args.length == 1) {
     if (goog.isArray(arg1)) {
-      return {'width': arg1.length > 0 ? arg1[0] : void 0, 'height': arg1.length > 1 ? arg1[1] : arg1[0]}
+      return {'width': arg1.length > 0 ? arg1[0] : void 0, 'height': arg1.length > 1 ? arg1[1] : arg1[0]};
     } else if (goog.isObject(arg1)) {
-      return {'width': arg1['width'], 'height': arg1['height']}
+      return {'width': arg1['width'], 'height': arg1['height']};
     } else {
-      return {'width': !!arg1, 'height': !!arg1}
+      return {'width': !!arg1, 'height': !!arg1};
     }
   } else {
     var arg2 = args[1];
-    return {'width': !!arg1, 'height': !!arg2}
+    return {'width': !!arg1, 'height': !!arg2};
   }
 };
 

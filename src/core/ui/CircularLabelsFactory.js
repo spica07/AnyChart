@@ -23,6 +23,7 @@ goog.inherits(anychart.core.ui.CircularLabelsFactory, anychart.core.ui.LabelsFac
 
 
 //region --- Settings
+/** @inheritDoc */
 anychart.core.ui.CircularLabelsFactory.prototype.SIMPLE_PROPS_DESCRIPTORS = (function() {
   /** @type {!Object.<string, anychart.core.settings.PropertyDescriptor>} */
   var map = goog.object.clone(anychart.core.ui.LabelsFactory.prototype.SIMPLE_PROPS_DESCRIPTORS);
@@ -133,7 +134,7 @@ anychart.core.ui.CircularLabelsFactory.prototype.getDimensionInternal = function
   outerBounds.left = /** @type {number} */(x);
   outerBounds.top = /** @type {number} */(y);
 
-  return /** @type {anychart.math.Rect} */(outerBounds)
+  return /** @type {anychart.math.Rect} */(outerBounds);
 };
 
 
@@ -160,6 +161,7 @@ goog.inherits(anychart.core.ui.CircularLabelsFactory.Label, anychart.core.ui.Lab
 
 
 //region --- Settings
+/** @inheritDoc */
 anychart.core.ui.CircularLabelsFactory.Label.prototype.SIMPLE_PROPS_DESCRIPTORS = (function() {
   /** @type {!Object.<string, anychart.core.settings.PropertyDescriptor>} */
   var map = goog.object.clone(anychart.core.ui.LabelsFactory.Label.prototype.SIMPLE_PROPS_DESCRIPTORS);

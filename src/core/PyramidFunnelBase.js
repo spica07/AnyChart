@@ -1225,7 +1225,6 @@ anychart.core.PyramidFunnelBase.prototype.drawContent = function(bounds) {
     var themePart = this.isInsideLabels() ?
         anychart.getFullTheme('pie.insideLabels') :
         anychart.getFullTheme('pie.outsideLabels');
-    this.labels().setAutoColor(themePart['autoColor']);
     this.labels()['disablePointerEvents'](themePart['disablePointerEvents']);
 
     if (!this.isInsideLabels()) {

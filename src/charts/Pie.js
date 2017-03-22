@@ -1613,7 +1613,6 @@ anychart.charts.Pie.prototype.drawContent = function(bounds) {
     var themePart = this.isOutsideLabels() ?
         anychart.getFullTheme('pie.outsideLabels') :
         anychart.getFullTheme('pie.insideLabels');
-    this.labels().setAutoColor(themePart['autoColor']);
     this.labels()['disablePointerEvents'](themePart['disablePointerEvents']);
     if (this.isOutsideLabels()) {
       this.calculateOutsideLabels();
