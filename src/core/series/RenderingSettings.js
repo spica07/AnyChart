@@ -567,6 +567,6 @@ anychart.core.series.RenderingSettings.PointContext.prototype.getStackedZero = f
   proto['getData'] = proto.getData;
   proto['getStackedValue'] = proto.getStackedValue;
   proto['getStackedZero'] = proto.getStackedZero;
-})();\
+})();
 
 //endregion
