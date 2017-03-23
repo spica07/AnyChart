@@ -861,6 +861,15 @@ anychart.charts.Stock.prototype.getCurrentMinDistance = function() {
 anychart.charts.Stock.prototype.getCurrentScrollerMinDistance = function() {
   return this.dataController_.getCurrentScrollerMinDistance();
 };
+
+
+/**
+ * Returns plots count.
+ * @return {number} Number of plots.
+ */
+anychart.charts.Stock.prototype.getPlotsCount = function() {
+  return this.plots_.length;
+};
 //endregion
 
 

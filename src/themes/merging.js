@@ -674,7 +674,8 @@ anychart.themes.merging.mergingMap_ = [
   {
     defaultObj: 'palette',
     targets: [
-      'chart.palette'
+      'chart.palette',
+      'stock.scroller.palette'
     ]
   },
   {

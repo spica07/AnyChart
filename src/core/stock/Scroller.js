@@ -76,6 +76,13 @@ anychart.core.stock.Scroller = function(chart) {
    */
   this.selectedSeriesContainer_ = null;
 
+  /**
+   * Palette for series colors.
+   * @type {anychart.palettes.RangeColors|anychart.palettes.DistinctColors}
+   * @private
+   */
+  this.palette_ = null;
+
   this.defaultSeriesType(anychart.enums.StockSeriesType.LINE);
 };
 goog.inherits(anychart.core.stock.Scroller, anychart.core.ui.Scroller);
@@ -1121,9 +1128,7 @@ anychart.core.stock.Scroller.prototype.createSeriesByType = function(type, opt_d
     series.setAutoZIndex(seriesZIndex);
     series.clip(true);
     series.setAutoPointWidth(.9);
-    // series.setAutoColor(this.palette().itemAt(index));
-    // series.setAutoMarkerType(/** @type {anychart.enums.MarkerType} */(this.markerPalette().itemAt(index)));
-    // series.setAutoHatchFill(/** @type {acgraph.vector.HatchFill|acgraph.vector.PatternFill} */(this.hatchFillPalette().itemAt(index)));
+    series.setAutoColor(this.palette().itemAt(index));
     series.setParentEventTarget(this);
     series.listenSignals(this.seriesInvalidated_, this);
 
@@ -1373,6 +1378,7 @@ anychart.core.stock.Scroller.prototype.draw = function() {
         series.parentBounds(this.pixelBoundsCache);
         series.container(this.seriesContainer_);
         series.secondaryContainer(this.selectedSeriesContainer_);
+        series.setAutoColor(this.palette().itemAt(i));
         series.draw();
         series.resumeSignalsDispatching(false);
       }
@@ -1398,6 +1404,74 @@ anychart.core.stock.Scroller.prototype.draw = function() {
 //endregion
 
 
+//region --- Palettes
+//----------------------------------------------------------------------------------------------------------------------
+//
+//  Palettes
+//
+//----------------------------------------------------------------------------------------------------------------------
+/**
+ * Getter/setter for palette.
+ * @param {(anychart.palettes.RangeColors|anychart.palettes.DistinctColors|Object|Array.<string>)=} opt_value .
+ * @return {!(anychart.palettes.RangeColors|anychart.palettes.DistinctColors|anychart.core.stock.Scroller)} .
+ */
+anychart.core.stock.Scroller.prototype.palette = function(opt_value) {
+  if (opt_value instanceof anychart.palettes.RangeColors) {
+    this.setupPalette_(anychart.palettes.RangeColors, opt_value);
+    return this;
+  } else if (opt_value instanceof anychart.palettes.DistinctColors) {
+    this.setupPalette_(anychart.palettes.DistinctColors, opt_value);
+    return this;
+  } else if (goog.isObject(opt_value) && opt_value['type'] == 'range') {
+    this.setupPalette_(anychart.palettes.RangeColors);
+  } else if (goog.isObject(opt_value) || this.palette_ == null)
+    this.setupPalette_(anychart.palettes.DistinctColors);
+
+  if (goog.isDef(opt_value)) {
+    this.palette_.setup(opt_value);
+    return this;
+  }
+  return /** @type {!(anychart.palettes.RangeColors|anychart.palettes.DistinctColors)} */(this.palette_);
+};
+
+
+/**
+ * @param {Function} cls Palette constructor.
+ * @param {(anychart.palettes.RangeColors|anychart.palettes.DistinctColors)=} opt_cloneFrom Settings to clone from.
+ * @private
+ */
+anychart.core.stock.Scroller.prototype.setupPalette_ = function(cls, opt_cloneFrom) {
+  if (this.palette_ instanceof cls) {
+    if (opt_cloneFrom)
+      this.palette_.setup(opt_cloneFrom);
+  } else {
+    // we dispatch only if we replace existing palette.
+    var doDispatch = !!this.palette_;
+    goog.dispose(this.palette_);
+    this.palette_ = new cls();
+    if (opt_cloneFrom)
+      this.palette_.setup(opt_cloneFrom);
+    this.palette_.listenSignals(this.paletteInvalidated_, this);
+    this.registerDisposable(this.palette_);
+    if (doDispatch)
+      this.invalidate(anychart.ConsistencyState.STOCK_SCROLLER_SERIES, anychart.Signal.NEEDS_REDRAW);
+  }
+};
+
+
+/**
+ * Internal palette invalidation handler.
+ * @param {anychart.SignalEvent} event Event object.
+ * @private
+ */
+anychart.core.stock.Scroller.prototype.paletteInvalidated_ = function(event) {
+  if (event.hasSignal(anychart.Signal.NEEDS_REAPPLICATION)) {
+    this.invalidate(anychart.ConsistencyState.STOCK_SCROLLER_SERIES, anychart.Signal.NEEDS_REDRAW);
+  }
+};
+
+
+//endregion
 //region IKeyIndexTransformer
 //----------------------------------------------------------------------------------------------------------------------
 //
@@ -1470,6 +1544,9 @@ anychart.core.stock.Scroller.prototype.disposeInternal = function() {
   goog.dispose(this.xScale_);
   this.xScale_ = null;
 
+  goog.dispose(this.palette_);
+  this.palette_ = null;
+
   delete this.chart_;
 
   anychart.core.stock.Scroller.base(this, 'disposeInternal');
@@ -1481,6 +1558,7 @@ anychart.core.stock.Scroller.prototype.serialize = function() {
   var json = anychart.core.stock.Scroller.base(this, 'serialize');
 
   json['defaultSeriesType'] = this.defaultSeriesType();
+  json['palette'] = this.palette().serialize();
 
   return json;
 };
@@ -1557,6 +1635,7 @@ anychart.core.stock.Scroller.prototype.setupByJSON = function(config, opt_defaul
       }
     }
   }
+  this.palette(config['palette']);
 };
 //endregion
 
@@ -1590,6 +1669,7 @@ anychart.core.stock.Scroller.prototype.setupByJSON = function(config, opt_defaul
   proto['removeSeries'] = proto.removeSeries;
   proto['removeSeriesAt'] = proto.removeSeriesAt;
   proto['removeAllSeries'] = proto.removeAllSeries;
+  proto['palette'] = proto.palette;
   proto['ama'] = proto.ama;
   proto['aroon'] = proto.aroon;
   proto['atr'] = proto.atr;
