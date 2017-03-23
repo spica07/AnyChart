@@ -1182,31 +1182,26 @@ anychart.core.ui.LabelsFactory.prototype.setThemeSettings = function(config) {
 /** @inheritDoc */
 anychart.core.ui.LabelsFactory.prototype.serialize = function() {
   var json = anychart.core.ui.LabelsFactory.base(this, 'serialize');
-  // if (goog.isNull(json['enabled'])) delete json['enabled'];
-  // if (this.background_) json['background'] = this.background_.serialize();
-  // if (this.padding_) json['padding'] = this.padding_.serialize();
-  // if (this.changedSettings['position']) json['position'] = this.position();
-  // if (this.changedSettings['anchor']) json['anchor'] = this.anchor();
-  // if (this.changedSettings['offsetX']) json['offsetX'] = this.offsetX();
-  // if (this.changedSettings['offsetY']) json['offsetY'] = this.offsetY();
-  // if (this.changedSettings['rotation']) json['rotation'] = this.rotation();
-  // if (this.changedSettings['width']) json['width'] = this.width();
-  // if (this.changedSettings['height']) json['height'] = this.height();
-  // if (this.changedSettings['connectorStroke']) json['connectorStroke'] = this.connectorStroke();
-  // if (this.changedSettings['adjustByHeight'] || this.changedSettings['adjustByWidth'])
-  //   json['adjustFontSize'] = this.adjustFontSize();
-  // if (goog.isDef(this.minFontSize())) json['minFontSize'] = this.minFontSize();
-  // if (goog.isDef(this.maxFontSize())) json['maxFontSize'] = this.maxFontSize();
-  //
-  // if (goog.isFunction(this.textFormatter_)) {
-  //   anychart.core.reporting.warning(
-  //       anychart.enums.WarningCode.CANT_SERIALIZE_FUNCTION,
-  //       null,
-  //       ['Labels textFormatter']
-  //   );
-  // } else {
-  //   if (goog.isDef(this.textFormatter_)) json['textFormatter'] = this.textFormatter_;
-  // }
+  if (goog.isNull(json['enabled'])) delete json['enabled'];
+
+  var val;
+  if (goog.isDef(this.hasOwnOption('background'))) {
+    val = this.background().serialize();
+    if (!goog.object.isEmpty(val))
+      json['background'] = val;
+  }
+  if (goog.isDef(this.hasOwnOption('padding'))) {
+    val = this.padding().serialize();
+    if (!goog.object.isEmpty(val))
+      json['padding'] = val;
+  }
+
+  var adjustFontSize = json['adjustFontSize'];
+  if (!(adjustFontSize && (goog.isDef(adjustFontSize['width']) || goog.isDef(adjustFontSize['height']))))
+    delete json['adjustFontSize'];
+
+  anychart.core.settings.serialize(this, this.TEXT_DESCRIPTORS, json, 'Labels factory label text');
+  anychart.core.settings.serialize(this, this.SIMPLE_PROPS_DESCRIPTORS, json, 'Labels factory label props');
 
   return json;
 };
@@ -2520,9 +2515,12 @@ anychart.core.ui.LabelsFactory.Label.prototype.draw = function() {
       this.backgroundElement_.zIndex(0);
       this.backgroundElement_.container(this.layer_);
     }
-    if (mergedSettings['background'] instanceof anychart.core.ui.Background)
-      this.backgroundElement_.setup(mergedSettings['background'].serialize());
-    else
+    if (mergedSettings['background'] instanceof anychart.core.ui.Background) {
+      var json = mergedSettings['background'].serialize();
+      if (!('enabled' in json))
+        json['enabled'] = false;
+      this.backgroundElement_.setupByJSON(json);
+    } else
       this.backgroundElement_.setup(mergedSettings['background']);
     this.backgroundElement_.draw();
 
