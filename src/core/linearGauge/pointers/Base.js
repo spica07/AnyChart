@@ -1002,10 +1002,10 @@ anychart.core.linearGauge.pointers.Base.prototype.getLabelsPosition = function(p
 //region --- LEGEND ---
 /**
  * Creates legend item data.
- * @param {Function} itemsTextFormatter Items text formatter.
+ * @param {Function} itemsFormat Items text formatter.
  * @return {!anychart.core.ui.Legend.LegendItemProvider} Color for legend item.
  */
-anychart.core.linearGauge.pointers.Base.prototype.getLegendItemData = function(itemsTextFormatter) {
+anychart.core.linearGauge.pointers.Base.prototype.getLegendItemData = function(itemsFormat) {
   var legendItem = this.legendItem();
   legendItem.markAllConsistent();
   var json = legendItem.serialize();
@@ -1024,9 +1024,9 @@ anychart.core.linearGauge.pointers.Base.prototype.getLegendItemData = function(i
     json['iconHatchFill'] = legendItem.iconHatchFill().call(ctx, ctx);
   }
   var itemText;
-  if (goog.isFunction(itemsTextFormatter)) {
+  if (goog.isFunction(itemsFormat)) {
     var format = this.createLegendContextProvider();
-    itemText = itemsTextFormatter.call(format, format);
+    itemText = itemsFormat.call(format, format);
   }
   if (!goog.isString(itemText))
     itemText = goog.isDef(this.name()) ? this.name() : 'Pointer: ' + this.autoIndex();

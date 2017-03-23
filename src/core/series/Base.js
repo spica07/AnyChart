@@ -1476,10 +1476,10 @@ anychart.core.series.Base.prototype.onLegendItemSignal = function(event) {
 
 /**
  * Creates legend item data.
- * @param {Function|string} itemsTextFormatter Items text formatter.
+ * @param {Function|string} itemsFormat Items text formatter.
  * @return {!anychart.core.ui.Legend.LegendItemProvider} Color for legend item.
  */
-anychart.core.series.Base.prototype.getLegendItemData = function(itemsTextFormatter) {
+anychart.core.series.Base.prototype.getLegendItemData = function(itemsFormat) {
   var legendItem = this.legendItem();
   legendItem.markAllConsistent();
 
@@ -1487,9 +1487,9 @@ anychart.core.series.Base.prototype.getLegendItemData = function(itemsTextFormat
   var baseColor = this.getOption('color');
   var context = this.createLegendContextProvider();
 
-  var formatter = json['text'] || itemsTextFormatter;
+  var formatter = json['text'] || itemsFormat;
   if (goog.isString(formatter))
-    formatter = anychart.core.utils.TokenParser.getInstance().getTextFormatter(formatter);
+    formatter = anychart.core.utils.TokenParser.getInstance().getFormat(formatter);
   json['text'] = goog.isFunction(formatter) ?
       formatter.call(context, context) :
       this.getLegendItemText(context);

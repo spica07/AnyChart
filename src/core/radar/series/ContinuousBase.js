@@ -522,8 +522,8 @@ anychart.core.radar.series.ContinuousBase.prototype.getMarkerType = function() {
 /**
  * @inheritDoc
  */
-anychart.core.radar.series.ContinuousBase.prototype.getLegendItemData = function(itemsTextFormatter) {
-  var data = anychart.core.radar.series.ContinuousBase.base(this, 'getLegendItemData', itemsTextFormatter);
+anychart.core.radar.series.ContinuousBase.prototype.getLegendItemData = function(itemsFormat) {
+  var data = anychart.core.radar.series.ContinuousBase.base(this, 'getLegendItemData', itemsFormat);
 
   var markers = this.markers();
   markers.setAutoFill(this.getMarkerFill(anychart.PointState.NORMAL));

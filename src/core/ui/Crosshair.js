@@ -440,8 +440,8 @@ anychart.core.ui.Crosshair.prototype.show = function(event) {
 
     if (this.xAxis_ && this.xAxis_.enabled() && this.xLabel_.enabled()) {
       var xLabelFormatProvider = this.getLabelsFormatProvider(this.xAxis_, xScale.transform(iterator.get('x')));
-      var xLabelTextFormatter = this.xLabel_.format() || anychart.utils.DEFAULT_FORMATTER;
-      this.xLabel_.text(xLabelTextFormatter.call(xLabelFormatProvider, xLabelFormatProvider));
+      var xLabelFormat = this.xLabel_.format() || anychart.utils.DEFAULT_FORMATTER;
+      this.xLabel_.text(xLabelFormat.call(xLabelFormatProvider, xLabelFormatProvider));
       var xLabelPosition = this.getLabelPosition_(this.xAxis_, this.xLabel_, x, y, xScale.transform(iterator.get('x')));
       this.xLabel_.x(/** @type {number}*/(xLabelPosition.x)).y(/** @type {number}*/(xLabelPosition.y));
       this.xLabel_.container(container).draw();
@@ -461,8 +461,8 @@ anychart.core.ui.Crosshair.prototype.show = function(event) {
 
     if (this.yAxis_ && this.yAxis_.enabled() && this.yLabel_.enabled()) {
       var yLabelFormatProvider = this.getLabelsFormatProvider(this.yAxis_, yScale.transform(iterator.get('value')));
-      var yLabelTextFormatter = this.yLabel_.format() || anychart.utils.DEFAULT_FORMATTER;
-      this.yLabel_.text(yLabelTextFormatter.call(yLabelFormatProvider, yLabelFormatProvider));
+      var yLabelFormat = this.yLabel_.format() || anychart.utils.DEFAULT_FORMATTER;
+      this.yLabel_.text(yLabelFormat.call(yLabelFormatProvider, yLabelFormatProvider));
       var yLabelPosition = this.getLabelPosition_(this.yAxis_, this.yLabel_, x, y, yScale.transform(iterator.get('value')));
       this.yLabel_.x(/** @type {number}*/(yLabelPosition.x)).y(/** @type {number}*/(yLabelPosition.y));
       this.yLabel_.container(container).draw();
@@ -570,8 +570,8 @@ anychart.core.ui.Crosshair.prototype.handleMouseOverAndMove = function(e) {
 
       if (this.xLabel_.enabled()) {
         var xLabelFormatProvider = this.getLabelsFormatProvider(this.xAxis_, xRatio);
-        var xLabelTextFormatter = this.xLabel_.format() || anychart.utils.DEFAULT_FORMATTER;
-        this.xLabel_.text(xLabelTextFormatter.call(xLabelFormatProvider, xLabelFormatProvider));
+        var xLabelFormat = this.xLabel_.format() || anychart.utils.DEFAULT_FORMATTER;
+        this.xLabel_.text(xLabelFormat.call(xLabelFormatProvider, xLabelFormatProvider));
         var xLabelPosition = this.getLabelPosition_(this.xAxis_, this.xLabel_, mouseX, mouseY, xRatio);
         this.xLabel_.x(/** @type {number}*/(xLabelPosition.x)).y(/** @type {number}*/(xLabelPosition.y));
         this.xLabel_.container(container).draw();
@@ -600,8 +600,8 @@ anychart.core.ui.Crosshair.prototype.handleMouseOverAndMove = function(e) {
 
       if (this.yLabel_.enabled()) {
         var yLabelFormatProvider = this.getLabelsFormatProvider(this.yAxis_, yRatio);
-        var yLabelTextFormatter = this.yLabel_.format() || anychart.utils.DEFAULT_FORMATTER;
-        this.yLabel_.text(yLabelTextFormatter.call(yLabelFormatProvider, yLabelFormatProvider));
+        var yLabelFormat = this.yLabel_.format() || anychart.utils.DEFAULT_FORMATTER;
+        this.yLabel_.text(yLabelFormat.call(yLabelFormatProvider, yLabelFormatProvider));
         var yLabelPosition = this.getLabelPosition_(this.yAxis_, this.yLabel_, mouseX, mouseY, yRatio);
         this.yLabel_.x(/** @type {number}*/(yLabelPosition.x)).y(/** @type {number}*/(yLabelPosition.y));
         this.yLabel_.container(container).draw();

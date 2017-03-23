@@ -874,7 +874,7 @@ goog.provide('anychart.themes.v6');
         'iconSize': 13,
         'items': null,
         'itemsFormatter': null, // effectively equals current settings
-        'itemsTextFormatter': null,
+        'itemsFormat': null,
         'itemsSourceMode': 'default',
         'inverted': false,
         'hoverCursor': 'pointer',
@@ -6450,7 +6450,7 @@ goog.provide('anychart.themes.v6');
           'items': null,
           'iconSize': 13,
           'itemsFormatter': null, // effectively equals current settings
-          'itemsTextFormatter': null,
+          'itemsFormat': null,
           'itemsSourceMode': 'default',
           'inverted': false,
           'hoverCursor': 'pointer',

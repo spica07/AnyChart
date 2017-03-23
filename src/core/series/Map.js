@@ -1010,7 +1010,7 @@ anychart.core.series.Map.prototype.finalizeDrawing = function() {
 //endregion
 //region --- Legend
 /** @inheritDoc */
-anychart.core.series.Map.prototype.getLegendItemData = function(itemsTextFormatter) {
+anychart.core.series.Map.prototype.getLegendItemData = function(itemsFormat) {
   var legendItem = this.legendItem();
   legendItem.markAllConsistent();
   var json = legendItem.serialize();
@@ -1030,9 +1030,9 @@ anychart.core.series.Map.prototype.getLegendItemData = function(itemsTextFormatt
   }
   var format = this.createLegendContextProvider();
   var itemText;
-  if (goog.isFunction(itemsTextFormatter)) {
+  if (goog.isFunction(itemsFormat)) {
 
-    itemText = itemsTextFormatter.call(format, format);
+    itemText = itemsFormat.call(format, format);
   }
   if (!goog.isString(itemText))
     itemText = goog.isDef(this.name()) ? this.name() : 'Series: ' + this.index();

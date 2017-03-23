@@ -1245,7 +1245,7 @@ anychart.charts.Polar.prototype.invalidateSeries_ = function() {
 //
 //----------------------------------------------------------------------------------------------------------------------
 /** @inheritDoc */
-anychart.charts.Polar.prototype.createLegendItemsProvider = function(sourceMode, itemsTextFormatter) {
+anychart.charts.Polar.prototype.createLegendItemsProvider = function(sourceMode, itemsFormat) {
   var i, count;
   /**
    * @type {!Array.<anychart.core.ui.Legend.LegendItemProvider>}
@@ -1256,7 +1256,7 @@ anychart.charts.Polar.prototype.createLegendItemsProvider = function(sourceMode,
   for (i = 0, count = this.series_.length; i < count; i++) {
     /** @type {anychart.core.polar.series.Base} */
     var series = this.series_[i];
-    var itemData = series.getLegendItemData(itemsTextFormatter);
+    var itemData = series.getLegendItemData(itemsFormat);
     itemData['sourceUid'] = goog.getUid(this);
     itemData['sourceKey'] = series.index();
     data.push(itemData);

@@ -488,8 +488,8 @@ anychart.core.polar.series.ContinuousBase.prototype.getMarkerType = function() {
 /**
  * @inheritDoc
  */
-anychart.core.polar.series.ContinuousBase.prototype.getLegendItemData = function(itemsTextFormatter) {
-  var data = anychart.core.polar.series.ContinuousBase.base(this, 'getLegendItemData', itemsTextFormatter);
+anychart.core.polar.series.ContinuousBase.prototype.getLegendItemData = function(itemsFormat) {
+  var data = anychart.core.polar.series.ContinuousBase.base(this, 'getLegendItemData', itemsFormat);
   var markers = this.markers();
   markers.setAutoFill(this.getMarkerFill());
   markers.setAutoStroke(/** @type {acgraph.vector.Stroke} */(this.getMarkerStroke()));

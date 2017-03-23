@@ -1445,8 +1445,8 @@ anychart.core.heatMap.series.Base.prototype.getMarkerStroke = function() {
 /**
  * @inheritDoc
  */
-anychart.core.heatMap.series.Base.prototype.getLegendItemData = function(itemsTextFormatter) {
-  var data = anychart.core.heatMap.series.Base.base(this, 'getLegendItemData', itemsTextFormatter);
+anychart.core.heatMap.series.Base.prototype.getLegendItemData = function(itemsFormat) {
+  var data = anychart.core.heatMap.series.Base.base(this, 'getLegendItemData', itemsFormat);
   var markers = this.markers();
   markers.setAutoFill(this.getMarkerFill());
   markers.setAutoStroke(/** @type {acgraph.vector.Stroke} */(this.getMarkerStroke()));

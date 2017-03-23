@@ -937,11 +937,11 @@ anychart.core.resource.TimeLine.prototype.draw = function() {
         if (labels) {
           labels.clear();
         } else {
-          var defaultTextFormatter = /** @type {Function} */(anychart.getFullTheme('defaultLabelFactory.format'));
+          var defaultFormat = /** @type {Function} */(anychart.getFullTheme('defaultLabelFactory.format'));
           var defaultPositionFormatter = /** @type {Function} */(anychart.getFullTheme('defaultLabelFactory.positionFormatter'));
 
           labels = new anychart.core.ui.LabelsFactory();
-          labels['format'](defaultTextFormatter);
+          labels['format'](defaultFormat);
           labels['positionFormatter'](defaultPositionFormatter);
 
           labels.enabled(true);

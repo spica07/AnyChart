@@ -955,7 +955,7 @@ anychart.core.ui.LabelsFactory.prototype.getDimension = function(formatProviderO
     this.measureTextElement_.attr('aria-hidden', 'true');
   }
 
-  text = this.callTextFormatter(format, formatProvider, opt_cacheIndex);
+  text = this.callFormat(format, formatProvider, opt_cacheIndex);
   this.measureTextElement_.width(null);
   this.measureTextElement_.height(null);
   if (isHtml) {
@@ -1094,7 +1094,7 @@ anychart.core.ui.LabelsFactory.prototype.measureWithTransform = function(formatP
 
 
 //endregion
-//region --- TextFormatter calls management
+//region --- Format calls management
 /**
  * Calls text formatter in scope of provider, or returns value from cache.
  * @param {Function|string} formatter Text formatter function.
@@ -1102,9 +1102,9 @@ anychart.core.ui.LabelsFactory.prototype.measureWithTransform = function(formatP
  * @param {number=} opt_cacheIndex Label index.
  * @return {*}
  */
-anychart.core.ui.LabelsFactory.prototype.callTextFormatter = function(formatter, provider, opt_cacheIndex) {
+anychart.core.ui.LabelsFactory.prototype.callFormat = function(formatter, provider, opt_cacheIndex) {
   if (goog.isString(formatter))
-    formatter = anychart.core.utils.TokenParser.getInstance().getTextFormatter(formatter);
+    formatter = anychart.core.utils.TokenParser.getInstance().getFormat(formatter);
   if (!this.formatCallsCache_)
     this.formatCallsCache_ = {};
   if (goog.isDefAndNotNull(opt_cacheIndex)) {
@@ -2312,7 +2312,7 @@ anychart.core.ui.LabelsFactory.Label.prototype.createSizeMeasureElement_ = funct
 
   var isHtml = mergedSettings['useHtml'];
   var formatProvider = this.formatProvider();
-  var text = this.factory_.callTextFormatter(mergedSettings['format'], formatProvider, this.getIndex());
+  var text = this.factory_.callFormat(mergedSettings['format'], formatProvider, this.getIndex());
 
   if (!this.fontSizeMeasureElement_) {
     this.fontSizeMeasureElement_ = acgraph.text();
@@ -2539,7 +2539,7 @@ anychart.core.ui.LabelsFactory.Label.prototype.draw = function() {
       var series = /** @type {{getIterator: Function}} */ (formatProvider['series']);
       series.getIterator().select(goog.isDef(formatProvider['index']) ? formatProvider['index'] : this.getIndex());
     }
-    var text = factory.callTextFormatter(mergedSettings['format'], formatProvider, this.getIndex());
+    var text = factory.callFormat(mergedSettings['format'], formatProvider, this.getIndex());
 
     this.layer_.setTransformationMatrix(1, 0, 0, 1, 0, 0);
 

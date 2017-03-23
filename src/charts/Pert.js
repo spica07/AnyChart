@@ -573,7 +573,7 @@ anychart.charts.Pert.prototype.dataInvalidated_ = function(event) {
 //
 //----------------------------------------------------------------------------------------------------------------------
 /** @inheritDoc */
-anychart.charts.Pert.prototype.createLegendItemsProvider = function(sourceMode, itemsTextFormatter) {
+anychart.charts.Pert.prototype.createLegendItemsProvider = function(sourceMode, itemsFormat) {
   //TODO (A.Kudryavtsev): Implement.
   return [];
 };

@@ -133,7 +133,7 @@ anychart.core.ui.Legend = function() {
    * @type {?(Function|string)}
    * @private
    */
-  this.itemsTextFormatter_ = null;
+  this.itemsFormat_ = null;
 
   /**
    * Flag that shows what we need: true - create items, false - update them.
@@ -375,16 +375,28 @@ anychart.core.ui.Legend.prototype.itemsFormatter = function(opt_value) {
  * @param {(string|Function)=} opt_value Items text formatter function.
  * @return {(Function|string|anychart.core.ui.Legend)} Items text formatter function or self for chaining.
  */
-anychart.core.ui.Legend.prototype.itemsTextFormatter = function(opt_value) {
+anychart.core.ui.Legend.prototype.itemsFormat = function(opt_value) {
   if (goog.isDef(opt_value)) {
-    if (this.itemsTextFormatter_ != opt_value) {
-      this.itemsTextFormatter_ = opt_value;
+    if (this.itemsFormat_ != opt_value) {
+      this.itemsFormat_ = opt_value;
       this.invalidate(anychart.ConsistencyState.APPEARANCE | anychart.ConsistencyState.LEGEND_RECREATE_ITEMS,
           anychart.Signal.NEEDS_REDRAW);
     }
     return this;
   }
-  return this.itemsTextFormatter_;
+  return this.itemsFormat_;
+};
+
+
+/**
+ * Getter/setter for items text formatter.
+ * @param {(string|Function)=} opt_value Items text formatter function.
+ * @return {(Function|string|anychart.core.ui.Legend)} Items text formatter function or self for chaining.
+ * @deprecated Since 7.13.1. Use 'itemsFormat' instead.
+ */
+anychart.core.ui.Legend.prototype.itemsTextFormatter = function(opt_value) {
+  anychart.core.reporting.warning(anychart.enums.WarningCode.DEPRECATED, null, ['itemsTextFormatter()', 'itemsFormat()'], true);
+  return this.itemsFormat(opt_value);
 };
 
 
@@ -1657,7 +1669,7 @@ anychart.core.ui.Legend.prototype.createItemsFromSource_ = function() {
     for (var i = 0; i < this.itemsSourceInternal.length; i++) {
       source = /** @type {anychart.core.SeparateChart|anychart.core.stock.Plot} */ (this.itemsSourceInternal[i]);
       if (!goog.isNull(source) && goog.isFunction(source.createLegendItemsProvider))
-        items = goog.array.concat(items, source.createLegendItemsProvider(this.itemsSourceMode_, this.itemsTextFormatter_));
+        items = goog.array.concat(items, source.createLegendItemsProvider(this.itemsSourceMode_, this.itemsFormat_));
     }
     return items;
   } else
@@ -2373,7 +2385,10 @@ anychart.core.ui.Legend.prototype.serialize = function() {
 };
 
 
-/** @inheritDoc */
+/**
+ * @inheritDoc
+ * @suppress {deprecated}
+ */
 anychart.core.ui.Legend.prototype.setupByJSON = function(config, opt_default) {
   anychart.core.ui.Legend.base(this, 'setupByJSON', config, opt_default);
 
@@ -2400,7 +2415,10 @@ anychart.core.ui.Legend.prototype.setupByJSON = function(config, opt_default) {
   this.inverted(config['inverted']);
   this.itemsSourceMode(config['itemsSourceMode']);
   this.items(config['items']);
-  this.itemsTextFormatter(config['itemsTextFormatter']);
+  this.itemsFormat(config['itemsFormat']);
+  if ('itemsTextFormatter' in config) {
+    this.itemsTextFormatter(config['itemsTextFormatter']);
+  }
   this.itemsFormatter(config['itemsFormatter']);
   this.iconTextSpacing(config['iconTextSpacing']);
   this.iconSize(config['iconSize']);
@@ -2433,12 +2451,14 @@ anychart.core.ui.Legend.prototype.disposeInternal = function() {
 //endregion
 //region --- Exports
 //exports
+/** @suppress {deprecated} */
 (function() {
   var proto = anychart.core.ui.Legend.prototype;
   proto['itemsLayout'] = proto.itemsLayout;
   proto['itemsSpacing'] = proto.itemsSpacing;
   proto['items'] = proto.items;
   proto['itemsFormatter'] = proto.itemsFormatter;
+  proto['itemsFormat'] = proto.itemsFormat;
   proto['itemsTextFormatter'] = proto.itemsTextFormatter;
   proto['itemsSourceMode'] = proto.itemsSourceMode;
   proto['inverted'] = proto.inverted;

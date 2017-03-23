@@ -680,10 +680,10 @@ anychart.core.SeriesBase.prototype.createLegendContextProvider = function() {
 
 /**
  * Return color for legend item.
- * @param {Function} itemsTextFormatter Items text formatter.
+ * @param {Function} itemsFormat Items text formatter.
  * @return {!anychart.core.ui.Legend.LegendItemProvider} Color for legend item.
  */
-anychart.core.SeriesBase.prototype.getLegendItemData = function(itemsTextFormatter) {
+anychart.core.SeriesBase.prototype.getLegendItemData = function(itemsFormat) {
   var legendItem = this.legendItem();
   legendItem.markAllConsistent();
   var json = legendItem.serialize();
@@ -702,9 +702,9 @@ anychart.core.SeriesBase.prototype.getLegendItemData = function(itemsTextFormatt
     json['iconHatchFill'] = legendItem.iconHatchFill().call(ctx, ctx);
   }
   var itemText;
-  if (goog.isFunction(itemsTextFormatter)) {
+  if (goog.isFunction(itemsFormat)) {
     var format = this.createLegendContextProvider();
-    itemText = itemsTextFormatter.call(format, format);
+    itemText = itemsFormat.call(format, format);
   }
   if (!goog.isString(itemText))
     itemText = goog.isDef(this.name()) ? this.name() : 'Series: ' + this.index();

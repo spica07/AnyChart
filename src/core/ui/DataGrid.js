@@ -1030,7 +1030,7 @@ anychart.core.ui.DataGrid.Column = function(dataGrid) {
    * @type {function(anychart.data.Tree.DataItem=):string}
    * @private
    */
-  this.format_ = this.defaultTextFormatter_;
+  this.format_ = this.defaultFormat_;
 
   /**
    * Multiplier to choose a left padding in a cell depending on a tree data item's depth.
@@ -1143,7 +1143,7 @@ anychart.core.ui.DataGrid.Column.prototype.setColumnFormat = function(fieldName,
  * @return {string} - Text value.
  * @private
  */
-anychart.core.ui.DataGrid.Column.prototype.defaultTextFormatter_ = function(opt_item) {
+anychart.core.ui.DataGrid.Column.prototype.defaultFormat_ = function(opt_item) {
   return '';
 };
 
@@ -1187,7 +1187,7 @@ anychart.core.ui.DataGrid.Column.prototype.format = function(opt_value) {
     if (goog.isFunction(opt_value)) {
       this.format_ = opt_value;
     } else {
-      this.format_ = this.defaultTextFormatter_;
+      this.format_ = this.defaultFormat_;
     }
     this.invalidate(anychart.ConsistencyState.DATA_GRID_COLUMN_POSITION, anychart.Signal.NEEDS_REDRAW);
     return this;
@@ -1710,7 +1710,7 @@ anychart.core.ui.DataGrid.Column.prototype.serialize = function() {
   json['title'] = this.title_.serialize();
   json['buttonCursor'] = this.buttonCursor_;
 
-  if (this.format_ != this.defaultTextFormatter_) {
+  if (this.format_ != this.defaultFormat_) {
     anychart.core.reporting.warning(
         anychart.enums.WarningCode.CANT_SERIALIZE_FUNCTION,
         null,

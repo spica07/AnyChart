@@ -1034,7 +1034,7 @@ anychart.core.ChartWithSeries.prototype.drawSeries = function(opt_topAxisPadding
 //
 //----------------------------------------------------------------------------------------------------------------------
 /** @inheritDoc */
-anychart.core.ChartWithSeries.prototype.createLegendItemsProvider = function(sourceMode, itemsTextFormatter) {
+anychart.core.ChartWithSeries.prototype.createLegendItemsProvider = function(sourceMode, itemsFormat) {
   var i, count;
   /**
    * @type {!Array.<anychart.core.ui.Legend.LegendItemProvider>}
@@ -1047,7 +1047,7 @@ anychart.core.ChartWithSeries.prototype.createLegendItemsProvider = function(sou
       (this.xScale() instanceof anychart.scales.Ordinal)) {
     var names = this.xScale().names();
 
-    if (goog.isFunction(itemsTextFormatter)) {
+    if (goog.isFunction(itemsFormat)) {
       var values = this.xScale().values();
       var itemText;
       var format;
@@ -1056,7 +1056,7 @@ anychart.core.ChartWithSeries.prototype.createLegendItemsProvider = function(sou
           'value': values[i],
           'name': names[i]
         };
-        itemText = itemsTextFormatter.call(format, format);
+        itemText = itemsFormat.call(format, format);
         if (!goog.isString(itemText))
           itemText = String(names[i]);
         data.push({
@@ -1080,7 +1080,7 @@ anychart.core.ChartWithSeries.prototype.createLegendItemsProvider = function(sou
     for (i = 0, count = this.seriesList.length; i < count; i++) {
       /** @type {anychart.core.series.Cartesian} */
       var series = this.seriesList[i];
-      var itemData = series.getLegendItemData(itemsTextFormatter);
+      var itemData = series.getLegendItemData(itemsFormat);
       itemData['sourceUid'] = goog.getUid(this);
       itemData['sourceKey'] = series.id();
       data.push(itemData);

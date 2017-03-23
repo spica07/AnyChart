@@ -3286,7 +3286,7 @@ anychart.charts.Pie.prototype.getPoint = function(index) {
 
 
 /** @inheritDoc */
-anychart.charts.Pie.prototype.createLegendItemsProvider = function(sourceMode, itemsTextFormatter) {
+anychart.charts.Pie.prototype.createLegendItemsProvider = function(sourceMode, itemsFormat) {
   /**
    * @type {!Array.<anychart.core.ui.Legend.LegendItemProvider>}
    */
@@ -3304,9 +3304,9 @@ anychart.charts.Pie.prototype.createLegendItemsProvider = function(sourceMode, i
     index = iterator.getIndex();
     var legendItem = /** @type {Object} */ (iterator.get('legendItem') || {});
     var itemText = null;
-    if (goog.isFunction(itemsTextFormatter)) {
+    if (goog.isFunction(itemsFormat)) {
       var format = this.createFormatProvider();
-      itemText = itemsTextFormatter.call(format, format);
+      itemText = itemsFormat.call(format, format);
     }
     if (!goog.isString(itemText)) {
       var isGrouped = !!iterator.meta('groupedPoint');

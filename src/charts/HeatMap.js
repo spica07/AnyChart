@@ -740,7 +740,7 @@ anychart.charts.HeatMap.prototype.colorScaleInvalidated_ = function(event) {
 //
 //----------------------------------------------------------------------------------------------------------------------
 /** @inheritDoc */
-anychart.charts.HeatMap.prototype.createLegendItemsProvider = function(sourceMode, itemsTextFormatter) {
+anychart.charts.HeatMap.prototype.createLegendItemsProvider = function(sourceMode, itemsFormat) {
   var i, count;
   /**
    * @type {!Array.<anychart.core.ui.Legend.LegendItemProvider>}

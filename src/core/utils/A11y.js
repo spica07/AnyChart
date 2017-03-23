@@ -243,7 +243,7 @@ anychart.core.utils.ChartA11y.prototype.applyA11y = function(textInfo) {
     if (this.titleFormatter_) {
       var formatter = this.titleFormatter_;
       if (goog.isString(formatter))
-        formatter = anychart.core.utils.TokenParser.getInstance().getTextFormatter(formatter);
+        formatter = anychart.core.utils.TokenParser.getInstance().getFormat(formatter);
       titleText = formatter.call(textInfo, textInfo);
     }
 
@@ -349,7 +349,7 @@ anychart.core.utils.SeriesA11y.prototype.applyA11y = function(textInfo) {
   if (this.enabled() && this.titleFormatter()) {
     var formatter = this.titleFormatter();
     if (goog.isString(formatter))
-      formatter = anychart.core.utils.TokenParser.getInstance().getTextFormatter(formatter);
+      formatter = anychart.core.utils.TokenParser.getInstance().getFormat(formatter);
     titleText = formatter.call(textInfo, textInfo);
     role = 'img';
   }

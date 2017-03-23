@@ -1510,7 +1510,7 @@ anychart.charts.Radar.prototype.invalidateSeries_ = function() {
 //
 //----------------------------------------------------------------------------------------------------------------------
 /** @inheritDoc */
-anychart.charts.Radar.prototype.createLegendItemsProvider = function(sourceMode, itemsTextFormatter) {
+anychart.charts.Radar.prototype.createLegendItemsProvider = function(sourceMode, itemsFormat) {
   var i, count;
   /**
    * @type {!Array.<anychart.core.ui.Legend.LegendItemProvider>}
@@ -1521,7 +1521,7 @@ anychart.charts.Radar.prototype.createLegendItemsProvider = function(sourceMode,
   if (sourceMode == anychart.enums.LegendItemsSourceMode.CATEGORIES && (this.xScale() instanceof anychart.scales.Ordinal)) {
     var names = this.xScale().names();
 
-    if (goog.isFunction(itemsTextFormatter)) {
+    if (goog.isFunction(itemsFormat)) {
       var values = this.xScale().values();
       var itemText;
       var format;
@@ -1530,7 +1530,7 @@ anychart.charts.Radar.prototype.createLegendItemsProvider = function(sourceMode,
           'value': values[i],
           'name': names[i]
         };
-        itemText = itemsTextFormatter.call(format, format);
+        itemText = itemsFormat.call(format, format);
         if (!goog.isString(itemText))
           itemText = String(names[i]);
         data.push({
@@ -1554,7 +1554,7 @@ anychart.charts.Radar.prototype.createLegendItemsProvider = function(sourceMode,
     for (i = 0, count = this.series_.length; i < count; i++) {
       /** @type {anychart.core.radar.series.Base} */
       var series = this.series_[i];
-      var itemData = series.getLegendItemData(itemsTextFormatter);
+      var itemData = series.getLegendItemData(itemsFormat);
       itemData['sourceUid'] = goog.getUid(this);
       itemData['sourceKey'] = series.index();
       data.push(itemData);

@@ -233,12 +233,22 @@ anychart.core.ui.Tooltip.prototype.TOOLTIP_SIMPLE_DESCRIPTORS = (function() {
       anychart.core.ui.Tooltip.TOOLTIP_BOUNDS_STATE,
       anychart.Signal.NEEDS_REDRAW | anychart.Signal.BOUNDS_CHANGED);
 
-  map['titleFormatter'] = anychart.core.settings.createDescriptor(
+  map['titleFormat'] = anychart.core.settings.createDescriptor(
       anychart.enums.PropertyHandlerType.SINGLE_ARG,
-      'titleFormatter',
+      'titleFormat',
       anychart.core.settings.stringOrFunctionNormalizer,
       anychart.core.ui.Tooltip.TOOLTIP_BOUNDS_STATE,
       anychart.Signal.NEEDS_REDRAW);
+
+  //@deprecated Since 7.13.1. Use 'titleFormat' instead.
+  map['titleFormatter'] = anychart.core.settings.createDescriptor(
+      anychart.enums.PropertyHandlerType.SINGLE_ARG_DEPRECATED,
+      'titleFormat',
+      anychart.core.settings.stringOrFunctionNormalizer,
+      anychart.core.ui.Tooltip.TOOLTIP_BOUNDS_STATE,
+      anychart.Signal.NEEDS_REDRAW,
+      void 0,
+      'titleFormatter');
 
   map['format'] = anychart.core.settings.createDescriptor(
       anychart.enums.PropertyHandlerType.SINGLE_ARG,
@@ -267,12 +277,22 @@ anychart.core.ui.Tooltip.prototype.TOOLTIP_SIMPLE_DESCRIPTORS = (function() {
       void 0,
       'contentFormatter');
 
-  map['unionTextFormatter'] = anychart.core.settings.createDescriptor(
+  map['unionFormat'] = anychart.core.settings.createDescriptor(
       anychart.enums.PropertyHandlerType.SINGLE_ARG,
-      'unionTextFormatter',
+      'unionFormat',
       anychart.core.settings.stringOrFunctionNormalizer,
       anychart.core.ui.Tooltip.TOOLTIP_BOUNDS_STATE,
       anychart.Signal.NEEDS_REDRAW);
+
+  //@deprecated Since 7.7.0. Use unionFormat() method instead.
+  map['unionTextFormatter'] = anychart.core.settings.createDescriptor(
+      anychart.enums.PropertyHandlerType.SINGLE_ARG,
+      'unionFormat',
+      anychart.core.settings.stringOrFunctionNormalizer,
+      anychart.core.ui.Tooltip.TOOLTIP_BOUNDS_STATE,
+      anychart.Signal.NEEDS_REDRAW,
+      void 0,
+      'unionTextFormatter');
 
   map['valuePrefix'] = anychart.core.settings.createDescriptor(
       anychart.enums.PropertyHandlerType.SINGLE_ARG,
@@ -1144,7 +1164,7 @@ anychart.core.ui.Tooltip.prototype.getFormattedTitle = function(contextProvider)
   contextProvider['titleText'] = this.title_.getOption('text');
   var formatter = this.getOption('titleFormatter');
   if (goog.isString(formatter))
-    formatter = anychart.core.utils.TokenParser.getInstance().getTextFormatter(formatter);
+    formatter = anychart.core.utils.TokenParser.getInstance().getFormat(formatter);
 
   return formatter.call(contextProvider, contextProvider);
 };
@@ -1162,10 +1182,10 @@ anychart.core.ui.Tooltip.prototype.getFormattedContent_ = function(contextProvid
   contextProvider['valuePrefix'] = this.getOption('valuePrefix') || '';
   contextProvider['valuePostfix'] = this.getOption('valuePostfix') || '';
   var formatter = opt_useUnionFormatter ?
-      this.getOption('unionTextFormatter') :
+      this.getOption('unionFormat') :
       this.getOption('format');
   if (goog.isString(formatter))
-    formatter = anychart.core.utils.TokenParser.getInstance().getTextFormatter(formatter);
+    formatter = anychart.core.utils.TokenParser.getInstance().getFormat(formatter);
 
   return formatter.call(contextProvider, contextProvider);
 };

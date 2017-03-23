@@ -814,7 +814,7 @@ anychart.charts.TreeMap.prototype.legendItemOut = function(item, event) {
 
 
 /** @inheritDoc */
-anychart.charts.TreeMap.prototype.createLegendItemsProvider = function(sourceMode, itemsTextFormatter) {
+anychart.charts.TreeMap.prototype.createLegendItemsProvider = function(sourceMode, itemsFormat) {
   var i, count;
   /**
    * @type {!Array.<anychart.core.ui.Legend.LegendItemProvider>}

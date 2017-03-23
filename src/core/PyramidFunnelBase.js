@@ -3626,7 +3626,7 @@ anychart.core.PyramidFunnelBase.prototype.createTooltipContextProvider = functio
 /**
  * @inheritDoc
  */
-anychart.core.PyramidFunnelBase.prototype.createLegendItemsProvider = function(sourceMode, itemsTextFormatter) {
+anychart.core.PyramidFunnelBase.prototype.createLegendItemsProvider = function(sourceMode, itemsFormat) {
   /**
    * @type {!Array.<anychart.core.ui.Legend.LegendItemProvider>}
    */
@@ -3640,10 +3640,10 @@ anychart.core.PyramidFunnelBase.prototype.createLegendItemsProvider = function(s
 
     var legendItem = /** @type {Object} */ (iterator.get('legendItem') || {});
     var itemText = null;
-    if (goog.isFunction(itemsTextFormatter)) {
+    if (goog.isFunction(itemsFormat)) {
       var format = this.createFormatProvider();
       format.pointInternal = this.getPoint(index);
-      itemText = itemsTextFormatter.call(format, format);
+      itemText = itemsFormat.call(format, format);
     }
     if (!goog.isString(itemText)) {
       itemText = String(goog.isDef(iterator.get('name')) ? iterator.get('name') : iterator.get('x'));

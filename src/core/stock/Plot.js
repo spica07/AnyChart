@@ -1613,7 +1613,7 @@ anychart.core.stock.Plot.prototype.getLegendAutoText = function(legendFormatter,
   var formatter;
   if (!isNaN(opt_titleValue) && (formatter = legendFormatter)) {
     if (goog.isString(formatter))
-      formatter = anychart.core.utils.TokenParser.getInstance().getTextFormatter(formatter);
+      formatter = anychart.core.utils.TokenParser.getInstance().getFormat(formatter);
     if (goog.isFunction(formatter)) {
       var grouping = /** @type {anychart.core.stock.Grouping} */(this.chart_.grouping());
       var context = new anychart.core.utils.GenericContextProvider({
@@ -1682,10 +1682,10 @@ anychart.core.stock.Plot.prototype.onLegendSignal_ = function(event) {
 /**
  * Create legend items provider specific to chart type.
  * @param {string} sourceMode Items source mode (default|categories).
- * @param {?(Function|string)} itemsTextFormatter Legend items text formatter.
+ * @param {?(Function|string)} itemsFormat Legend items text formatter.
  * @return {!Array.<anychart.core.ui.Legend.LegendItemProvider>} Legend items provider.
  */
-anychart.core.stock.Plot.prototype.createLegendItemsProvider = function(sourceMode, itemsTextFormatter) {
+anychart.core.stock.Plot.prototype.createLegendItemsProvider = function(sourceMode, itemsFormat) {
   /**
    * @type {!Array.<anychart.core.ui.Legend.LegendItemProvider>}
    */
@@ -1694,7 +1694,7 @@ anychart.core.stock.Plot.prototype.createLegendItemsProvider = function(sourceMo
     /** @type {anychart.core.series.Stock} */
     var series = this.series_[i];
     if (series) {
-      var itemData = series.getLegendItemData(itemsTextFormatter);
+      var itemData = series.getLegendItemData(itemsFormat);
       itemData['sourceUid'] = goog.getUid(this);
       itemData['sourceKey'] = series.id();
       data.push(itemData);

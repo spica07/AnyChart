@@ -803,7 +803,7 @@ goog.provide('anychart.themes.defaultTheme');
       'hideDelay': 0,
       'titleFormatter': returnValue,
       'format': returnValueWithPrefixPostfix,
-      'unionTextFormatter': function() {
+      'unionFormat': function() {
         return this['formattedValues'].join('\n');
       },
       'zIndex': 0,
@@ -931,7 +931,7 @@ goog.provide('anychart.themes.defaultTheme');
       'itemsSpacing': 15,
       'items': null,
       'itemsFormatter': null,
-      'itemsTextFormatter': null,
+      'itemsFormat': null,
       'itemsSourceMode': 'default',
       'inverted': false,
       'hoverCursor': 'pointer',

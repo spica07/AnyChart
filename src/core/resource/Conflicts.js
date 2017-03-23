@@ -147,7 +147,7 @@ anychart.core.resource.Conflicts.prototype.clear = function() {
 anychart.core.resource.Conflicts.prototype.evaluate = function(date, allocation, resource, top) {
   if (allocation && allocation.allocated > allocation.vacant) {
     var provider = this.createFormatProvider(date, allocation, resource);
-    var text = this.labels_.callTextFormatter(/** @type {Function} */(this.labels_.getOption('format')), provider, ++this.labelIndex_);
+    var text = this.labels_.callFormat(/** @type {Function} */(this.labels_.getOption('format')), provider, ++this.labelIndex_);
     if (this.current_) {
       if (this.current_.text == text)
         return;

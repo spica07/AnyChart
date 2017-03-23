@@ -4829,7 +4829,7 @@ anychart.charts.Map.prototype.inverseTransform = function(x, y) {
 //
 //----------------------------------------------------------------------------------------------------------------------
 /** @inheritDoc */
-anychart.charts.Map.prototype.createLegendItemsProvider = function(sourceMode, itemsTextFormatter) {
+anychart.charts.Map.prototype.createLegendItemsProvider = function(sourceMode, itemsFormat) {
   var i, count;
   /**
    * @type {!Array.<anychart.core.ui.Legend.LegendItemProvider>}
@@ -4841,7 +4841,7 @@ anychart.charts.Map.prototype.createLegendItemsProvider = function(sourceMode, i
     for (i = 0, count = this.seriesList.length; i < count; i++) {
       series = this.seriesList[i];
       scale = series.colorScale();
-      itemData = series.getLegendItemData(itemsTextFormatter);
+      itemData = series.getLegendItemData(itemsFormat);
       itemData['sourceUid'] = goog.getUid(this);
       itemData['sourceKey'] = series.id();
       itemData['meta'] = {
