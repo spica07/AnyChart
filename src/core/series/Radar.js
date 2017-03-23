@@ -41,25 +41,6 @@ anychart.core.series.Radar.prototype.cx;
 anychart.core.series.Radar.prototype.cy;
 
 
-/**
- * Properties that should be defined in series.Radar prototype.
- * @type {!Object.<string, anychart.core.settings.PropertyDescriptor>}
- */
-anychart.core.series.Radar.PROPERTY_DESCRIPTORS = (function() {
-  /** @type {!Object.<string, anychart.core.settings.PropertyDescriptor>} */
-  var map = {};
-  map['startAngle'] = anychart.core.settings.createDescriptor(
-      anychart.enums.PropertyHandlerType.SINGLE_ARG,
-      'startAngle',
-      anychart.core.settings.numberNormalizer,
-      anychart.ConsistencyState.SERIES_POINTS,
-      anychart.Signal.NEEDS_REDRAW,
-      anychart.core.series.Capabilities.ANY);
-  return map;
-})();
-anychart.core.settings.populate(anychart.core.series.Radar, anychart.core.series.Radar.PROPERTY_DESCRIPTORS);
-
-
 /** @inheritDoc */
 anychart.core.series.Radar.prototype.startDrawing = function() {
   var bounds = this.pixelBoundsCache;
@@ -134,25 +115,8 @@ anychart.core.series.Radar.prototype.transformXY = function(xVal, yVal, opt_xSub
 };
 
 
-/** @inheritDoc */
-anychart.core.series.Radar.prototype.serialize = function() {
-  var json = anychart.core.series.Radar.base(this, 'serialize');
-  anychart.core.settings.serialize(this, anychart.core.series.Radar.PROPERTY_DESCRIPTORS, json);
-  return json;
-};
-
-
-/** @inheritDoc */
-anychart.core.series.Radar.prototype.setupByJSON = function(config, opt_default) {
-  anychart.core.settings.deserialize(this, anychart.core.series.Radar.PROPERTY_DESCRIPTORS, config);
-  anychart.core.series.Radar.base(this, 'setupByJSON', config, opt_default);
-};
-
-
 //exports
 (function() {
   var proto = anychart.core.series.Radar.prototype;
   proto['transformXY'] = proto.transformXY;
-  // descriptors export:
-  //proto['startAngle'] = proto.startAngle;
 })();

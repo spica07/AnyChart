@@ -319,7 +319,7 @@ anychart.core.RadarPolarChart.prototype.getAxisByIndex = function(index) {
 //------------------------------------------------------------------------------
 /** @inheritDoc */
 anychart.core.RadarPolarChart.prototype.setupSeriesBeforeDraw = function(series, opt_topAxisPadding, opt_rightAxisPadding, opt_bottomAxisPadding, opt_leftAxisPadding) {
-  series['startAngle'](this.startAngle_);
+  series.setOption('startAngle', this.startAngle_);
 };
 
 
