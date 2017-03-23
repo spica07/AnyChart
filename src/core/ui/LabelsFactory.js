@@ -62,7 +62,7 @@ anychart.core.ui.LabelsFactory = function() {
    * @protected
    */
   this.settingsFieldsForMerge = ['background', 'padding', 'height', 'width', 'offsetY', 'offsetX', 'position', 'anchor',
-    'rotation', 'textFormatter', 'positionFormatter', 'minFontSize', 'maxFontSize', 'fontSize', 'fontWeight', 'clip',
+    'rotation', 'format', 'positionFormatter', 'minFontSize', 'maxFontSize', 'fontSize', 'fontWeight', 'clip',
     'connectorStroke', 'textWrap', 'adjustFontSize', 'useHtml'
   ];
 
@@ -194,12 +194,22 @@ anychart.core.settings.populate(anychart.core.ui.LabelsFactory, anychart.core.ui
 anychart.core.ui.LabelsFactory.prototype.SIMPLE_PROPS_DESCRIPTORS = (function() {
   /** @type {!Object.<string, anychart.core.settings.PropertyDescriptor>} */
   var map = {};
-  map['textFormatter'] = anychart.core.settings.createDescriptor(
+  map['format'] = anychart.core.settings.createDescriptor(
       anychart.enums.PropertyHandlerType.SINGLE_ARG,
-      'textFormatter',
+      'format',
       anychart.core.settings.stringOrFunctionNormalizer,
       anychart.ConsistencyState.APPEARANCE | anychart.ConsistencyState.BOUNDS,
       anychart.Signal.NEEDS_REDRAW | anychart.Signal.BOUNDS_CHANGED);
+
+  //@deprecated Since 7.13.1. Use 'format' instead.
+  map['textFormatter'] = anychart.core.settings.createDescriptor(
+      anychart.enums.PropertyHandlerType.SINGLE_ARG_DEPRECATED,
+      'format',
+      anychart.core.settings.stringOrFunctionNormalizer,
+      anychart.ConsistencyState.APPEARANCE | anychart.ConsistencyState.BOUNDS,
+      anychart.Signal.NEEDS_REDRAW | anychart.Signal.BOUNDS_CHANGED,
+      void 0,
+      'textFormatter');
 
   map['positionFormatter'] = anychart.core.settings.createDescriptor(
       anychart.enums.PropertyHandlerType.SINGLE_ARG,
@@ -305,6 +315,18 @@ anychart.core.ui.LabelsFactory.prototype.enabled = function(opt_value) {
 };
 
 
+/**
+ * Gets or sets labels text formatter function.
+ * @param {(Function|string)=} opt_value Labels text formatter function.
+ * @return {Function|string|anychart.core.ui.LabelsFactory} Labels text formatter function or Labels instance for chaining
+ * @deprecated Since 7.13.1. Use 'format' instead.
+ */
+anychart.core.ui.LabelsFactory.prototype.textFormatter = function(opt_value) {
+  anychart.core.reporting.warning(anychart.enums.WarningCode.DEPRECATED, null, ['textFormatter()', 'format()'], true);
+  return this['format'](opt_value);
+};
+
+
 //----------------------------------------------------------------------------------------------------------------------
 //
 //  Background and Padding.
@@ -386,8 +408,8 @@ anychart.core.ui.LabelsFactory.prototype.paddingInvalidated_ = function(event) {
  * Gets text formatter.
  * @return {Function|string} Text formatter.
  */
-anychart.core.ui.LabelsFactory.prototype.getTextFormatterInternal = function() {
-  return /** @type {Function|string} */(this.getOwnOption('textFormatter'));
+anychart.core.ui.LabelsFactory.prototype.getFormat = function() {
+  return /** @type {Function|string} */(this.getOwnOption('format'));
 };
 
 
@@ -395,8 +417,8 @@ anychart.core.ui.LabelsFactory.prototype.getTextFormatterInternal = function() {
  * Sets text formatter.
  * @param {Function|string} value Text formatter value.
  */
-anychart.core.ui.LabelsFactory.prototype.setTextFormatterInternal = function(value) {
-  this.setOption('textFormatter', value);
+anychart.core.ui.LabelsFactory.prototype.setFormat = function(value) {
+  this.setOption('format', value);
 };
 
 
@@ -760,7 +782,7 @@ anychart.core.ui.LabelsFactory.prototype.labelsCount = function() {
 /**
  * Creates new instance of anychart.core.ui.LabelsFactory.Label, saves it in the factory
  * and returns it.
- * @param {*} formatProvider Object that provides info for textFormatter function.
+ * @param {*} formatProvider Object that provides info for format function.
  * @param {*} positionProvider Object that provides info for positionFormatter function.
  * @param {number=} opt_index Label index.
  * @return {!anychart.core.ui.LabelsFactory.Label} Returns new label instance.
@@ -868,7 +890,7 @@ anychart.core.ui.LabelsFactory.prototype.draw = function() {
 //region --- Measuring
 /**
  * Returns label size.
- * @param {*|anychart.core.ui.LabelsFactory.Label} formatProviderOrLabel Object that provides info for textFormatter function.
+ * @param {*|anychart.core.ui.LabelsFactory.Label} formatProviderOrLabel Object that provides info for format function.
  * @param {*=} opt_positionProvider Object that provides info for positionFormatter function.
  * @param {Object=} opt_settings .
  * @param {number=} opt_cacheIndex .
@@ -926,14 +948,14 @@ anychart.core.ui.LabelsFactory.prototype.getDimension = function(formatProviderO
   var offsetX = /** @type {number|string} */(this.measureCustomLabel_.getOption('offsetX') || this.getOption('offsetX'));
   if (!goog.isDef(offsetX)) offsetX = 0;
   var anchor = /** @type {string} */(this.measureCustomLabel_.getOption('anchor') || this.getOption('anchor'));
-  var textFormatter = /** @type {Function|string} */(this.measureCustomLabel_.getOption('textFormatter') || this.getOption('textFormatter'));
+  var format = /** @type {Function|string} */(this.measureCustomLabel_.getOption('format') || this.getOption('format'));
 
   if (!this.measureTextElement_) {
     this.measureTextElement_ = acgraph.text();
     this.measureTextElement_.attr('aria-hidden', 'true');
   }
 
-  text = this.callTextFormatter(textFormatter, formatProvider, opt_cacheIndex);
+  text = this.callTextFormatter(format, formatProvider, opt_cacheIndex);
   this.measureTextElement_.width(null);
   this.measureTextElement_.height(null);
   if (isHtml) {
@@ -1026,7 +1048,7 @@ anychart.core.ui.LabelsFactory.prototype.getDimensionInternal = function(outerBo
 
 /**
  * Measure labels using formatProvider, positionProvider and returns labels bounds.
- * @param {*|anychart.core.ui.LabelsFactory.Label} formatProviderOrLabel Object that provides info for textFormatter function.
+ * @param {*|anychart.core.ui.LabelsFactory.Label} formatProviderOrLabel Object that provides info for format function.
  * @param {*=} opt_positionProvider Object that provides info for positionFormatter function.
  * @param {Object=} opt_settings .
  * @param {number=} opt_cacheIndex .
@@ -1040,7 +1062,7 @@ anychart.core.ui.LabelsFactory.prototype.measure = function(formatProviderOrLabe
 
 /**
  * Measures label in its coordinate system and returns bounds as an array of points in parent coordinate system.
- * @param {*|anychart.core.ui.LabelsFactory.Label} formatProviderOrLabel Object that provides info for textFormatter function.
+ * @param {*|anychart.core.ui.LabelsFactory.Label} formatProviderOrLabel Object that provides info for format function.
  * @param {*=} opt_positionProvider Object that provides info for positionFormatter function.
  * @param {Object=} opt_settings .
  * @param {number=} opt_cacheIndex .
@@ -1083,14 +1105,14 @@ anychart.core.ui.LabelsFactory.prototype.measureWithTransform = function(formatP
 anychart.core.ui.LabelsFactory.prototype.callTextFormatter = function(formatter, provider, opt_cacheIndex) {
   if (goog.isString(formatter))
     formatter = anychart.core.utils.TokenParser.getInstance().getTextFormatter(formatter);
-  if (!this.textFormatterCallsCache_)
-    this.textFormatterCallsCache_ = {};
+  if (!this.formatCallsCache_)
+    this.formatCallsCache_ = {};
   if (goog.isDefAndNotNull(opt_cacheIndex)) {
-    if (!goog.isDef(this.textFormatterCallsCache_[opt_cacheIndex])) {
-      this.textFormatterCallsCache_[opt_cacheIndex] = formatter.call(provider, provider);
+    if (!goog.isDef(this.formatCallsCache_[opt_cacheIndex])) {
+      this.formatCallsCache_[opt_cacheIndex] = formatter.call(provider, provider);
     }
 
-    return this.textFormatterCallsCache_[opt_cacheIndex];
+    return this.formatCallsCache_[opt_cacheIndex];
   }
   return formatter.call(provider, provider);
 };
@@ -1103,10 +1125,10 @@ anychart.core.ui.LabelsFactory.prototype.callTextFormatter = function(formatter,
  */
 anychart.core.ui.LabelsFactory.prototype.dropCallsCache = function(opt_index) {
   if (!goog.isDef(opt_index)) {
-    this.textFormatterCallsCache_ = {};
+    this.formatCallsCache_ = {};
   } else {
-    if (this.textFormatterCallsCache_ && goog.isDef(this.textFormatterCallsCache_[opt_index])) {
-      delete this.textFormatterCallsCache_[opt_index];
+    if (this.formatCallsCache_ && goog.isDef(this.formatCallsCache_[opt_index])) {
+      delete this.formatCallsCache_[opt_index];
     }
   }
   return this;
@@ -1544,12 +1566,23 @@ anychart.core.settings.populate(anychart.core.ui.LabelsFactory.Label, anychart.c
 anychart.core.ui.LabelsFactory.Label.prototype.SIMPLE_PROPS_DESCRIPTORS = (function() {
   /** @type {!Object.<string, anychart.core.settings.PropertyDescriptor>} */
   var map = {};
-  map['textFormatter'] = anychart.core.settings.createDescriptor(
+
+  map['format'] = anychart.core.settings.createDescriptor(
       anychart.enums.PropertyHandlerType.SINGLE_ARG,
-      'textFormatter',
+      'format',
       anychart.core.settings.stringOrFunctionNormalizer,
       anychart.ConsistencyState.APPEARANCE | anychart.ConsistencyState.BOUNDS,
       anychart.Signal.NEEDS_REDRAW | anychart.Signal.BOUNDS_CHANGED);
+
+  //@deprecated Since 7.13.1. Use 'format' instead.
+  map['textFormatter'] = anychart.core.settings.createDescriptor(
+      anychart.enums.PropertyHandlerType.SINGLE_ARG_DEPRECATED,
+      'format',
+      anychart.core.settings.stringOrFunctionNormalizer,
+      anychart.ConsistencyState.APPEARANCE | anychart.ConsistencyState.BOUNDS,
+      anychart.Signal.NEEDS_REDRAW | anychart.Signal.BOUNDS_CHANGED,
+      void 0,
+      'textFormatter');
 
   map['positionFormatter'] = anychart.core.settings.createDescriptor(
       anychart.enums.PropertyHandlerType.SINGLE_ARG,
@@ -2279,7 +2312,7 @@ anychart.core.ui.LabelsFactory.Label.prototype.createSizeMeasureElement_ = funct
 
   var isHtml = mergedSettings['useHtml'];
   var formatProvider = this.formatProvider();
-  var text = this.factory_.callTextFormatter(mergedSettings['textFormatter'], formatProvider, this.getIndex());
+  var text = this.factory_.callTextFormatter(mergedSettings['format'], formatProvider, this.getIndex());
 
   if (!this.fontSizeMeasureElement_) {
     this.fontSizeMeasureElement_ = acgraph.text();
@@ -2502,11 +2535,11 @@ anychart.core.ui.LabelsFactory.Label.prototype.draw = function() {
     mergedSettings = this.mergedSettings;
 
     var formatProvider = this.formatProvider();
-    if (goog.isDef(formatProvider) && formatProvider['series'] && (!this.textFormatterCallsCache_ || !goog.isDef(this.textFormatterCallsCache_[this.getIndex()]))) {
+    if (goog.isDef(formatProvider) && formatProvider['series'] && (!this.formatCallsCache_ || !goog.isDef(this.formatCallsCache_[this.getIndex()]))) {
       var series = /** @type {{getIterator: Function}} */ (formatProvider['series']);
       series.getIterator().select(goog.isDef(formatProvider['index']) ? formatProvider['index'] : this.getIndex());
     }
-    var text = factory.callTextFormatter(mergedSettings['textFormatter'], formatProvider, this.getIndex());
+    var text = factory.callTextFormatter(mergedSettings['format'], formatProvider, this.getIndex());
 
     this.layer_.setTransformationMatrix(1, 0, 0, 1, 0, 0);
 

@@ -123,7 +123,7 @@ anychart.charts.Sparkline = function(opt_data, opt_csvSettings) {
   this.labelsInternal_ = new anychart.core.ui.LabelsFactory();
   // defaults that was deleted form LabelsFactory
   this.labelsInternal_['positionFormatter'](anychart.utils.DEFAULT_FORMATTER);
-  this.labelsInternal_['textFormatter'](anychart.utils.DEFAULT_FORMATTER);
+  this.labelsInternal_['format'](anychart.utils.DEFAULT_FORMATTER);
   this.labelsInternal_.background(null);
   this.labelsInternal_['rotation'](0);
   this.labelsInternal_['width'](null);

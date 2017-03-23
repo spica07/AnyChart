@@ -23,6 +23,13 @@ goog.require('goog.math');
  *    normalizer: Function,
  *    consistency: (anychart.ConsistencyState|number),
  *    signal: (anychart.Signal|number)
+ * }|{
+ *    handler: number,
+ *    propName: string,
+ *    normalizer: Function,
+ *    consistency: (anychart.ConsistencyState|number),
+ *    signal: (anychart.Signal|number),
+ *    deprecatedPropName: string
  * }}
  */
 anychart.core.settings.PropertyDescriptor;
@@ -37,9 +44,10 @@ anychart.core.settings.PropertyDescriptor;
  * @param {number} consistency - Consistency to set.
  * @param {number} signal - Signal.
  * @param {number=} opt_check - Check function.
+ * @param {string=} opt_deprecatedPropName - Deprecated prop name.
  * @return {anychart.core.settings.PropertyDescriptor} - Descriptor.
  */
-anychart.core.settings.createDescriptor = function(handler, propName, normalizer, consistency, signal, opt_check) {
+anychart.core.settings.createDescriptor = function(handler, propName, normalizer, consistency, signal, opt_check, opt_deprecatedPropName) {
   /**
    * @type {anychart.core.settings.PropertyDescriptor}
    */
@@ -52,6 +60,8 @@ anychart.core.settings.createDescriptor = function(handler, propName, normalizer
   };
   if (goog.isDef(opt_check))
     descriptor.capabilityCheck = opt_check;
+  if (goog.isDef(opt_deprecatedPropName))
+    descriptor.deprecatedPropName = opt_deprecatedPropName;
   return descriptor;
 };
 
@@ -242,15 +252,29 @@ anychart.core.settings.createTextPropertiesDescriptors = function(invalidateBoun
 anychart.core.settings.populate = function(classConstructor, descriptors) {
   for (var i in descriptors) {
     var descriptor = descriptors[i];
-    classConstructor.prototype[i] = goog.partial(
-        descriptor.handler == anychart.enums.PropertyHandlerType.MULTI_ARG ?
-            anychart.core.settings.multiArgsHandler :
-            anychart.core.settings.simpleHandler,
-        descriptor.propName,
-        descriptor.normalizer,
-        descriptor.capabilityCheck,
-        descriptor.consistency,
-        descriptor.signal);
+    if (descriptor.handler == anychart.enums.PropertyHandlerType.MULTI_ARG_DEPRECATED ||
+        descriptor.handler == anychart.enums.PropertyHandlerType.SINGLE_ARG_DEPRECATED) {
+      classConstructor.prototype[i] = goog.partial(
+          descriptor.handler == anychart.enums.PropertyHandlerType.MULTI_ARG_DEPRECATED ?
+              anychart.core.settings.multiArgsDeprecatedHandler :
+              anychart.core.settings.simpleDeprecatedHandler,
+          descriptor.propName,
+          descriptor.deprecatedPropName,
+          descriptor.normalizer,
+          descriptor.capabilityCheck,
+          descriptor.consistency,
+          descriptor.signal);
+    } else {
+      classConstructor.prototype[i] = goog.partial(
+          descriptor.handler == anychart.enums.PropertyHandlerType.MULTI_ARG ?
+              anychart.core.settings.multiArgsHandler :
+              anychart.core.settings.simpleHandler,
+          descriptor.propName,
+          descriptor.normalizer,
+          descriptor.capabilityCheck,
+          descriptor.consistency,
+          descriptor.signal);
+    }
   }
 };
 
@@ -368,6 +392,24 @@ anychart.core.settings.simpleHandler = function(fieldName, normalizer, supportCh
 
 
 /**
+ * Simple field handler, that is suitable for partial application to make real handlers.
+ * @param {string} fieldName
+ * @param {string} deprecatedFieldName
+ * @param {function(*):*} normalizer
+ * @param {number} supportCheck - set to anychart.core.series.Capabilities.ANY to invalidate in any case.
+ * @param {anychart.ConsistencyState|number} consistencyState
+ * @param {anychart.Signal|number} signal
+ * @param {*=} opt_value
+ * @return {*|anychart.core.settings.IObjectWithSettings}
+ * @this {anychart.core.settings.IObjectWithSettings}
+ */
+anychart.core.settings.simpleDeprecatedHandler = function(fieldName, deprecatedFieldName, normalizer, supportCheck, consistencyState, signal, opt_value) {
+  anychart.core.reporting.warning(anychart.enums.WarningCode.DEPRECATED, null, [deprecatedFieldName + '()', fieldName + '()'], true);
+  return anychart.core.settings.simpleHandler(fieldName, normalizer, supportCheck, consistencyState, signal, opt_value);
+};
+
+
+/**
  * Field handler, that is suitable for partial application to make real handlers. Unlike the simpleHandler it passes
  * all args starting to the normalizer instead of the first param only.
  * @param {string} fieldName
@@ -401,6 +443,26 @@ anychart.core.settings.multiArgsHandler = function(fieldName, arrayNormalizer, s
     return this;
   }
   return this.getOption(fieldName);
+};
+
+
+/**
+ * Field handler, that is suitable for partial application to make real handlers. Unlike the simpleHandler it passes
+ * all args starting to the normalizer instead of the first param only.
+ * @param {string} fieldName
+ * @param {string} deprecatedFieldName
+ * @param {function(Array):*} arrayNormalizer
+ * @param {number} supportCheck - set to anychart.core.series.Capabilities.ANY to invalidate in any case.
+ * @param {anychart.ConsistencyState|number} consistencyState
+ * @param {anychart.Signal|number} signal
+ * @param {*=} opt_value
+ * @param {...*} var_args
+ * @return {*|anychart.core.settings.IObjectWithSettings}
+ * @this {anychart.core.settings.IObjectWithSettings}
+ */
+anychart.core.settings.multiArgsDeprecatedHandler = function(fieldName, deprecatedFieldName, arrayNormalizer, supportCheck, consistencyState, signal, opt_value, var_args) {
+  anychart.core.reporting.warning(anychart.enums.WarningCode.DEPRECATED, null, [deprecatedFieldName + '()', fieldName + '()'], true);
+  return anychart.core.settings.multiArgsHandler(fieldName, arrayNormalizer, supportCheck, consistencyState, signal, opt_value, var_args);
 };
 //endregion
 

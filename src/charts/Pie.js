@@ -955,7 +955,7 @@ anychart.charts.Pie.prototype.overlapMode = function(opt_value) {
 anychart.charts.Pie.prototype.labels = function(opt_value) {
   if (!this.labels_) {
     this.labels_ = new anychart.core.ui.CircularLabelsFactory();
-    this.labels_.setOption('textFormatter', function() {
+    this.labels_.setOption('format', function() {
       return (this['value'] * 100 / this.getStat(anychart.enums.Statistics.SUM)).toFixed(1) + '%';
     });
     this.labels_.setOption('positionFormatter', function() {

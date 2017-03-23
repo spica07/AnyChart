@@ -484,11 +484,11 @@ anychart.core.pert.PertVisualElements.prototype.onTooltipSignal_ = function(even
 anychart.core.pert.PertVisualElements.prototype.getCurrentTooltipConfig = function() {
   var config = this.tooltip().serialize();
   var titleFormatter = this.tooltip().getOption('titleFormatter');
-  var textFormatter = this.tooltip().getOption('textFormatter');
+  var format = this.tooltip().getOption('format');
   if (titleFormatter && titleFormatter != anychart.utils.DEFAULT_FORMATTER)
     config['titleFormatter'] = titleFormatter;
-  if (textFormatter && textFormatter != anychart.utils.DEFAULT_FORMATTER)
-    config['textFormatter'] = textFormatter;
+  if (format && format != anychart.utils.DEFAULT_FORMATTER)
+    config['format'] = format;
   return config;
 };
 

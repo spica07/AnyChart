@@ -137,7 +137,7 @@ goog.inherits(anychart.core.resource.TimeLine, anychart.core.VisualBaseWithBound
  *      selectable: (boolean|undefined),
  *      disablePointerEvents: (boolean|undefined),
  *      useHtml: (boolean|undefined),
- *      textFormatter: (Function|undefined)
+ *      format: (Function|undefined)
  *   }>,
  *   fill: (acgraph.vector.Fill|undefined),
  *   padding: (Object|Array|number|string|null|undefined),
@@ -163,7 +163,7 @@ goog.inherits(anychart.core.resource.TimeLine, anychart.core.VisualBaseWithBound
  *   selectable: (boolean|undefined),
  *   disablePointerEvents: (boolean|undefined),
  *   useHtml: (boolean|undefined),
- *   textFormatter: (Function|undefined)
+ *   format: (Function|undefined)
  * }}
  */
 anychart.core.resource.TimeLine.Level;
@@ -216,13 +216,23 @@ anychart.core.resource.TimeLine.TEXT_DESCRIPTORS =
         anychart.Signal.NEEDS_REDRAW | anychart.Signal.BOUNDS_CHANGED,
         anychart.Signal.NEEDS_REDRAW
     );
-anychart.core.resource.TimeLine.TEXT_DESCRIPTORS['textFormatter'] =
+anychart.core.resource.TimeLine.TEXT_DESCRIPTORS['format'] =
     anychart.core.settings.createDescriptor(
         anychart.enums.PropertyHandlerType.SINGLE_ARG,
-        'textFormatter',
+        'format',
         anychart.core.settings.stringOrFunctionNormalizer,
         anychart.ConsistencyState.APPEARANCE | anychart.ConsistencyState.BOUNDS,
         anychart.Signal.NEEDS_REDRAW | anychart.Signal.BOUNDS_CHANGED);
+//@deprecated Since 7.13.1. Use 'format' instead.
+anychart.core.resource.TimeLine.TEXT_DESCRIPTORS['textFormatter'] =
+    anychart.core.settings.createDescriptor(
+        anychart.enums.PropertyHandlerType.SINGLE_ARG_DEPRECATED,
+        'format',
+        anychart.core.settings.stringOrFunctionNormalizer,
+        anychart.ConsistencyState.APPEARANCE | anychart.ConsistencyState.BOUNDS,
+        anychart.Signal.NEEDS_REDRAW | anychart.Signal.BOUNDS_CHANGED,
+        void 0,
+        'textFormatter');
 anychart.core.settings.populate(anychart.core.resource.TimeLine, anychart.core.resource.TimeLine.TEXT_DESCRIPTORS);
 
 
@@ -927,11 +937,11 @@ anychart.core.resource.TimeLine.prototype.draw = function() {
         if (labels) {
           labels.clear();
         } else {
-          var defaultTextFormatter = /** @type {Function} */(anychart.getFullTheme('defaultLabelFactory.textFormatter'));
+          var defaultTextFormatter = /** @type {Function} */(anychart.getFullTheme('defaultLabelFactory.format'));
           var defaultPositionFormatter = /** @type {Function} */(anychart.getFullTheme('defaultLabelFactory.positionFormatter'));
 
           labels = new anychart.core.ui.LabelsFactory();
-          labels['textFormatter'](defaultTextFormatter);
+          labels['format'](defaultTextFormatter);
           labels['positionFormatter'](defaultPositionFormatter);
 
           labels.enabled(true);

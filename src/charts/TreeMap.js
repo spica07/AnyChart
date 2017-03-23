@@ -2152,13 +2152,13 @@ anychart.charts.TreeMap.prototype.drawLabel_ = function(pointState) {
             bounds.getBottom() >= measuredBounds.getBottom());
 
     var dropText = false;
-    var textFormatter;
+    var format;
     if (outOfCellBounds) {
       if (displayMode == anychart.enums.LabelsDisplayMode.DROP) {
         if (isHeader) {
           dropText = true;
-          textFormatter = labelsFactory.getTextFormatterInternal();
-          labelsFactory['textFormatter'](anychart.charts.TreeMap.EMPTY_TEXT_FORMATTER);
+          format = labelsFactory.getFormat();
+          labelsFactory['format'](anychart.charts.TreeMap.EMPTY_TEXT_FORMATTER);
           label['width'](bounds.width);
           label['height'](bounds.height);
         } else
@@ -2189,15 +2189,15 @@ anychart.charts.TreeMap.prototype.drawLabel_ = function(pointState) {
         emptyText = !labelsFactory.enabled();
       }
       if (emptyText) {
-        textFormatter = labelsFactory.getTextFormatterInternal();
-        labelsFactory['textFormatter'](anychart.charts.TreeMap.EMPTY_TEXT_FORMATTER);
+        format = labelsFactory.getFormat();
+        labelsFactory['format'](anychart.charts.TreeMap.EMPTY_TEXT_FORMATTER);
         label.enabled(true);
       }
     }
 
     label.draw();
     if (dropText || emptyText) {
-      labelsFactory.setTextFormatterInternal(/** @type {?Function} */ (textFormatter));
+      labelsFactory.setFormat(/** @type {?Function} */ (format));
     }
   }
 };
