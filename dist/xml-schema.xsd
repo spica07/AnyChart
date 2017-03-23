@@ -62,6 +62,7 @@
             <!-- charts.Pie and charts.Funnel and charts.Pyramid elements -->
             <xsd:element minOccurs="0" maxOccurs="1" name="labels" type="core.LabelsFactory"/>
             <xsd:element minOccurs="0" maxOccurs="1" name="hover_labels" type="core.LabelsFactory"/>
+            <xsd:element minOccurs="0" maxOccurs="1" name="select_labels" type="core.LabelsFactory"/>
             <xsd:element minOccurs="0" maxOccurs="1" name="tooltip" type="core.Tooltip"/>
             <xsd:element minOccurs="0" maxOccurs="1" name="connector_stroke" type="Stroke"/>
             <xsd:element minOccurs="0" maxOccurs="1" name="fill" type="Fill"/>
@@ -156,7 +157,7 @@
         <xsd:attribute name="points_padding" type="simple.NumberOrPercent" default="5"/>
         <xsd:attribute name="hover_markers" type="simple.MarkerType"/>
         <xsd:attribute name="select_markers" type="simple.MarkerType"/>
-        <xsd:attribute name="select_labels" type="simple.BoolOrNull" default="true"/>
+        <xsd:attribute name="select_labels" type="simple.BoolOrNull"/>
         <xsd:attribute name="select_fill" type="xsd:string"/>
         <xsd:attribute name="select_stroke" type="xsd:string"/>
         <xsd:attribute name="select_hatch_fill" type="simple.HatchFill" default="false"/>
@@ -167,8 +168,8 @@
         <xsd:attribute name="y_axis" type="simple.BoolOrNull" default="true"/>
         <!-- charts.Pie attrs -->
         <!--<xsd:attribute name="group" type="xsd:boolean"/> NO SUPPORT IN XML YET-->
-        <xsd:attribute name="labels" type="simple.BoolOrNull" default="true"/>
-        <xsd:attribute name="hover_labels" type="simple.BoolOrNull" default="true"/>
+        <xsd:attribute name="labels" type="simple.BoolOrNull"/>
+        <xsd:attribute name="hover_labels" type="simple.BoolOrNull"/>
         <xsd:attribute name="tooltip" type="simple.BoolOrNull" default="true"/>
         <xsd:attribute name="sort" type="enums.Sort" default="none"/>
         <xsd:attribute name="radius" type="simple.NumberOrPercent" default="100%"/>

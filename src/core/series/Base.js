@@ -2007,7 +2007,8 @@ anychart.core.series.Base.prototype.drawFactoryElement = function(seriesFactoryG
             (!chartStateFactory || goog.isNull(chartStateFactory.enabled()) || !goog.isDef(chartStateFactory.enabled())) ? // has no state stateFactory or null "enabled" in it ?
                 goog.isNull(pointOverrideEnabled) ? // has no marker in point or null "enabled" in it ?
                     goog.isNull(mainFactory.enabled()) || !goog.isDef(mainFactory.enabled()) ?
-                        chartNormalFactory.enabled() :
+                        chartNormalFactory ? chartNormalFactory.enabled() :
+                            null :
                         mainFactory.enabled() :
                     pointOverrideEnabled :
                 chartStateFactory.enabled() :
@@ -2034,15 +2035,18 @@ anychart.core.series.Base.prototype.drawFactoryElement = function(seriesFactoryG
       }
     } else {
       var statePointOverridePos = statePointOverride && goog.isDef(statePointOverride['position']) ? statePointOverride['position'] : void 0;
-      var seriesStateFactoryPos = seriesStateFactory && goog.isDef(seriesStateFactory.position()) ? seriesStateFactory.position() : void 0;
-      var chartStateFactoryPos = chartStateFactory && goog.isDef(chartStateFactory.position()) ? chartStateFactory.position() : void 0;
+      var seriesStateFactoryPos = seriesStateFactory && goog.isDef(seriesStateFactory['position']()) ? seriesStateFactory['position']() : void 0;
+      var chartStateFactoryPos = chartStateFactory && goog.isDef(chartStateFactory['position']()) ? chartStateFactory['position']() : void 0;
       var pointOverridePos = pointOverride && goog.isDef(pointOverride['position']) ? pointOverride['position'] : void 0;
+      var seriesNormalFactoryPos = mainFactory && goog.isDef(mainFactory['position']()) ? mainFactory['position']() : void 0;
 
       var position = goog.isDef(statePointOverridePos) ? statePointOverridePos :
           goog.isDef(seriesStateFactoryPos) ? seriesStateFactoryPos :
               goog.isDef(chartStateFactoryPos) ? chartStateFactoryPos :
                   goog.isDef(pointOverridePos) ? pointOverridePos :
-                      mainFactory.position();
+                      goog.isDef(mainFactory) ? seriesNormalFactoryPos :
+                          goog.isDef(chartNormalFactory) ? chartNormalFactory['position']() :
+                              'auto';
 
       positionProvider = this.createPositionProvider(/** @type {anychart.enums.Position|string} */(position), true);
       return this.drawSingleFactoryElement(mainFactory, index, positionProvider, formatProvider,
