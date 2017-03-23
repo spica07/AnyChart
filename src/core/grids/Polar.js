@@ -562,7 +562,7 @@ anychart.core.grids.Polar.prototype.drawInterlaceRadial = function(angle, sweep,
  * @return {anychart.core.grids.Polar} An instance of {@link anychart.core.grids.Polar} class for method chaining.
  */
 anychart.core.grids.Polar.prototype.draw = function() {
-  var xScale = /** @type {anychart.scales.ScatterBase} */(this.xScale());
+  var xScale = /** @type {anychart.scales.ScatterBase|anychart.scales.Ordinal} */(this.xScale());
   var yScale = /** @type {anychart.scales.ScatterBase|anychart.scales.Ordinal} */(this.yScale());
 
   if (!xScale) {
@@ -627,9 +627,11 @@ anychart.core.grids.Polar.prototype.draw = function() {
     var i;
 
     if (this.isRadial()) {
-      ticks = this.isMinor() ? xScale.minorTicks() : xScale.ticks();
+      isOrdinal = xScale instanceof anychart.scales.Ordinal;
+      ticks = isOrdinal ? xScale.ticks() : this.isMinor() ? xScale.minorTicks() : xScale.ticks();
       ticksArray = ticks.get();
-      ticksArrLen = ticksArray.length - 1;
+      ticksArrLen = ticksArray.length;
+      if (!isOrdinal) ticksArrLen--;
 
       var sweep = 360 / ticksArrLen;
       var angleRad, x, y, prevX = NaN, prevY = NaN, xRatio, angle;

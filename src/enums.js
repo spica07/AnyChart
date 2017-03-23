@@ -2909,7 +2909,9 @@ anychart.enums.normalizeRadarSeriesType = function(value, opt_default) {
 anychart.enums.PolarSeriesType = {
   AREA: 'area',
   LINE: 'line',
-  MARKER: 'marker'
+  MARKER: 'marker',
+  POLYGON: 'polygon',
+  POLYLINE: 'polyline'
 };
 
 
@@ -2926,6 +2928,10 @@ anychart.enums.normalizePolarSeriesType = function(value, opt_default) {
       return anychart.enums.PolarSeriesType.AREA;
     case 'line':
       return anychart.enums.PolarSeriesType.LINE;
+    case 'polygon':
+      return anychart.enums.PolarSeriesType.POLYGON;
+    case 'polyline':
+      return anychart.enums.PolarSeriesType.POLYLINE;
     case 'marker':
       return anychart.enums.PolarSeriesType.MARKER;
   }

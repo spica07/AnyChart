@@ -74,6 +74,12 @@ anychart.core.series.Polar.prototype.prepareMetaMakers = function() {
 
 
 /** @inheritDoc */
+anychart.core.series.Polar.prototype.getXPointPosition = function() {
+  return this.xScale() instanceof anychart.scales.Ordinal ? 0.5 : 0;
+};
+
+
+/** @inheritDoc */
 anychart.core.series.Polar.prototype.serialize = function() {
   var json = anychart.core.series.Polar.base(this, 'serialize');
   anychart.core.settings.serialize(this, anychart.core.series.Polar.PROPERTY_DESCRIPTORS, json);

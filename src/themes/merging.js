@@ -1047,13 +1047,15 @@ anychart.themes.merging.mergingMap_ = [
   {
     defaultObj: 'polar.defaultSeriesSettings.areaLike',
     targets: [
-      'polar.defaultSeriesSettings.area'
+      'polar.defaultSeriesSettings.area',
+      'polar.defaultSeriesSettings.polygon'
     ]
   },
   {
     defaultObj: 'polar.defaultSeriesSettings.lineLike',
     targets: [
-      'polar.defaultSeriesSettings.line'
+      'polar.defaultSeriesSettings.line',
+      'polar.defaultSeriesSettings.polyline'
     ]
   },
   {

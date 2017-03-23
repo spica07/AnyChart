@@ -367,8 +367,8 @@ anychart.core.axes.Polar.prototype.stroke = function(opt_strokeOrFill, opt_thick
 
 
 /**
- * @param {anychart.scales.ScatterBase=} opt_value Scale.
- * @return {anychart.scales.ScatterBase|!anychart.core.axes.Polar} Axis scale or itself for method chaining.
+ * @param {anychart.scales.Base=} opt_value Scale.
+ * @return {anychart.scales.Base|!anychart.core.axes.Polar} Axis scale or itself for method chaining.
  */
 anychart.core.axes.Polar.prototype.scale = function(opt_value) {
   if (goog.isDef(opt_value)) {
@@ -449,236 +449,234 @@ anychart.core.axes.Polar.prototype.calculateAxisBounds_ = function() {
       this.cx_ = Math.round(parentBounds.left + parentBounds.width / 2);
       this.cy_ = Math.round(parentBounds.top + parentBounds.height / 2);
 
-      var scale = /** @type {anychart.scales.ScatterBase} */(this.scale());
+      var scale = /** @type {anychart.scales.Base} */(this.scale());
 
-      if (scale) {
-        var delta = 0;
-        if (this.enabled()) {
-          this.dropBoundsCache_();
-          var x, y, x1, y1, lineThickness, tickLen, labelBounds;
-          var i, j, overlappedLabels, needDrawLabels, needDrawMinorLabels;
+      if (scale && this.enabled()) {
+        var isOrdinal = scale instanceof anychart.scales.Ordinal;
+        this.dropBoundsCache_();
+        var x, y, x1, y1, lineThickness, tickLen, labelBounds;
+        var i, j, overlappedLabels, needDrawLabels, needDrawMinorLabels;
 
-          var leftExtreme = NaN;
-          var topExtreme = NaN;
-          var rightExtreme = NaN;
-          var bottomExtreme = NaN;
+        var leftExtreme = NaN;
+        var topExtreme = NaN;
+        var rightExtreme = NaN;
+        var bottomExtreme = NaN;
 
-          var leftExtremeLabelIndex = NaN;
-          var topExtremeLabelIndex = NaN;
-          var rightExtremeLabelIndex = NaN;
-          var bottomExtremeLabelIndex = NaN;
+        var leftExtremeLabelIndex = NaN;
+        var topExtremeLabelIndex = NaN;
+        var rightExtremeLabelIndex = NaN;
+        var bottomExtremeLabelIndex = NaN;
 
-          var leftExtremeAngle = NaN;
-          var topExtremeAngle = NaN;
-          var rightExtremeAngle = NaN;
-          var bottomExtremeAngle = NaN;
+        var leftExtremeAngle = NaN;
+        var topExtremeAngle = NaN;
+        var rightExtremeAngle = NaN;
+        var bottomExtremeAngle = NaN;
 
-          var leftExtremeIsMajor = true;
-          var topExtremeIsMajor = true;
-          var rightExtremeIsMajor = true;
-          var bottomExtremeIsMajor = true;
+        var leftExtremeIsMajor = true;
+        var topExtremeIsMajor = true;
+        var rightExtremeIsMajor = true;
+        var bottomExtremeIsMajor = true;
 
-          var scaleTicksArr = scale.ticks().get();
-          var ticksArrLen = scaleTicksArr.length;
+        var scaleTicksArr = scale.ticks().get();
+        var ticksArrLen = scaleTicksArr.length;
 
-          overlappedLabels = this.getOverlappedLabels_();
-          if (goog.isObject(overlappedLabels)) {
-            needDrawLabels = overlappedLabels.labels;
-            needDrawMinorLabels = overlappedLabels.minorLabels;
-          } else {
-            needDrawLabels = !overlappedLabels;
-            needDrawMinorLabels = !overlappedLabels;
-          }
+        overlappedLabels = this.getOverlappedLabels_();
+        if (goog.isObject(overlappedLabels)) {
+          needDrawLabels = overlappedLabels.labels;
+          needDrawMinorLabels = overlappedLabels.minorLabels;
+        } else {
+          needDrawLabels = !overlappedLabels;
+          needDrawMinorLabels = !overlappedLabels;
+        }
 
-          i = 0;
-          j = 0;
-          var scaleMinorTicksArr = scale.minorTicks().get();
-          var minorTicksArrLen = scaleMinorTicksArr.length;
-          var minorTickVal, minorRatio, prevMajorRatio;
-          var tickVal, ratio, drawLabel, drawTick;
+        i = 0;
+        j = 0;
+        var scaleMinorTicksArr = isOrdinal ? [] : scale.minorTicks().get();
+        var minorTicksArrLen = scaleMinorTicksArr.length;
+        var minorTickVal, minorRatio, prevMajorRatio;
+        var tickVal, ratio, drawLabel, drawTick;
 
-          var angleRad, minorAngleRad;
-          var startAngle = goog.math.standardAngle(this.startAngle() - 90);
-          var angle, minorAngle;
+        var angleRad, minorAngleRad;
+        var startAngle = goog.math.standardAngle(this.startAngle() - 90);
+        var angle, minorAngle;
 
-          while (i < ticksArrLen || j < minorTicksArrLen) {
-            tickVal = scaleTicksArr[i];
-            minorTickVal = scaleMinorTicksArr[j];
-            ratio = scale.transform(tickVal);
-            minorRatio = scale.transform(minorTickVal);
+        while (i < ticksArrLen || j < minorTicksArrLen) {
+          tickVal = scaleTicksArr[i];
+          minorTickVal = scaleMinorTicksArr[j];
+          ratio = scale.transform(tickVal);
+          minorRatio = scale.transform(minorTickVal);
 
-            if (((ratio <= minorRatio && i < ticksArrLen) || j == minorTicksArrLen)) {
-              angle = goog.math.standardAngle(startAngle + ratio * 360);
-              angleRad = angle * Math.PI / 180;
+          if (((ratio <= minorRatio && i < ticksArrLen) || j == minorTicksArrLen)) {
+            angle = goog.math.standardAngle(startAngle + ratio * 360);
+            angleRad = angle * Math.PI / 180;
 
-              drawLabel = goog.isArray(needDrawLabels) ? needDrawLabels[i] : needDrawLabels;
-              drawTick = (goog.isArray(needDrawLabels) && needDrawLabels[i]) || goog.isBoolean(needDrawLabels);
+            drawLabel = goog.isArray(needDrawLabels) ? needDrawLabels[i] : needDrawLabels;
+            drawTick = (goog.isArray(needDrawLabels) && needDrawLabels[i]) || goog.isBoolean(needDrawLabels);
 
-              if (drawLabel && this.labels().enabled()) {
-                labelBounds = this.getLabelBounds_(i, true);
-                x = labelBounds.getLeft();
-                y = labelBounds.getTop();
-                x1 = labelBounds.getRight();
-                y1 = labelBounds.getBottom();
-              } else if (drawTick && this.ticks().enabled()) {
-                lineThickness = this.line_.stroke()['thickness'] ? this.line_.stroke()['thickness'] : 1;
-                tickLen = this.ticks().enabled() ? this.ticks().length() : 0;
-                radius = this.radius_ + tickLen + lineThickness / 2;
-                x = x1 = Math.round(this.cx_ + radius * Math.cos(angleRad));
-                y = y1 = Math.round(this.cy_ + radius * Math.sin(angleRad));
-              } else {
-                lineThickness = this.line_.stroke()['thickness'] ? this.line_.stroke()['thickness'] : 1;
-                radius = this.radius_ + lineThickness / 2;
-                x = x1 = Math.round(this.cx_ + radius * Math.cos(angleRad));
-                y = y1 = Math.round(this.cy_ + radius * Math.sin(angleRad));
-              }
-
-              if (isNaN(leftExtreme) || x < leftExtreme) {
-                leftExtreme = x;
-                leftExtremeLabelIndex = i;
-                leftExtremeAngle = angle;
-                leftExtremeIsMajor = true;
-              }
-              if (isNaN(topExtreme) || y < topExtreme) {
-                topExtreme = y;
-                topExtremeLabelIndex = i;
-                topExtremeAngle = angle;
-                topExtremeIsMajor = true;
-              }
-              if (isNaN(rightExtreme) || x1 > rightExtreme) {
-                rightExtreme = x1;
-                rightExtremeLabelIndex = i;
-                rightExtremeAngle = angle;
-                rightExtremeIsMajor = true;
-              }
-              if (isNaN(bottomExtreme) || y1 > bottomExtreme) {
-                bottomExtreme = y1;
-                bottomExtremeLabelIndex = i;
-                bottomExtremeAngle = angle;
-                bottomExtremeIsMajor = true;
-              }
-              prevMajorRatio = ratio;
-              i++;
-            } else {
-              minorAngle = goog.math.standardAngle(startAngle + minorRatio * 360);
-              minorAngleRad = minorAngle * Math.PI / 180;
-
-              drawLabel = goog.isArray(needDrawMinorLabels) ? needDrawMinorLabels[j] : needDrawMinorLabels;
-              drawTick = (goog.isArray(needDrawMinorLabels) && needDrawMinorLabels[j]) || goog.isBoolean(needDrawMinorLabels);
-
-              if (drawLabel && prevMajorRatio != minorRatio) {
-                labelBounds = this.getLabelBounds_(j, false);
-                x = labelBounds.getLeft();
-                y = labelBounds.getTop();
-                x1 = labelBounds.getRight();
-                y1 = labelBounds.getBottom();
-              } else if (drawTick && this.minorTicks().enabled() && prevMajorRatio != minorRatio) {
-                lineThickness = this.line_.stroke()['thickness'] ? this.line_.stroke()['thickness'] : 1;
-                tickLen = this.minorTicks().enabled() ? this.minorTicks().length() : 0;
-                radius = this.radius_ + tickLen + lineThickness / 2;
-                x = x1 = Math.round(this.cx_ + radius * Math.cos(minorAngleRad));
-                y = y1 = Math.round(this.cy_ + radius * Math.sin(minorAngleRad));
-              }
-
-              if (isNaN(leftExtreme) || x < leftExtreme) {
-                leftExtreme = x;
-                leftExtremeLabelIndex = j;
-                leftExtremeAngle = minorAngle;
-                leftExtremeIsMajor = false;
-              }
-              if (isNaN(topExtreme) || y < topExtreme) {
-                topExtreme = y;
-                topExtremeLabelIndex = j;
-                topExtremeAngle = minorAngle;
-                topExtremeIsMajor = false;
-              }
-              if (isNaN(rightExtreme) || x1 > rightExtreme) {
-                rightExtreme = x1;
-                rightExtremeLabelIndex = j;
-                rightExtremeAngle = minorAngle;
-                rightExtremeIsMajor = false;
-              }
-              if (isNaN(bottomExtreme) || y1 > bottomExtreme) {
-                bottomExtreme = y1;
-                bottomExtremeLabelIndex = j;
-                bottomExtremeAngle = minorAngle;
-                bottomExtremeIsMajor = false;
-              }
-              j++;
-            }
-          }
-
-          var leftDelta = 0;
-          var topDelta = 0;
-          var rightDelta = 0;
-          var bottomDelta = 0;
-
-          leftExtreme = Math.round(leftExtreme);
-          topExtreme = Math.round(topExtreme);
-          rightExtreme = Math.round(rightExtreme);
-          bottomExtreme = Math.round(bottomExtreme);
-
-          var a;
-          if (leftExtreme < parentBounds.getLeft()) {
-            a = leftExtremeAngle < 180 ?
-                Math.sin((leftExtremeAngle - 90) * Math.PI / 180) :
-                Math.cos((leftExtremeAngle - 180) * Math.PI / 180);
-            leftDelta = Math.round((parentBounds.getLeft() - leftExtreme) / a);
-          }
-          if (topExtreme < parentBounds.getTop()) {
-            a = topExtremeAngle < 270 ?
-                Math.sin((topExtremeAngle - 180) * Math.PI / 180) :
-                Math.cos((topExtremeAngle - 270) * Math.PI / 180);
-            topDelta = Math.round((parentBounds.getTop() - topExtreme) / a);
-          }
-          if (rightExtreme > parentBounds.getRight()) {
-            a = rightExtremeAngle < 360 ?
-                Math.sin((rightExtremeAngle - 270) * Math.PI / 180) :
-                Math.cos(rightExtremeAngle * Math.PI / 180);
-            rightDelta = Math.round((rightExtreme - parentBounds.getRight()) / a);
-          }
-          if (bottomExtreme > parentBounds.getBottom()) {
-            a = bottomExtremeAngle < 90 ?
-                Math.sin(bottomExtremeAngle * Math.PI / 180) :
-                Math.cos((bottomExtremeAngle - 90) * Math.PI / 180);
-            bottomDelta = Math.round((bottomExtreme - parentBounds.getBottom()) / a);
-          }
-
-          delta = Math.max(leftDelta, topDelta, rightDelta, bottomDelta);
-
-          this.criticalTickLength_ = NaN;
-          if (delta > 0) {
-            this.radius_ -= delta;
-            if (this.radius_ < 0) {
-              this.radius_ = 0;
-              var labelSize = 0;
-              if (this.labels().enabled()) {
-                var extremeLabelIndex = NaN, isHorizontal, isMajor = true;
-                if (delta == leftDelta) {
-                  extremeLabelIndex = leftExtremeLabelIndex;
-                  isMajor = leftExtremeIsMajor;
-                  isHorizontal = true;
-                } else if (delta == topDelta) {
-                  extremeLabelIndex = topExtremeLabelIndex;
-                  isMajor = topExtremeIsMajor;
-                  isHorizontal = false;
-                } else if (delta == rightDelta) {
-                  extremeLabelIndex = rightExtremeLabelIndex;
-                  isMajor = rightExtremeIsMajor;
-                  isHorizontal = true;
-                } else if (delta == bottomDelta) {
-                  extremeLabelIndex = bottomExtremeLabelIndex;
-                  isMajor = bottomExtremeIsMajor;
-                  isHorizontal = false;
-                }
-                var extremeLabelBounds = this.getLabelBounds_(extremeLabelIndex, isMajor);
-                labelSize = isHorizontal ? extremeLabelBounds.width : extremeLabelBounds.height;
-              }
+            if (drawLabel && this.labels().enabled()) {
+              labelBounds = this.getLabelBounds_(i, true);
+              x = labelBounds.getLeft();
+              y = labelBounds.getTop();
+              x1 = labelBounds.getRight();
+              y1 = labelBounds.getBottom();
+            } else if (drawTick && this.ticks().enabled()) {
               lineThickness = this.line_.stroke()['thickness'] ? this.line_.stroke()['thickness'] : 1;
-              this.criticalTickLength_ = Math.min(parentBounds.width, parentBounds.height) / 2 - labelSize - lineThickness;
+              tickLen = this.ticks().enabled() ? this.ticks().length() : 0;
+              radius = this.radius_ + tickLen + lineThickness / 2;
+              x = x1 = Math.round(this.cx_ + radius * Math.cos(angleRad));
+              y = y1 = Math.round(this.cy_ + radius * Math.sin(angleRad));
+            } else {
+              lineThickness = this.line_.stroke()['thickness'] ? this.line_.stroke()['thickness'] : 1;
+              radius = this.radius_ + lineThickness / 2;
+              x = x1 = Math.round(this.cx_ + radius * Math.cos(angleRad));
+              y = y1 = Math.round(this.cy_ + radius * Math.sin(angleRad));
             }
-            this.dropBoundsCache_();
+
+            if (isNaN(leftExtreme) || x < leftExtreme) {
+              leftExtreme = x;
+              leftExtremeLabelIndex = i;
+              leftExtremeAngle = angle;
+              leftExtremeIsMajor = true;
+            }
+            if (isNaN(topExtreme) || y < topExtreme) {
+              topExtreme = y;
+              topExtremeLabelIndex = i;
+              topExtremeAngle = angle;
+              topExtremeIsMajor = true;
+            }
+            if (isNaN(rightExtreme) || x1 > rightExtreme) {
+              rightExtreme = x1;
+              rightExtremeLabelIndex = i;
+              rightExtremeAngle = angle;
+              rightExtremeIsMajor = true;
+            }
+            if (isNaN(bottomExtreme) || y1 > bottomExtreme) {
+              bottomExtreme = y1;
+              bottomExtremeLabelIndex = i;
+              bottomExtremeAngle = angle;
+              bottomExtremeIsMajor = true;
+            }
+            prevMajorRatio = ratio;
+            i++;
+          } else {
+            minorAngle = goog.math.standardAngle(startAngle + minorRatio * 360);
+            minorAngleRad = minorAngle * Math.PI / 180;
+
+            drawLabel = goog.isArray(needDrawMinorLabels) ? needDrawMinorLabels[j] : needDrawMinorLabels;
+            drawTick = (goog.isArray(needDrawMinorLabels) && needDrawMinorLabels[j]) || goog.isBoolean(needDrawMinorLabels);
+
+            if (drawLabel && prevMajorRatio != minorRatio) {
+              labelBounds = this.getLabelBounds_(j, false);
+              x = labelBounds.getLeft();
+              y = labelBounds.getTop();
+              x1 = labelBounds.getRight();
+              y1 = labelBounds.getBottom();
+            } else if (drawTick && this.minorTicks().enabled() && prevMajorRatio != minorRatio) {
+              lineThickness = this.line_.stroke()['thickness'] ? this.line_.stroke()['thickness'] : 1;
+              tickLen = this.minorTicks().enabled() ? this.minorTicks().length() : 0;
+              radius = this.radius_ + tickLen + lineThickness / 2;
+              x = x1 = Math.round(this.cx_ + radius * Math.cos(minorAngleRad));
+              y = y1 = Math.round(this.cy_ + radius * Math.sin(minorAngleRad));
+            }
+
+            if (isNaN(leftExtreme) || x < leftExtreme) {
+              leftExtreme = x;
+              leftExtremeLabelIndex = j;
+              leftExtremeAngle = minorAngle;
+              leftExtremeIsMajor = false;
+            }
+            if (isNaN(topExtreme) || y < topExtreme) {
+              topExtreme = y;
+              topExtremeLabelIndex = j;
+              topExtremeAngle = minorAngle;
+              topExtremeIsMajor = false;
+            }
+            if (isNaN(rightExtreme) || x1 > rightExtreme) {
+              rightExtreme = x1;
+              rightExtremeLabelIndex = j;
+              rightExtremeAngle = minorAngle;
+              rightExtremeIsMajor = false;
+            }
+            if (isNaN(bottomExtreme) || y1 > bottomExtreme) {
+              bottomExtreme = y1;
+              bottomExtremeLabelIndex = j;
+              bottomExtremeAngle = minorAngle;
+              bottomExtremeIsMajor = false;
+            }
+            j++;
           }
+        }
+
+        var leftDelta = 0;
+        var topDelta = 0;
+        var rightDelta = 0;
+        var bottomDelta = 0;
+
+        leftExtreme = Math.round(leftExtreme);
+        topExtreme = Math.round(topExtreme);
+        rightExtreme = Math.round(rightExtreme);
+        bottomExtreme = Math.round(bottomExtreme);
+
+        var a;
+        if (leftExtreme < parentBounds.getLeft()) {
+          a = leftExtremeAngle < 180 ?
+              Math.sin((leftExtremeAngle - 90) * Math.PI / 180) :
+              Math.cos((leftExtremeAngle - 180) * Math.PI / 180);
+          leftDelta = Math.round((parentBounds.getLeft() - leftExtreme) / a);
+        }
+        if (topExtreme < parentBounds.getTop()) {
+          a = topExtremeAngle < 270 ?
+              Math.sin((topExtremeAngle - 180) * Math.PI / 180) :
+              Math.cos((topExtremeAngle - 270) * Math.PI / 180);
+          topDelta = Math.round((parentBounds.getTop() - topExtreme) / a);
+        }
+        if (rightExtreme > parentBounds.getRight()) {
+          a = rightExtremeAngle < 360 ?
+              Math.sin((rightExtremeAngle - 270) * Math.PI / 180) :
+              Math.cos(rightExtremeAngle * Math.PI / 180);
+          rightDelta = Math.round((rightExtreme - parentBounds.getRight()) / a);
+        }
+        if (bottomExtreme > parentBounds.getBottom()) {
+          a = bottomExtremeAngle < 90 ?
+              Math.sin(bottomExtremeAngle * Math.PI / 180) :
+              Math.cos((bottomExtremeAngle - 90) * Math.PI / 180);
+          bottomDelta = Math.round((bottomExtreme - parentBounds.getBottom()) / a);
+        }
+
+        var delta = Math.max(leftDelta, topDelta, rightDelta, bottomDelta);
+
+        this.criticalTickLength_ = NaN;
+        if (delta > 0) {
+          this.radius_ -= delta;
+          if (this.radius_ < 0) {
+            this.radius_ = 0;
+            var labelSize = 0;
+            if (this.labels().enabled()) {
+              var extremeLabelIndex = NaN, isHorizontal, isMajor = true;
+              if (delta == leftDelta) {
+                extremeLabelIndex = leftExtremeLabelIndex;
+                isMajor = leftExtremeIsMajor;
+                isHorizontal = true;
+              } else if (delta == topDelta) {
+                extremeLabelIndex = topExtremeLabelIndex;
+                isMajor = topExtremeIsMajor;
+                isHorizontal = false;
+              } else if (delta == rightDelta) {
+                extremeLabelIndex = rightExtremeLabelIndex;
+                isMajor = rightExtremeIsMajor;
+                isHorizontal = true;
+              } else if (delta == bottomDelta) {
+                extremeLabelIndex = bottomExtremeLabelIndex;
+                isMajor = bottomExtremeIsMajor;
+                isHorizontal = false;
+              }
+              var extremeLabelBounds = this.getLabelBounds_(extremeLabelIndex, isMajor);
+              labelSize = isHorizontal ? extremeLabelBounds.width : extremeLabelBounds.height;
+            }
+            lineThickness = this.line_.stroke()['thickness'] ? this.line_.stroke()['thickness'] : 1;
+            this.criticalTickLength_ = Math.min(parentBounds.width, parentBounds.height) / 2 - labelSize - lineThickness;
+          }
+          this.dropBoundsCache_();
         }
         var outerRadius = this.radius_ + delta;
         var outerDiameter = outerRadius * 2;
@@ -779,7 +777,8 @@ anychart.core.axes.Polar.prototype.getOverlappedLabels_ = function() {
     if (this.overlapMode_ == anychart.enums.LabelsOverlapMode.ALLOW_OVERLAP) {
       return false;
     } else {
-      var scale = /** @type {anychart.scales.ScatterBase} */(this.scale());
+      var scale = /** @type {anychart.scales.ScatterBase|anychart.scales.Ordinal} */(this.scale());
+      var isOrdinal = scale instanceof anychart.scales.Ordinal;
       var labels = [];
       var minorLabels = [];
 
@@ -810,103 +809,101 @@ anychart.core.axes.Polar.prototype.getOverlappedLabels_ = function() {
         var k = -1;
         var isLabels = this.labels().enabled();
 
-        if (scale instanceof anychart.scales.ScatterBase) {
-          var scaleMinorTicksArr = scale.minorTicks().get();
-          i = 0;
-          j = 0;
-          var minorTicksArrLen = scaleMinorTicksArr.length;
-          var minorTickVal, minorRatio;
-          var isMinorLabels = this.minorLabels().enabled();
+        var scaleMinorTicksArr = isOrdinal ? [] : scale.minorTicks().get();
+        i = 0;
+        j = 0;
+        var minorTicksArrLen = scaleMinorTicksArr.length;
+        var minorTickVal, minorRatio;
+        var isMinorLabels = isOrdinal ? false : this.minorLabels().enabled();
 
-          while (i < ticksArrLen || j < minorTicksArrLen) {
-            tickVal = scaleTicksArr[i];
-            minorTickVal = scaleMinorTicksArr[j];
-            ratio = scale.transform(tickVal);
-            minorRatio = scale.transform(minorTickVal);
-            bounds1 = bounds2 = bounds3 = bounds4 = null;
+        while (i < ticksArrLen || j < minorTicksArrLen) {
+          tickVal = scaleTicksArr[i];
+          minorTickVal = scaleMinorTicksArr[j];
+          ratio = scale.transform(tickVal);
+          minorRatio = scale.transform(minorTickVal);
+          bounds1 = bounds2 = bounds3 = bounds4 = null;
 
-            if (nextDrawableLabel == -1 && isLabels) {
-              k = i;
-              while (nextDrawableLabel == -1 && k < ticksArrLen) {
-                bounds1 = this.getLabelBounds_(k, true).toCoordinateBox();
+          if (nextDrawableLabel == -1 && isLabels) {
+            k = i;
+            while (nextDrawableLabel == -1 && k < ticksArrLen) {
+              bounds1 = this.getLabelBounds_(k, true).toCoordinateBox();
 
-                if (prevDrawableLabel != -1)
-                  bounds2 = this.getLabelBounds_(prevDrawableLabel, true).toCoordinateBox();
+              if (prevDrawableLabel != -1)
+                bounds2 = this.getLabelBounds_(prevDrawableLabel, true).toCoordinateBox();
 
-                if (k == ticksArrLen - 1)
-                  bounds3 = this.getLabelBounds_(0, true).toCoordinateBox();
+              if (k == ticksArrLen - 1)
+                bounds3 = this.getLabelBounds_(0, true).toCoordinateBox();
 
-                if (!(anychart.math.checkRectIntersection(bounds1, bounds2) ||
-                    anychart.math.checkRectIntersection(bounds1, bounds3))) {
-                  tempRatio = scale.transform(scaleTicksArr[k]);
-                  if (tempRatio <= 0 || tempRatio >= 1)
-                    nextDrawableLabel = k;
-                  else if (tempRatio > 0 && tempRatio < 1)
-                    nextDrawableLabel = k;
-                }
-                k++;
+              if (!(anychart.math.checkRectIntersection(bounds1, bounds2) ||
+                  anychart.math.checkRectIntersection(bounds1, bounds3))) {
+                tempRatio = scale.transform(scaleTicksArr[k]);
+                if (tempRatio <= 0 || tempRatio >= 1)
+                  nextDrawableLabel = k;
+                else if (tempRatio > 0 && tempRatio < 1)
+                  nextDrawableLabel = k;
               }
+              k++;
             }
+          }
 
-            if (((ratio <= minorRatio && i < ticksArrLen) || j == minorTicksArrLen)) {
-              if (isLabels && i == nextDrawableLabel && this.labels().enabled()) {
-                prevDrawableLabel = i;
-                nextDrawableLabel = -1;
-                labels.push(true);
-              } else {
-                labels.push(false);
-              }
-              i++;
-              if (ratio == minorRatio && (this.labels().enabled() || this.ticks().enabled())) {
-                minorLabels.push(false);
-                j++;
-              }
+          if (((ratio <= minorRatio && i < ticksArrLen) || j == minorTicksArrLen)) {
+            if (isLabels && i == nextDrawableLabel && this.labels().enabled()) {
+              prevDrawableLabel = i;
+              nextDrawableLabel = -1;
+              labels.push(true);
             } else {
-              if (isMinorLabels) {
-                bounds1 = this.getLabelBounds_(j, false).toCoordinateBox();
+              labels.push(false);
+            }
+            i++;
+            if (ratio == minorRatio && (this.labels().enabled() || this.ticks().enabled())) {
+              minorLabels.push(false);
+              j++;
+            }
+          } else {
+            if (isMinorLabels) {
+              bounds1 = this.getLabelBounds_(j, false).toCoordinateBox();
 
-                if (prevDrawableLabel != -1)
-                  bounds2 = this.getLabelBounds_(prevDrawableLabel, true).toCoordinateBox();
+              if (prevDrawableLabel != -1)
+                bounds2 = this.getLabelBounds_(prevDrawableLabel, true).toCoordinateBox();
 
-                if (nextDrawableLabel != -1)
-                  bounds3 = this.getLabelBounds_(nextDrawableLabel, true).toCoordinateBox();
+              if (nextDrawableLabel != -1)
+                bounds3 = this.getLabelBounds_(nextDrawableLabel, true).toCoordinateBox();
 
-                if (prevDrawableMinorLabel != -1)
-                  bounds4 = this.getLabelBounds_(prevDrawableMinorLabel, false).toCoordinateBox();
+              if (prevDrawableMinorLabel != -1)
+                bounds4 = this.getLabelBounds_(prevDrawableMinorLabel, false).toCoordinateBox();
 
-                var label = this.minorLabels().getLabel(j);
-                var isLabelEnabled = label ?
-                    goog.isDef(label.enabled()) ?
-                        label.enabled() :
-                        true :
-                    true;
+              var label = this.minorLabels().getLabel(j);
+              var isLabelEnabled = label ?
+                  goog.isDef(label.enabled()) ?
+                      label.enabled() :
+                      true :
+                  true;
 
-                if (!(anychart.math.checkRectIntersection(bounds1, bounds2) ||
-                    anychart.math.checkRectIntersection(bounds1, bounds3) ||
-                    anychart.math.checkRectIntersection(bounds1, bounds4)) && isLabelEnabled) {
+              if (!(anychart.math.checkRectIntersection(bounds1, bounds2) ||
+                  anychart.math.checkRectIntersection(bounds1, bounds3) ||
+                  anychart.math.checkRectIntersection(bounds1, bounds4)) && isLabelEnabled) {
 
-                  tempRatio = scale.transform(scaleMinorTicksArr[j]);
-                  if (tempRatio <= 0 || tempRatio >= 1) {
-                    prevDrawableMinorLabel = j;
-                    minorLabels.push(true);
-                  } else if (tempRatio > 0 && tempRatio < 1) {
-                    prevDrawableMinorLabel = j;
-                    minorLabels.push(true);
-                  } else {
-                    minorLabels.push(false);
-                  }
-
+                tempRatio = scale.transform(scaleMinorTicksArr[j]);
+                if (tempRatio <= 0 || tempRatio >= 1) {
+                  prevDrawableMinorLabel = j;
+                  minorLabels.push(true);
+                } else if (tempRatio > 0 && tempRatio < 1) {
+                  prevDrawableMinorLabel = j;
+                  minorLabels.push(true);
                 } else {
                   minorLabels.push(false);
                 }
+
               } else {
                 minorLabels.push(false);
               }
-              j++;
+            } else {
+              minorLabels.push(false);
             }
+            j++;
           }
-          if (!isMinorLabels) minorLabels = false;
         }
+        if (!isMinorLabels) minorLabels = false;
       }
       if (!isLabels) labels = false;
       this.overlappedLabels_ = {labels: labels, minorLabels: minorLabels};
@@ -932,7 +929,7 @@ anychart.core.axes.Polar.prototype.getLabelBounds_ = function(index, isMajor) {
   var lineThickness = this.line_.stroke()['thickness'] ? this.line_.stroke()['thickness'] : 1;
   var ticks = isMajor ? this.ticks() : this.minorTicks();
   var labels = isMajor ? this.labels() : this.minorLabels();
-  var scale = /** @type {anychart.scales.ScatterBase} */(this.scale());
+  var scale = /** @type {anychart.scales.ScatterBase|anychart.scales.Ordinal} */(this.scale());
   var scaleTicks = isMajor ? scale.ticks() : scale.minorTicks();
 
   var value = scaleTicks.get()[index];
@@ -977,7 +974,7 @@ anychart.core.axes.Polar.prototype.getLabelsFormatProvider_ = function(index, va
  * @private
  */
 anychart.core.axes.Polar.prototype.drawLabel_ = function(index, x, y, isMajor) {
-  var scale = /** @type {anychart.scales.ScatterBase} */(this.scale());
+  var scale = /** @type {anychart.scales.ScatterBase|anychart.scales.Ordinal} */(this.scale());
   var scaleTicksArr = isMajor ? scale.ticks().get() : scale.minorTicks().get();
   var labels = isMajor ? this.labels() : this.minorLabels();
 
@@ -1016,7 +1013,7 @@ anychart.core.axes.Polar.prototype.checkDrawingNeeded = function() {
  * @return {anychart.core.axes.Polar} An instance of {@link anychart.core.axes.Polar} class for method chaining.
  */
 anychart.core.axes.Polar.prototype.draw = function() {
-  var scale = /** @type {anychart.scales.ScatterBase} */(this.scale());
+  var scale = /** @type {anychart.scales.ScatterBase|anychart.scales.Ordinal} */(this.scale());
 
   if (!scale) {
     anychart.core.reporting.error(anychart.enums.ErrorCode.SCALE_NOT_SET);
@@ -1112,136 +1109,167 @@ anychart.core.axes.Polar.prototype.draw = function() {
     var tickVal, ratio, drawLabel, drawTick;
     var lineThickness = this.line_.stroke()['thickness'] ? this.line_.stroke()['thickness'] : 1;
 
+    overlappedLabels = this.getOverlappedLabels_();
+    if (goog.isObject(overlappedLabels)) {
+      needDrawLabels = overlappedLabels.labels;
+      needDrawMinorLabels = overlappedLabels.minorLabels;
+    } else {
+      needDrawLabels = !overlappedLabels;
+      needDrawMinorLabels = !overlappedLabels;
+    }
 
-    if (scale instanceof anychart.scales.ScatterBase) {
-      overlappedLabels = this.getOverlappedLabels_();
-      if (goog.isObject(overlappedLabels)) {
-        needDrawLabels = overlappedLabels.labels;
-        needDrawMinorLabels = overlappedLabels.minorLabels;
-      } else {
-        needDrawLabels = !overlappedLabels;
-        needDrawMinorLabels = !overlappedLabels;
-      }
+    var isOrdinal = scale instanceof anychart.scales.Ordinal;
+    var scaleMinorTicksArr = isOrdinal ? [] : scale.minorTicks().get();
+    var minorTickThickness = this.minorTicks_.stroke()['thickness'] ? parseFloat(this.minorTicks_.stroke()['thickness']) : 1;
+    var minorTickLen = this.minorTicks().enabled() ? isNaN(this.criticalTickLength_) ? this.minorTicks().length() : this.criticalTickLength_ : 0;
 
-      var scaleMinorTicksArr = scale.minorTicks().get();
-      var minorTickThickness = this.minorTicks_.stroke()['thickness'] ? parseFloat(this.minorTicks_.stroke()['thickness']) : 1;
-      var minorTickLen = this.minorTicks().enabled() ? isNaN(this.criticalTickLength_) ? this.minorTicks().length() : this.criticalTickLength_ : 0;
+    i = 0;
+    j = 0;
+    var minorTicksArrLen = scaleMinorTicksArr.length;
+    var minorTickVal, minorRatio, prevMajorRatio;
 
-      i = 0;
-      j = 0;
-      var minorTicksArrLen = scaleMinorTicksArr.length;
-      var minorTickVal, minorRatio, prevMajorRatio;
+    while (i < ticksArrLen || j < minorTicksArrLen) {
+      tickVal = scaleTicksArr[i];
+      minorTickVal = scaleMinorTicksArr[j];
+      ratio = scale.transform(tickVal);
+      minorRatio = scale.transform(minorTickVal);
 
-      while (i < ticksArrLen || j < minorTicksArrLen) {
-        tickVal = scaleTicksArr[i];
-        minorTickVal = scaleMinorTicksArr[j];
-        ratio = scale.transform(tickVal);
-        minorRatio = scale.transform(minorTickVal);
+      if (((ratio <= minorRatio && i < ticksArrLen) || j == minorTicksArrLen)) {
+        angle = goog.math.standardAngle(startAngle + ratio * 360);
+        angleRad = angle * Math.PI / 180;
 
-        if (((ratio <= minorRatio && i < ticksArrLen) || j == minorTicksArrLen)) {
-          angle = goog.math.standardAngle(startAngle + ratio * 360);
-          angleRad = angle * Math.PI / 180;
+        xPixelShift = 0;
+        yPixelShift = 0;
 
-          xPixelShift = 0;
-          yPixelShift = 0;
+        halfThickness = Math.floor(lineThickness / 2);
+        if (!angle) {
+          yPixelShift = !(tickThickness % 2) ? 0 : -.5;
+        } else if (angle == 90) {
+          xPixelShift = !(tickThickness % 2) ? 0 : -.5;
+        } else if (angle == 180) {
+          yPixelShift = !(tickThickness % 2) ? 0 : .5;
+        } else if (angle == 270) {
+          xPixelShift = !(tickThickness % 2) ? 0 : .5;
+        }
 
-          halfThickness = Math.floor(lineThickness / 2);
-          if (!angle) {
-            yPixelShift = tickThickness % 2 == 0 ? 0 : -.5;
-          } else if (angle == 90) {
-            xPixelShift = tickThickness % 2 == 0 ? 0 : -.5;
-          } else if (angle == 180) {
-            yPixelShift = tickThickness % 2 == 0 ? 0 : .5;
-          } else if (angle == 270) {
-            xPixelShift = tickThickness % 2 == 0 ? 0 : .5;
-          }
+        radius = this.radius_ + halfThickness;
+        x0Ticks = this.cx_ + radius * Math.cos(angleRad);
+        y0Ticks = this.cy_ + radius * Math.sin(angleRad);
 
-          radius = this.radius_ + halfThickness;
-          x0Ticks = this.cx_ + radius * Math.cos(angleRad);
-          y0Ticks = this.cy_ + radius * Math.sin(angleRad);
+        radius = this.radius_ + tickLen + halfThickness;
+        x1Ticks = this.cx_ + radius * Math.cos(angleRad);
+        y1Ticks = this.cy_ + radius * Math.sin(angleRad);
 
-          radius = this.radius_ + tickLen + halfThickness;
-          x1Ticks = this.cx_ + radius * Math.cos(angleRad);
-          y1Ticks = this.cy_ + radius * Math.sin(angleRad);
+        if (!(angle % 90)) {
+          x0Ticks = Math.round(x0Ticks);
+          y0Ticks = Math.round(y0Ticks);
+          x1Ticks = Math.round(x1Ticks);
+          y1Ticks = Math.round(y1Ticks);
+        }
 
-          if (angle % 90 == 0) {
-            x0Ticks = Math.round(x0Ticks);
-            y0Ticks = Math.round(y0Ticks);
-            x1Ticks = Math.round(x1Ticks);
-            y1Ticks = Math.round(y1Ticks);
-          }
+        x0Ticks += xPixelShift;
+        y0Ticks += yPixelShift;
+        x1Ticks += xPixelShift;
+        y1Ticks += yPixelShift;
 
-          x0Ticks += xPixelShift;
-          y0Ticks += yPixelShift;
-          x1Ticks += xPixelShift;
-          y1Ticks += yPixelShift;
+        drawLabel = goog.isArray(needDrawLabels) ? needDrawLabels[i] : needDrawLabels;
+        drawTick = (goog.isArray(needDrawLabels) && needDrawLabels[i]) || goog.isBoolean(needDrawLabels);
 
-          drawLabel = goog.isArray(needDrawLabels) ? needDrawLabels[i] : needDrawLabels;
-          drawTick = (goog.isArray(needDrawLabels) && needDrawLabels[i]) || goog.isBoolean(needDrawLabels);
+        if (drawTick && ticksDrawer)
+          ticksDrawer.call(ticks, x0Ticks, y0Ticks, x1Ticks, y1Ticks);
 
-          if (drawTick && ticksDrawer)
-            ticksDrawer.call(ticks, x0Ticks, y0Ticks, x1Ticks, y1Ticks);
+        if (drawLabel) {
+          if (isOrdinal) {
+            angle = goog.math.standardAngle(startAngle + scale.transform(tickVal, 0.5) * 360);
+            angleRad = angle * Math.PI / 180;
 
-          if (drawLabel) {
+            xPixelShift = 0;
+            yPixelShift = 0;
+
+            halfThickness = Math.floor(lineThickness / 2);
+            if (!angle) {
+              yPixelShift = !(tickThickness % 2) ? 0 : -.5;
+            } else if (angle == 90) {
+              xPixelShift = !(tickThickness % 2) ? 0 : -.5;
+            } else if (angle == 180) {
+              yPixelShift = !(tickThickness % 2) ? 0 : .5;
+            } else if (angle == 270) {
+              xPixelShift = !(tickThickness % 2) ? 0 : .5;
+            }
+
+            radius = this.radius_ + halfThickness;
+            x1Ticks = this.cx_ + radius * Math.cos(angleRad);
+            y1Ticks = this.cy_ + radius * Math.sin(angleRad);
+
+            if (!(angle % 90)) {
+              x1Ticks = Math.round(x1Ticks);
+              y1Ticks = Math.round(y1Ticks);
+            }
+
+            x1Ticks += xPixelShift;
+            y1Ticks += yPixelShift;
+            offset = this.getLabelPositionOffsetForAngle_(angle, this.getLabelBounds_(i, true));
+            labelsDrawer.call(this, i, x1Ticks + offset.x, y1Ticks + offset.y, true);
+          } else {
             offset = this.getLabelPositionOffsetForAngle_(angle, this.getLabelBounds_(i, true));
             labelsDrawer.call(this, i, x1Ticks + offset.x, y1Ticks + offset.y, true);
           }
-
-          prevMajorRatio = ratio;
-          i++;
-        } else {
-          minorAngle = goog.math.standardAngle(startAngle + minorRatio * 360);
-          minorAngleRad = minorAngle * Math.PI / 180;
-
-          xPixelShift = 0;
-          yPixelShift = 0;
-
-          halfThickness = Math.floor(lineThickness / 2);
-          if (!minorAngle) {
-            yPixelShift = minorTickThickness % 2 == 0 ? 0 : -.5;
-          } else if (minorAngle == 90) {
-            xPixelShift = minorTickThickness % 2 == 0 ? 0 : -.5;
-          } else if (minorAngle == 180) {
-            yPixelShift = minorTickThickness % 2 == 0 ? 0 : .5;
-          } else if (minorAngle == 270) {
-            xPixelShift = minorTickThickness % 2 == 0 ? 0 : .5;
-          }
-
-          radius = this.radius_ + halfThickness;
-          x0Ticks = this.cx_ + radius * Math.cos(minorAngleRad);
-          y0Ticks = this.cy_ + radius * Math.sin(minorAngleRad);
-
-          radius = this.radius_ + minorTickLen + halfThickness;
-          x1Ticks = this.cx_ + radius * Math.cos(minorAngleRad);
-          y1Ticks = this.cy_ + radius * Math.sin(minorAngleRad);
-
-          if (minorAngle % 90 == 0) {
-            x0Ticks = Math.round(x0Ticks);
-            y0Ticks = Math.round(y0Ticks);
-            x1Ticks = Math.round(x1Ticks);
-            y1Ticks = Math.round(y1Ticks);
-          }
-
-          x0Ticks += xPixelShift;
-          y0Ticks += yPixelShift;
-          x1Ticks += xPixelShift;
-          y1Ticks += yPixelShift;
-
-          drawLabel = goog.isArray(needDrawMinorLabels) ? needDrawMinorLabels[j] : needDrawMinorLabels;
-          drawTick = (goog.isArray(needDrawMinorLabels) && needDrawMinorLabels[j]) || goog.isBoolean(needDrawMinorLabels);
-
-          if (drawTick && minorTicksDrawer && prevMajorRatio != minorRatio)
-            minorTicksDrawer.call(minorTicks, x0Ticks, y0Ticks, x1Ticks, y1Ticks);
-
-          if (drawLabel && prevMajorRatio != minorRatio) {
-            offset = this.getLabelPositionOffsetForAngle_(minorAngle, this.getLabelBounds_(j, false));
-            minorLabelsDrawer.call(this, j, x1Ticks + offset.x, y1Ticks + offset.y, false);
-          }
-          j++;
         }
+
+        prevMajorRatio = ratio;
+        i++;
+      } else {
+        minorAngle = goog.math.standardAngle(startAngle + minorRatio * 360);
+        minorAngleRad = minorAngle * Math.PI / 180;
+
+        xPixelShift = 0;
+        yPixelShift = 0;
+
+        halfThickness = Math.floor(lineThickness / 2);
+        if (!minorAngle) {
+          yPixelShift = minorTickThickness % 2 == 0 ? 0 : -.5;
+        } else if (minorAngle == 90) {
+          xPixelShift = minorTickThickness % 2 == 0 ? 0 : -.5;
+        } else if (minorAngle == 180) {
+          yPixelShift = minorTickThickness % 2 == 0 ? 0 : .5;
+        } else if (minorAngle == 270) {
+          xPixelShift = minorTickThickness % 2 == 0 ? 0 : .5;
+        }
+
+        radius = this.radius_ + halfThickness;
+        x0Ticks = this.cx_ + radius * Math.cos(minorAngleRad);
+        y0Ticks = this.cy_ + radius * Math.sin(minorAngleRad);
+
+        radius = this.radius_ + minorTickLen + halfThickness;
+        x1Ticks = this.cx_ + radius * Math.cos(minorAngleRad);
+        y1Ticks = this.cy_ + radius * Math.sin(minorAngleRad);
+
+        if (minorAngle % 90 == 0) {
+          x0Ticks = Math.round(x0Ticks);
+          y0Ticks = Math.round(y0Ticks);
+          x1Ticks = Math.round(x1Ticks);
+          y1Ticks = Math.round(y1Ticks);
+        }
+
+        x0Ticks += xPixelShift;
+        y0Ticks += yPixelShift;
+        x1Ticks += xPixelShift;
+        y1Ticks += yPixelShift;
+
+        drawLabel = goog.isArray(needDrawMinorLabels) ? needDrawMinorLabels[j] : needDrawMinorLabels;
+        drawTick = (goog.isArray(needDrawMinorLabels) && needDrawMinorLabels[j]) || goog.isBoolean(needDrawMinorLabels);
+
+        if (drawTick && minorTicksDrawer && prevMajorRatio != minorRatio)
+          minorTicksDrawer.call(minorTicks, x0Ticks, y0Ticks, x1Ticks, y1Ticks);
+
+        if (drawLabel && prevMajorRatio != minorRatio) {
+          offset = this.getLabelPositionOffsetForAngle_(minorAngle, this.getLabelBounds_(j, false));
+          minorLabelsDrawer.call(this, j, x1Ticks + offset.x, y1Ticks + offset.y, false);
+        }
+        j++;
       }
-      this.minorLabels().draw();
     }
+    this.minorLabels().draw();
     this.labels().draw();
   }
 
