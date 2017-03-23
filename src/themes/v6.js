@@ -5493,7 +5493,7 @@ goog.provide('anychart.themes.v6');
              * @return {*}
              */
             'titleFormatter': function() {
-              return this['name'] || this['getDataValue']('name');
+              return this['name'] || this['getData']('name');
             },
             /**
              * @this {*}
