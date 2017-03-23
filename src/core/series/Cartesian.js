@@ -1286,9 +1286,7 @@ anychart.core.series.Cartesian.prototype.makePointEvent = function(event) {
 //
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Gets wrapped point by index.
- * @param {number} index Point index.
- * @return {anychart.core.SeriesPoint} Wrapped point.
+ * @inheritDoc
  */
 anychart.core.series.Cartesian.prototype.getPoint = function(index) {
   var point;

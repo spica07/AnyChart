@@ -179,7 +179,7 @@ anychart.core.contexts.FormatContext.prototype.getStat = function(name) {
     var source = this.storage_.statisticsSources[i];
 
     //TODO (A.Kudryavtsev): Yes, there are cases when statistics source still don't have getStat() method. Theoretically, it must be fixed.
-    result = source.getStat ? source.getStat(name) : void 0;
+    result = (source && source.getStat) ? source.getStat(name) : void 0;
     if (goog.isDef(result))
       return result;
   }

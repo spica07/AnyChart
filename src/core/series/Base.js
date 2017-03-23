@@ -1122,6 +1122,14 @@ anychart.core.series.Base.prototype.getChart = function() {
 };
 
 
+/**
+ * Gets wrapped point by index.
+ * @param {number} index Point index.
+ * @return {anychart.core.Point} Wrapped point.
+ */
+anychart.core.series.Base.prototype.getPoint = goog.abstractMethod;
+
+
 //endregion
 //region --- Working with data
 //----------------------------------------------------------------------------------------------------------------------
@@ -3348,7 +3356,7 @@ anychart.core.series.Base.prototype.updateFormatContext = function(provider, opt
   tokenCustomValues[anychart.enums.StringToken.NAME] = {value: rowInfo.get('name'), type: anychart.enums.TokenType.NUMBER};
 
   provider
-      .statisticsSources([this, this.getChart()])
+      .statisticsSources([this.getPoint(), this, this.getChart()])
       .dataSource(rowInfo)
       .tokenAliases(tokenAliases)
       .tokenCustomValues(tokenCustomValues);
