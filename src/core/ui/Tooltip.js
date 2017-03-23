@@ -2,13 +2,13 @@ goog.provide('anychart.core.ui.Tooltip');
 
 goog.require('acgraph.math');
 goog.require('anychart.compatibility');
+goog.require('anychart.core.FormatContext');
 goog.require('anychart.core.VisualBase');
 goog.require('anychart.core.settings');
 goog.require('anychart.core.ui.Background');
 goog.require('anychart.core.ui.Label');
 goog.require('anychart.core.ui.Separator');
 goog.require('anychart.core.ui.Title');
-goog.require('anychart.core.utils.GenericContextProvider');
 goog.require('anychart.core.utils.Padding');
 goog.require('anychart.math.Rect');
 

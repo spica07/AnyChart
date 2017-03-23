@@ -1654,7 +1654,7 @@ anychart.core.axes.Linear.prototype.getLabelsFormatProvider = function(index, va
     'tickValue': {value: labelValue, type: anychart.enums.TokenType.NUMBER},
     'scale': {value: scale, type: anychart.enums.TokenType.UNKNOWN}
   };
-  
+
   if (addRange) {
     values['min'] = {value: goog.isDef(scale.max) ? scale.max : null, type: anychart.enums.TokenType.NUMBER};
     values['max'] = {value: goog.isDef(scale.min) ? scale.min : null, type: anychart.enums.TokenType.NUMBER};
@@ -1670,7 +1670,7 @@ anychart.core.axes.Linear.prototype.getLabelsFormatProvider = function(index, va
   var context = new anychart.core.FormatContext(values);
   context.tokenAliases(aliases);
   context.tokenCustomValues(tokenCustomValues);
-  
+
   return context.propagate();
 };
 

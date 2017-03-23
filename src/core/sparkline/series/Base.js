@@ -349,7 +349,7 @@ anychart.core.sparkline.series.Base.prototype.createFormatProvider = function(op
     'index': {value: iterator.getIndex(), type: anychart.enums.TokenType.NUMBER},
     'value': {value: iterator.get('value'), type: anychart.enums.TokenType.NUMBER},
     'x': {value: iterator.get('x'), type: anychart.enums.TokenType.STRING},
-    'seriesName': {value: this.name() || 'Series ' + this.getIndex(), type: anychart.enums.TokenType.STRING}
+    'seriesName': {value: this.name() || 'Series ' + iterator.getIndex(), type: anychart.enums.TokenType.STRING}
   };
 
   var tokenAliases = {};

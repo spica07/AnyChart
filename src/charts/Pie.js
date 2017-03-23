@@ -2126,8 +2126,7 @@ anychart.charts.Pie.prototype.colorize3DSlice_ = function(pointState) {
   for (i = 0; i < length; i++) {
     side = this.sides3D_[i];
     if (side.index == index) {
-      var uniqueValue = (side.type == anychart.charts.Pie.Side3DType.FRONT ||
-      side.type == anychart.charts.Pie.Side3DType.BACK) ? side.start : '';
+      var uniqueValue = (side.type == anychart.charts.Pie.Side3DType.FRONT || side.type == anychart.charts.Pie.Side3DType.BACK) ? side.start : '';
       this.colorize3DPath_(side.type + 'Path' + uniqueValue, pointState);
     }
   }

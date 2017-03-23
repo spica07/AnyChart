@@ -1942,7 +1942,7 @@ anychart.charts.Resource.prototype.createTooltipContextProvider = function() {
      * @type {anychart.core.FormatContext}
      * @protected
      */
-    this.tooltipContext = anychart.core.FormatContext();
+    this.tooltipContext = new anychart.core.FormatContext();
   }
 
   var iter = this.getIterator();

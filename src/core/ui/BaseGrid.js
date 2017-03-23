@@ -564,7 +564,7 @@ anychart.core.ui.BaseGrid.prototype.createFormatProvider = function(item, opt_pe
   if (!this.formatProvider_)
     this.formatProvider_ = new anychart.core.FormatContext();
 
-  var isResources = this.controller_.isResources();
+  var isResources = this.controller.isResources();
   var values = {
     'item': {value: item, type: anychart.enums.TokenType.UNKNOWN},
     'name': {value: item.get(anychart.enums.GanttDataFields.NAME), type: anychart.enums.TokenType.STRING},
@@ -595,9 +595,9 @@ anychart.core.ui.BaseGrid.prototype.createFormatProvider = function(item, opt_pe
     values['progressValue'] = {value: item.meta(anychart.enums.GanttDataFields.PROGRESS_VALUE), type: anychart.enums.TokenType.PERCENT};
 
     var isParent = !!item.numChildren();
-    values['autoStart'] = {value: isParent ? this.currentItem.meta('autoStart') : void 0, type: anychart.enums.TokenType.DATE_TIME};
-    values['autoEnd'] = {value: isParent ? this.currentItem.meta('autoEnd') : void 0, type: anychart.enums.TokenType.DATE_TIME};
-    values['autoProgress'] = {value: isParent ? this.currentItem.meta('autoProgress') : void 0, type: anychart.enums.TokenType.PERCENT};
+    values['autoStart'] = {value: isParent ? item.meta('autoStart') : void 0, type: anychart.enums.TokenType.DATE_TIME};
+    values['autoEnd'] = {value: isParent ? item.meta('autoEnd') : void 0, type: anychart.enums.TokenType.DATE_TIME};
+    values['autoProgress'] = {value: isParent ? item.meta('autoProgress') : void 0, type: anychart.enums.TokenType.PERCENT};
   }
 
   this.formatProvider_

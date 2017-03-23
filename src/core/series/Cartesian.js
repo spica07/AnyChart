@@ -6,7 +6,6 @@ goog.require('anychart.core.utils.DrawingPlanIterator');
 goog.require('anychart.core.utils.Error');
 goog.require('anychart.core.utils.IInteractiveSeries');
 goog.require('anychart.core.utils.InteractivityState');
-goog.require('anychart.core.utils.SeriesPointContextProvider');
 goog.require('anychart.data');
 goog.require('anychart.enums');
 goog.require('anychart.utils');
@@ -141,7 +140,7 @@ anychart.core.series.Cartesian.prototype.hoverMode_;
 
 
 /**
- * @type {anychart.core.utils.SeriesPointContextProvider}
+ * @type {anychart.core.FormatContext}
  * @private
  */
 anychart.core.series.Cartesian.prototype.pointProvider_;

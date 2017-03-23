@@ -3290,38 +3290,97 @@ anychart.core.series.Base.prototype.makeMissing = function(rowInfo, yNames) {
 //
 //----------------------------------------------------------------------------------------------------------------------
 /**
+ * Applies required data to format context.
+ * @param {anychart.core.FormatContext} provider - Format context.
+ * @param {anychart.data.IRowInfo=} opt_rowInfo - Data source.
+ * @return {anychart.core.FormatContext} - Updated format context.
+ */
+anychart.core.series.Base.prototype.updateFormatContext = function(provider, opt_rowInfo) {
+  var rowInfo = opt_rowInfo || this.getIterator();
+  var values = {
+    'chart': {value: this.getChart(), type: anychart.enums.TokenType.UNKNOWN},
+    'series': {value: this, type: anychart.enums.TokenType.UNKNOWN},
+    'scale': {value: this.getXScale(), type: anychart.enums.TokenType.UNKNOWN},
+    'index': {value: rowInfo.getIndex(), type: anychart.enums.TokenType.NUMBER},
+    'x': {value: rowInfo.get('x'), type: anychart.enums.TokenType.STRING},
+    'seriesName': {value: this.name() || 'Series ' + this.getIndex(), type: anychart.enums.TokenType.STRING}
+  };
+
+  if (this.isSizeBased())
+    values['size'] = {value: rowInfo.get('size'), type: anychart.enums.TokenType.NUMBER};
+
+  if (this.supportsError()) {
+    /** @type {anychart.core.utils.ISeriesWithError} */
+    var series = /** @type {anychart.core.utils.ISeriesWithError} */(this);
+    /** @type {anychart.enums.ErrorMode} */
+    var mode = /** @type {anychart.enums.ErrorMode} */(series.error().mode());
+    var error;
+    if (mode == anychart.enums.ErrorMode.BOTH || mode == anychart.enums.ErrorMode.VALUE) {
+      error = series.getErrorValues(false);
+      values['valueLowerError'] = {value: error[0], type: anychart.enums.TokenType.NUMBER};
+      values['valueUpperError'] = {value: error[1], type: anychart.enums.TokenType.NUMBER};
+    }
+    if (mode == anychart.enums.ErrorMode.BOTH || mode == anychart.enums.ErrorMode.X) {
+      error = series.getErrorValues(true);
+      values['xLowerError'] = {value: error[0], type: anychart.enums.TokenType.NUMBER};
+      values['xUpperError'] = {value: error[1], type: anychart.enums.TokenType.NUMBER};
+    }
+  }
+
+  var refValueNames = this.getYValueNames();
+  for (var i = 0; i < refValueNames.length; i++) {
+    var refName = refValueNames[i];
+    // Yes, all values will be treated as string by default.
+    // tokenCustomValues() override this default.
+    // See anychart.core.contexts.FormatContext#getTokenTypeInternal.
+    values[refName] = {value: rowInfo.get(refName)};
+  }
+
+  var tokenAliases = {};
+  tokenAliases[anychart.enums.StringToken.BUBBLE_SIZE] = 'size';
+  tokenAliases[anychart.enums.StringToken.RANGE_START] = 'low';
+  tokenAliases[anychart.enums.StringToken.RANGE_END] = 'high';
+  tokenAliases[anychart.enums.StringToken.X_VALUE] = 'x';
+
+  var tokenCustomValues = {};
+  var diff = /** @type {number} */ (rowInfo.get('high')) - /** @type {number} */ (rowInfo.get('low'));
+  tokenCustomValues[anychart.enums.StringToken.RANGE] = {value: diff, type: anychart.enums.TokenType.NUMBER};
+  tokenCustomValues[anychart.enums.StringToken.NAME] = {value: rowInfo.get('name'), type: anychart.enums.TokenType.NUMBER};
+
+  provider
+      .statisticsSources([this, this.getChart()])
+      .dataSource(rowInfo)
+      .tokenAliases(tokenAliases)
+      .tokenCustomValues(tokenCustomValues);
+
+  return /** @type {anychart.core.FormatContext} */ (provider.propagate(values));
+};
+
+
+/**
  * Creates labels format provider.
  * @return {Object} Object with info for labels formatting.
  * @protected
  */
 anychart.core.series.Base.prototype.createLabelsContextProvider = function() {
-  // var provider = new anychart.core.utils.SeriesPointContextProvider(this, this.getYValueNames(), this.supportsError());
-  var provider = new anychart.core.FormatContext();
-
-  var iterator = this.getIterator();
-  var values = {
-
-  };
-
-  return provider;
+  return this.updateFormatContext(new anychart.core.FormatContext());
 };
 
 
 /**
  * Creates tooltip context provider.
- * @return {!anychart.core.FormatContext}
+ * @return {anychart.core.FormatContext}
  */
 anychart.core.series.Base.prototype.createTooltipContextProvider = function() {
   if (!this.tooltipContext) {
     /**
      * Tooltip context cache.
-     * @type {anychart.core.utils.SeriesPointContextProvider}
+     * @type {anychart.core.FormatContext}
      * @protected
      */
-    this.tooltipContext = new anychart.core.utils.SeriesPointContextProvider(this, this.getYValueNames(), this.supportsError());
+    this.tooltipContext = new anychart.core.FormatContext();
   }
-  this.tooltipContext.applyReferenceValues();
-  return this.tooltipContext;
+  return this.updateFormatContext(this.tooltipContext);
 };
 
 

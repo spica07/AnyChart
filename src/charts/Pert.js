@@ -1509,12 +1509,10 @@ anychart.charts.Pert.prototype.clearExcessiveMilestones_ = function() {
     milestone = this.milestonesMap_[uid];
     cantBeShortenedMap = {};
 
-    //if (milestone.label == 'Finish: SD') debugger;
     for (i = 0; i < milestone.mSuccessors.length; i++) {
       mSucc = milestone.mSuccessors[i];
 
       if (mSucc.successors.length == 1 && mSucc.mPredecessors.length < 2 && !mSucc.predecessors.length) {
-        //if (mSucc.successors.length == 1 && !mSucc.predecessors.length) {
         succId = String(mSucc.successors[0].get(anychart.enums.DataField.ID));
         succWork = this.worksMap_[succId];
         var succFinishMilestone = succWork.finishMilestone;
@@ -2032,7 +2030,6 @@ anychart.charts.Pert.prototype.plotSegment_ = function(segments, faces, segmentI
       }
     }
   }
-  //if (leftMost == null) debugger;
   var path = [leftMost];
   milestone = leftMost;
   while (milestone) {

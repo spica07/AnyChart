@@ -889,12 +889,8 @@ anychart.core.axes.Circular.prototype.getLabelsFormatProvider_ = function(index,
   aliases[anychart.enums.StringToken.AXIS_SCALE_MAX] = 'max';
   aliases[anychart.enums.StringToken.AXIS_SCALE_MIN] = 'max';
 
-  var tokenCustomValues = {};
-  tokenCustomValues[anychart.enums.StringToken.AXIS_NAME] = {value: this.title().text(), type: anychart.enums.TokenType.STRING};
-
   var context = new anychart.core.FormatContext(values);
   context.tokenAliases(aliases);
-  context.tokenCustomValues(tokenCustomValues);
 
   return context.propagate();
 };

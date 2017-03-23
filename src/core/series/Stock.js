@@ -3,6 +3,8 @@
  * @suppress {extraRequire}
  */
 goog.provide('anychart.core.series.Stock');
+
+goog.require('anychart.core.FormatContext');
 goog.require('anychart.core.drawers.Area');
 goog.require('anychart.core.drawers.Candlestick');
 goog.require('anychart.core.drawers.Column');
@@ -19,7 +21,6 @@ goog.require('anychart.core.drawers.StepArea');
 goog.require('anychart.core.drawers.StepLine');
 goog.require('anychart.core.reporting');
 goog.require('anychart.core.series.Base');
-goog.require('anychart.core.utils.StockHighlightContextProvider');
 goog.require('anychart.data.Table');
 
 
@@ -109,6 +110,14 @@ anychart.core.series.Stock.prototype.getCategoryWidth = function() {
 anychart.core.series.Stock.prototype.getPoint = function(index) {
   //TODO (A.Kudryavtsev): Add for stock statistics?
   return null;
+};
+
+
+/**
+ * @inheritDoc
+ */
+anychart.core.series.Stock.prototype.supportsError = function() {
+  return false;
 };
 
 
@@ -465,10 +474,9 @@ anychart.core.series.Stock.prototype.getPointState = function(index) {
 /** @inheritDoc */
 anychart.core.series.Stock.prototype.createTooltipContextProvider = function() {
   if (!this.tooltipContext) {
-    this.tooltipContext = new anychart.core.utils.StockHighlightContextProvider(this, this.getYValueNames(), false);
+    this.tooltipContext = new anychart.core.FormatContext();
   }
-  this.tooltipContext.applyReferenceValues();
-  return this.tooltipContext;
+  return this.updateFormatContext(this.tooltipContext, this.getCurrentPoint());
 };
 
 
@@ -479,9 +487,8 @@ anychart.core.series.Stock.prototype.createTooltipContextProvider = function() {
  */
 anychart.core.series.Stock.prototype.createLegendContextProvider = function() {
   if (!this.legendProvider)
-    this.legendProvider = new anychart.core.utils.StockHighlightContextProvider(this, this.getYValueNames(), false);
-  this.legendProvider.applyReferenceValues();
-  return this.legendProvider;
+    this.legendProvider = new anychart.core.FormatContext();
+  return this.updateFormatContext(this.legendProvider, this.getCurrentPoint());
 };
 
 

@@ -3,6 +3,8 @@ goog.provide('anychart.core.FormatContext');
 goog.require('anychart.core.contexts.FormatContext');
 
 
+//TODO (A.Kudryavtsev): Dirty hack!
+window['anychart']['core'] = window['anychart']['core'] || {};
 
 window['anychart']['core']['FormatContext'] = function(opt_values, opt_dataSource, opt_statisticsSources) {
   window['anychart']['core']['FormatContext'].base(this, 'constructor', opt_values, opt_dataSource, opt_statisticsSources);
@@ -78,6 +80,7 @@ anychart.core.FormatContext.prototype.getSeriesMeta = function(name) {
 //exports
 /** @suppress {deprecated} */
 (function() {
+  goog.exportSymbol('anychart.core.FormatContext', anychart.core.FormatContext);
   var proto = anychart.core.FormatContext.prototype;
 
   proto['getData'] = proto.getData;

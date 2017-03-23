@@ -252,7 +252,7 @@ anychart.core.contexts.FormatContext.prototype.getTokenTypeInternal = function(n
   //     this.storage_.values[aliasName] || this.storage_.tokenCustomValues[aliasName] ||
   //     this.storage_.values[statName] || this.storage_.tokenCustomValues[statName];
 
-  var valueSource = this.storage_.tokenCustomValues[aliasName] || this.storage_.values[aliasName] ||
+  var typeSource = this.storage_.tokenCustomValues[aliasName] || this.storage_.values[aliasName] ||
       this.storage_.tokenCustomValues[origName] || this.storage_.values[origName] ||
       this.storage_.tokenCustomValues[statName] || this.storage_.values[statName];
 

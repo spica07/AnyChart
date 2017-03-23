@@ -31,7 +31,7 @@ goog.require('anychart.enums');
 anychart.core.polar.series.Base = function(opt_data, opt_csvSettings) {
   anychart.core.polar.series.Base.base(this, 'constructor', opt_data, opt_csvSettings);
   /**
-   * @type {anychart.core.utils.FormatContext}
+   * @type {anychart.core.FormatContext}
    * @private
    */
   this.pointProvider_;

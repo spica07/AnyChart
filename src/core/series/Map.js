@@ -1,14 +1,14 @@
 goog.provide('anychart.core.series.Map');
+
 goog.require('anychart.core.BubblePoint');
 goog.require('anychart.core.ChoroplethPoint');
+goog.require('anychart.core.FormatContext');
 goog.require('anychart.core.SeriesPoint');
 goog.require('anychart.core.series.Cartesian');
 goog.require('anychart.core.utils.DrawingPlanIterator');
 goog.require('anychart.core.utils.Error');
 goog.require('anychart.core.utils.IInteractiveSeries');
 goog.require('anychart.core.utils.InteractivityState');
-goog.require('anychart.core.utils.MapConnectorPointContextProvider');
-goog.require('anychart.core.utils.MapPointContextProvider');
 goog.require('anychart.data');
 goog.require('anychart.enums');
 goog.require('anychart.utils');
@@ -1059,39 +1059,81 @@ anychart.core.series.Map.prototype.getLegendItemData = function(itemsTextFormatt
 
 //endregion
 //region --- Position and Formating
+/** @inheritDoc */
+anychart.core.series.Map.prototype.updateFormatContext = function(provider, opt_rowInfo) {
+  var rowInfo = opt_rowInfo || this.getIterator();
+
+  var values = {
+    'chart': {value: this.getChart(), type: anychart.enums.TokenType.UNKNOWN},
+    'series': {value: this, type: anychart.enums.TokenType.UNKNOWN},
+    'scale': {value: this.getXScale(), type: anychart.enums.TokenType.UNKNOWN},
+    'index': {value: rowInfo.getIndex(), type: anychart.enums.TokenType.NUMBER},
+    'seriesName': {value: this.name() || 'Series: ' + this.getIndex(), type: anychart.enums.TokenType.STRING}
+  };
+
+  var i;
+  var refValueNames = this.getYValueNames();
+  for (i = 0; i < refValueNames.length; i++) {
+    var refName = refValueNames[i];
+    // Yes, all values will be treated as string by default.
+    // tokenCustomValues() override this default.
+    // See anychart.core.contexts.FormatContext#getTokenTypeInternal.
+    values[refName] = {value: rowInfo.get(refName)};
+  }
+
+  if (this.drawer.type == anychart.enums.SeriesDrawerTypes.CONNECTOR) {
+    var pointsWithoutMissing = rowInfo.meta('pointsWithoutMissing');
+    if (pointsWithoutMissing && pointsWithoutMissing.length) {
+      values['startPoint'] = {value: {'lat': pointsWithoutMissing[0], 'long': pointsWithoutMissing[1]}, type: anychart.enums.TokenType.UNKNOWN};
+      values['endPoint'] = {value: {'lat': pointsWithoutMissing[pointsWithoutMissing.length - 2], 'long': pointsWithoutMissing[pointsWithoutMissing.length - 1]}, type: anychart.enums.TokenType.UNKNOWN};
+
+      var len;
+      var connectorPoints = [];
+      for (i = 0, len = pointsWithoutMissing.length; i < len; i += 2) {
+        connectorPoints.push({'lat': pointsWithoutMissing[i], 'long': pointsWithoutMissing[i + 1]});
+      }
+      values['connectorPoints'] = {value: connectorPoints, type: anychart.enums.TokenType.UNKNOWN};
+    }
+  } else {
+    var regionId = rowInfo.meta('regionId');
+    if (regionId)
+      values['id'] = {value: regionId, type: anychart.enums.TokenType.STRING};
+
+    provider
+        .values(values)
+        .dataSource(rowInfo)
+        .statisticsSources([this, this.getChart()]);
+
+    var features = rowInfo.meta('features');
+    var pointGeoProp = features && features.length ? features[0]['properties'] : null;
+    if (pointGeoProp) {
+      values['regionProperties'] = {value: pointGeoProp, type: anychart.enums.TokenType.UNKNOWN};
+      for (var key in pointGeoProp) {
+        if (pointGeoProp.hasOwnProperty(key)) {
+          var providerTokenValue = provider.getTokenValueInternal(key);
+          if (!goog.isDef(providerTokenValue)) {
+            values[key] = {value: pointGeoProp[key]};
+          }
+        }
+      }
+    }
+  }
+
+  return /** @type {anychart.core.FormatContext} */ (provider.propagate());
+};
+
+
 /**
- * @return {!anychart.core.utils.SeriesPointContextProvider}
+ * @return {anychart.core.FormatContext}
  */
 anychart.core.series.Map.prototype.getContextProvider = function() {
-  switch (this.drawer.type) {
-    case anychart.enums.SeriesDrawerTypes.CONNECTOR:
-      return new anychart.core.utils.MapConnectorPointContextProvider(this, this.getYValueNames());
-    default:
-      return new anychart.core.utils.MapPointContextProvider(this, this.getYValueNames());
-  }
+  return this.updateFormatContext(new anychart.core.FormatContext());
 };
 
 
 /** @inheritDoc */
 anychart.core.series.Map.prototype.createLabelsContextProvider = function() {
-  var provider = this.getContextProvider();
-  provider.applyReferenceValues();
-  return provider;
-};
-
-
-/** @inheritDoc */
-anychart.core.series.Map.prototype.createTooltipContextProvider = function() {
-  if (!this.tooltipContext) {
-    /**
-     * Tooltip context cache.
-     * @type {anychart.core.utils.SeriesPointContextProvider}
-     * @protected
-     */
-    this.tooltipContext = this.getContextProvider();
-  }
-  this.tooltipContext.applyReferenceValues();
-  return this.tooltipContext;
+  return this.getContextProvider();
 };
 
 
@@ -1110,14 +1152,12 @@ anychart.core.series.Map.prototype.transformXY = function(xCoord, yCoord) {
 /**
  * Creates format provider.
  * @param {boolean=} opt_force .
- * @return {!anychart.core.utils.SeriesPointContextProvider}
+ * @return {anychart.core.FormatContext}
  */
 anychart.core.series.Map.prototype.createFormatProvider = function(opt_force) {
   if (!this.pointProvider || opt_force)
-    this.pointProvider = this.getContextProvider();
-  this.pointProvider.applyReferenceValues();
-
-  return this.pointProvider;
+    this.pointProvider = new anychart.core.FormatContext();
+  return this.updateFormatContext(/** @type {!anychart.core.FormatContext} */ (this.pointProvider));
 };
 
 

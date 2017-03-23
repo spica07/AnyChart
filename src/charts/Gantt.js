@@ -268,9 +268,9 @@ anychart.charts.Gantt.prototype.createFormatProvider = function(item, opt_period
     values['progressValue'] = {value: item.meta(anychart.enums.GanttDataFields.PROGRESS_VALUE), type: anychart.enums.TokenType.PERCENT};
 
     var isParent = !!item.numChildren();
-    values['autoStart'] = {value: isParent ? this.currentItem.meta('autoStart') : void 0, type: anychart.enums.TokenType.DATE_TIME};
-    values['autoEnd'] = {value: isParent ? this.currentItem.meta('autoEnd') : void 0, type: anychart.enums.TokenType.DATE_TIME};
-    values['autoProgress'] = {value: isParent ? this.currentItem.meta('autoProgress') : void 0, type: anychart.enums.TokenType.PERCENT};
+    values['autoStart'] = {value: isParent ? item.meta('autoStart') : void 0, type: anychart.enums.TokenType.DATE_TIME};
+    values['autoEnd'] = {value: isParent ? item.meta('autoEnd') : void 0, type: anychart.enums.TokenType.DATE_TIME};
+    values['autoProgress'] = {value: isParent ? item.meta('autoProgress') : void 0, type: anychart.enums.TokenType.PERCENT};
   }
 
   this.formatProvider_
