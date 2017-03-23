@@ -494,8 +494,8 @@ anychart.charts.Pert.prototype.createFormatProvider = function(opt_force, opt_wo
   }
 
   this.formatProvider_
-      .dataSource(values['item'])
-      .statisticsSources([this]);
+      .statisticsSources([this])
+      .dataSource(values['item']);
 
   return /** @type {anychart.core.FormatContext} */ (this.formatProvider_.propagate(values));
 };

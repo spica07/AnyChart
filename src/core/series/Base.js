@@ -3356,7 +3356,7 @@ anychart.core.series.Base.prototype.updateFormatContext = function(provider, opt
   tokenCustomValues[anychart.enums.StringToken.NAME] = {value: rowInfo.get('name'), type: anychart.enums.TokenType.NUMBER};
 
   provider
-      .statisticsSources([this.getPoint(), this, this.getChart()])
+      .statisticsSources([this.getPoint(rowInfo.getIndex()), this, this.getChart()])
       .dataSource(rowInfo)
       .tokenAliases(tokenAliases)
       .tokenCustomValues(tokenCustomValues);
