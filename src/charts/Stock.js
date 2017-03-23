@@ -2079,4 +2079,5 @@ anychart.charts.Stock.prototype.toCsv = function(opt_chartDataExportMode, opt_cs
   proto['grouping'] = proto.grouping;
   proto['scrollerGrouping'] = proto.scrollerGrouping;
   proto['annotations'] = proto.annotations;
+  proto['getPlotsCount'] = proto.getPlotsCount;
 })();
