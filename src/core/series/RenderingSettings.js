@@ -516,7 +516,7 @@ goog.inherits(anychart.core.series.RenderingSettings.PointContext, anychart.core
  * @param {string} name
  * @return {*}
  */
-anychart.core.series.RenderingSettings.PointContext.prototype.getData = function(name) {
+anychart.core.series.RenderingSettings.PointContext.prototype.getDataValue = function(name) {
   return this.point_.get(name);
 };
 
@@ -564,7 +564,7 @@ anychart.core.series.RenderingSettings.PointContext.prototype.getStackedZero = f
   proto['getStat'] = proto.getStat;
 
   proto = anychart.core.series.RenderingSettings.PointContext.prototype;
-  proto['getData'] = proto.getData;
+  proto['getDataValue'] = proto.getDataValue;
   proto['getStackedValue'] = proto.getStackedValue;
   proto['getStackedZero'] = proto.getStackedZero;
 })();
