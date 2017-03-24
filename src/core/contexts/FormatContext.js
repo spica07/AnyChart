@@ -144,7 +144,7 @@ anychart.core.contexts.FormatContext.prototype.tokenCustomValues = function(opt_
  */
 anychart.core.contexts.FormatContext.prototype.getData = function(var_args) {
   return this.storage_.dataSource ?
-      this.storage_.dataSource.get.apply(null, arguments) :
+      this.storage_.dataSource.get.apply(this.storage_.dataSource, arguments) :
       void 0;
 };
 
