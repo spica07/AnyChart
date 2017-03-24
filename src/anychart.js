@@ -631,6 +631,8 @@ anychart.getFullTheme = function(root) {
   anychart.performance.start('Theme compilation');
   var i;
   if (!anychart.themeClones_.length) {
+    // var clone = anychart.utils.recursiveClone(goog.global['anychart']['themes'][anychart.DEFAULT_THEME]);
+    // anychart.themeClones_.push(clone || {});
     anychart.themeClones_.push(goog.global['anychart']['themes'][anychart.DEFAULT_THEME] || {});
   }
   for (i = anychart.themeClones_.length - 1; i < anychart.themes_.length; i++) {
@@ -638,11 +640,23 @@ anychart.getFullTheme = function(root) {
     var clone = anychart.utils.recursiveClone(goog.isString(themeToMerge) ? goog.global['anychart']['themes'][themeToMerge] : themeToMerge);
     anychart.themeClones_.push(goog.isObject(clone) ? clone : {});
   }
+
+  // var debug = false;
+  // if((root == 'bar' && (!anychart.themeClones_[1]['area'] || !anychart.themeClones_[1]['bar'])) || root == 'area') {
+  //   console.log(root);
+  //   debugger;
+  //   debug = true;
+  // };
+
   var startMergeAt = Infinity;
   for (i = 0; i < anychart.themeClones_.length; i++) {
     if (anychart.themes.merging.compileTheme(anychart.themeClones_[i], root, i))
       startMergeAt = Math.min(startMergeAt, i);
   }
+
+  // if(debug) {
+  // };
+
   for (i = Math.max(1, startMergeAt); i < anychart.themeClones_.length; i++) {
     // theme clones are guaranteed to be objects, so we can skip replacing them
     anychart.themes.merging.merge(anychart.themeClones_[i], anychart.themeClones_[i - 1]);
