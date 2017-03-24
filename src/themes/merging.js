@@ -582,7 +582,7 @@ anychart.themes.merging.mergingMap_ = [
     ]
   },
   {
-    defaultObj: 'defaultLabelFactory',
+    defaultObj: 'defaultLabelFactory',                                       
     targets: [
       'defaultAxis.labels',
       'defaultAxis.minorLabels',

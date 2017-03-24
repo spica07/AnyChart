@@ -352,7 +352,7 @@ anychart.core.gantt.TimelineHeader.prototype.draw = function() {
         level.suspendSignalsDispatching();
         level.anchor(levelsData[i]['anchor']);
         level.interval(levelsData[i]['interval']);
-        level.format(levelsData[i]['formatter']);
+        level.format(levelsData[i]['format'] || levelsData[i]['formatter']);
         level.invalidate(anychart.ConsistencyState.TIMELINE_HEADER_LEVEL_TICKS); //Scale is changed. It means that ticks must be recalculated anyway.
       }
       this.markConsistent(anychart.ConsistencyState.TIMELINE_HEADER_SCALES);
