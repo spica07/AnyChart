@@ -1119,7 +1119,7 @@ anychart.core.series.Map.prototype.updateFormatContext = function(provider, opt_
     }
   }
 
-  return /** @type {anychart.core.FormatContext} */ (provider.propagate());
+  return /** @type {anychart.core.FormatContext} */ (provider.propagate(values));
 };
 
 
