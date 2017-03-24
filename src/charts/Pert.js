@@ -477,7 +477,7 @@ anychart.charts.Pert.prototype.createFormatProvider = function(opt_force, opt_wo
     values['earliestFinish'] = {value: opt_activityData.earliestFinish, type: anychart.enums.TokenType.NUMBER};
     values['latestStart'] = {value: opt_activityData.latestStart, type: anychart.enums.TokenType.NUMBER};
     values['latestFinish'] = {value: opt_activityData.latestFinish, type: anychart.enums.TokenType.NUMBER};
-    if (!goog.isDef(this[anychart.enums.DataField.DURATION]))
+    if (!goog.isDef(values[anychart.enums.DataField.DURATION]))
       values[anychart.enums.DataField.DURATION] = {value: opt_activityData.duration, type: anychart.enums.TokenType.NUMBER};
     values['slack'] = {value: opt_activityData.slack, type: anychart.enums.TokenType.NUMBER};
     values['variance'] = {value: opt_activityData.variance, type: anychart.enums.TokenType.NUMBER};
