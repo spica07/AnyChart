@@ -143,9 +143,16 @@ anychart.core.contexts.FormatContext.prototype.tokenCustomValues = function(opt_
  * @return {*} - Data value.
  */
 anychart.core.contexts.FormatContext.prototype.getData = function(var_args) {
-  return this.storage_.dataSource ?
-      this.storage_.dataSource.get.apply(this.storage_.dataSource, arguments) :
-      void 0;
+  if (this.storage_.dataSource) {
+    if (this.storage_.dataSource instanceof anychart.data.IRowInfo) {
+      var name = arguments[0];
+      if (name && goog.isString(name))
+        return this.storage_.dataSource.get(name);
+    } else {
+      return this.storage_.dataSource.get.apply(this.storage_.dataSource, arguments);
+    }
+  }
+  return void 0;
 };
 
 
