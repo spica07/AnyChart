@@ -2843,7 +2843,7 @@ anychart.charts.Pie.prototype.drawLabel_ = function(pointState, opt_updateConnec
   var labelHoverEnabledState = hoverSliceLabel && goog.isDef(hoverSliceLabel['enabled']) ? hoverSliceLabel['enabled'] : null;
 
   var positionProvider = this.createPositionProvider();
-  var formatProvider = this.createFormatProvider();
+  var formatProvider = this.createFormatProvider(true);
 
   var isFitToSlice = true;
   if ((!hovered || (hovered && !this.forceHoverLabels_)) && !this.insideLabelsOverlap_) {
@@ -3695,13 +3695,14 @@ anychart.charts.Pie.prototype.calculate = function() {
 
 /**
  * Create pie label format provider.
+ * @param {boolean=} opt_force create context provider forcibly.
  * @return {Object} Object with info for labels formatting.
  * @protected
  */
-anychart.charts.Pie.prototype.createFormatProvider = function() {
+anychart.charts.Pie.prototype.createFormatProvider = function(opt_force) {
   var iterator = this.getIterator();
 
-  if (!this.pointProvider_)
+  if (!this.pointProvider_ || opt_force)
     this.pointProvider_ = new anychart.core.FormatContext();
 
   this.pointProvider_
@@ -3723,9 +3724,7 @@ anychart.charts.Pie.prototype.createFormatProvider = function() {
     values['values'] = {value: iterator.meta('values'), type: anychart.enums.TokenType.UNKNOWN};
   }
 
-  this.pointProvider_.propagate(values);
-
-  return this.pointProvider_;
+  return this.pointProvider_.propagate(values);
 };
 
 

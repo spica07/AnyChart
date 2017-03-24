@@ -336,6 +336,7 @@ anychart.core.contexts.FormatContext.prototype.getTokenTypeInternal = function(n
       case anychart.enums.StringToken.Y_PERCENT_OF_TOTAL:
       case anychart.enums.StringToken.X_PERCENT_OF_SERIES:
       case anychart.enums.StringToken.X_PERCENT_OF_TOTAL:
+      case anychart.enums.StringToken.PERCENT_VALUE:
         type = anychart.enums.TokenType.NUMBER;
     }
     // case anychart.enums.StringToken.NAME:
