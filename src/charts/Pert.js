@@ -447,9 +447,11 @@ anychart.charts.Pert.prototype.createFormatProvider = function(opt_force, opt_wo
     this.formatProvider_ = new anychart.core.FormatContext();
 
   var values = {};
+  var dataSource = null;
 
   if (opt_work) {
     values['item'] = {value: opt_work.item, type: anychart.enums.TokenType.UNKNOWN};
+    dataSource = opt_work.item;
     values[anychart.enums.DataField.NAME] = {value: opt_work.item.get(anychart.enums.DataField.NAME), type: anychart.enums.TokenType.STRING};
 
     var pessimistic = opt_work.item.get(anychart.enums.DataField.PESSIMISTIC);
@@ -495,7 +497,7 @@ anychart.charts.Pert.prototype.createFormatProvider = function(opt_force, opt_wo
 
   this.formatProvider_
       .statisticsSources([this])
-      .dataSource(values['item']);
+      .dataSource(dataSource);
 
   return /** @type {anychart.core.FormatContext} */ (this.formatProvider_.propagate(values));
 };
