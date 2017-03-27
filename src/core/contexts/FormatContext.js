@@ -138,6 +138,26 @@ anychart.core.contexts.FormatContext.prototype.tokenCustomValues = function(opt_
 
 
 /**
+ * Looks for lower case name in values.
+ * @param {string} lowerCaseName - Name in lower case.
+ * @private
+ * @return {*} - Found value.
+ */
+anychart.core.contexts.FormatContext.prototype.getInValuesCaseInsensitive_ = function(lowerCaseName) {
+  var key;
+  for (key in this.tokenCustomValues) {
+    if (this.storage_.tokenCustomValues.hasOwnProperty(key) && key.toLowerCase() == lowerCaseName)
+      return this.storage_.tokenCustomValues[key].value;
+  }
+  for (key in this.storage_.values) {
+    if (this.storage_.values.hasOwnProperty(key) && key.toLowerCase() == lowerCaseName)
+      return this.storage_.values[key].value;
+  }
+  return void 0;
+};
+
+
+/**
  * Gets data value.
  * @param {...*} var_args - Data field path.
  * @return {*} - Data value.
@@ -214,11 +234,14 @@ anychart.core.contexts.FormatContext.prototype.getTokenValueInternal = function(
 
   var valueSource = this.storage_.tokenCustomValues[aliasName] || this.storage_.values[aliasName] ||
       this.storage_.tokenCustomValues[name] || this.storage_.values[name] ||
-      this.storage_.tokenCustomValues[origName] || this.storage_.values[origName] ||
-      this.storage_.tokenCustomValues[lowerCaseName] || this.storage_.values[lowerCaseName];
+      this.storage_.tokenCustomValues[origName] || this.storage_.values[origName];
 
   if (valueSource)
     return valueSource.value;
+
+  var caseInsensitiveResult = this.getInValuesCaseInsensitive_(lowerCaseName);
+  if (goog.isDef(caseInsensitiveResult))
+    return caseInsensitiveResult;
 
   var dataValue = this.getData(aliasName) || this.getData(origName) || this.getData(lowerCaseName);
   if (goog.isDef(dataValue))
