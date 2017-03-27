@@ -2701,6 +2701,15 @@ anychart.core.series.Base.prototype.a11y = function(opt_enabledOrJson) {
 
 
 /**
+ * Creates a11y text info.
+ * @return {Object}
+ */
+anychart.core.series.Base.prototype.createA11yTextInfo = function() {
+  return this.createTooltipContextProvider();
+};
+
+
+/**
  * Animation enabled change handler.
  * @private
  */
@@ -2910,7 +2919,7 @@ anychart.core.series.Base.prototype.draw = function() {
 
   if (this.hasInvalidationState(anychart.ConsistencyState.A11Y)) {
     //SeriesPointContextProvider is pretty suitable in this case.
-    this.a11y().applyA11y(this.createTooltipContextProvider());
+    this.a11y().applyA11y();
     this.markConsistent(anychart.ConsistencyState.A11Y);
   }
 
