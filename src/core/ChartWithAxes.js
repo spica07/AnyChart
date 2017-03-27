@@ -117,6 +117,18 @@ anychart.core.ChartWithAxes.prototype.setDefaultScaleForLayoutBasedElements = fu
 };
 
 
+/** @inheritDoc */
+anychart.core.ChartWithAxes.prototype.isVertical = function() {
+  return this.barChartMode;
+};
+
+
+/** @inheritDoc */
+anychart.core.ChartWithAxes.prototype.invalidateAnnotations = function() {
+  this.annotations().invalidateAnnotations();
+};
+
+
 //endregion
 //region --- Default settings getters/setters
 //----------------------------------------------------------------------------------------------------------------------
@@ -655,11 +667,7 @@ anychart.core.ChartWithAxes.prototype.onCrosshairSignal_ = function(event) {
 //  Annotations
 //
 //----------------------------------------------------------------------------------------------------------------------
-/**
- * Annotations plot-level controller.
- * @param {Array.<anychart.enums.AnnotationTypes|anychart.core.annotations.AnnotationJSONFormat>=} opt_annotationsList
- * @return {anychart.core.ChartWithAxes|anychart.core.annotations.PlotController}
- */
+/** @inheritDoc */
 anychart.core.ChartWithAxes.prototype.annotations = function(opt_annotationsList) {
   if (!this.annotationsPlotController_) {
     /**
@@ -1014,7 +1022,7 @@ anychart.core.ChartWithAxes.prototype.drawContent = function(bounds) {
     this.dataBounds = this.getBoundsWithoutAxes(this.getContentAreaBounds(bounds));
 
     // we do not invalidate series BOUNDS state, because it will be invalidate naturally in series drawing section
-    this.annotations().invalidateAnnotations();
+    this.invalidateAnnotations();
     this.invalidate(this.getBoundsChangedSignal());
   }
 
