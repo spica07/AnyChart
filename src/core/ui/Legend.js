@@ -147,7 +147,7 @@ anychart.core.ui.Legend = function() {
    * @type {?(Function|string)}
    * @private
    */
-  this.titleFormatter_ = null;
+  this.titleFormat_ = null;
 
   /**
    * Hover cursor setting.
@@ -603,17 +603,29 @@ anychart.core.ui.Legend.prototype.titleInvalidated_ = function(event) {
  * If set, formats title. Currently supported in Stock only.
  * @param {?(Function|string)=} opt_value
  * @return {Function|string|anychart.core.ui.Legend}
+ * @deprecated Since 7.13.1. Use 'titleFormat' instead.
  */
 anychart.core.ui.Legend.prototype.titleFormatter = function(opt_value) {
+  anychart.core.reporting.warning(anychart.enums.WarningCode.DEPRECATED, null, ['titleFormatter', 'titleFormat'], true);
+  return this.titleFormat(opt_value);
+};
+
+
+/**
+ * If set, formats title. Currently supported in Stock only.
+ * @param {?(Function|string)=} opt_value
+ * @return {Function|string|anychart.core.ui.Legend}
+ */
+anychart.core.ui.Legend.prototype.titleFormat = function(opt_value) {
   if (goog.isDef(opt_value)) {
-    if (this.titleFormatter_ != opt_value) {
-      this.titleFormatter_ = opt_value;
+    if (this.titleFormat_ != opt_value) {
+      this.titleFormat_ = opt_value;
       this.invalidate(anychart.ConsistencyState.LEGEND_TITLE | anychart.ConsistencyState.BOUNDS,
           anychart.Signal.BOUNDS_CHANGED | anychart.Signal.NEEDS_REDRAW);
     }
     return this;
   }
-  return this.titleFormatter_;
+  return this.titleFormat_;
 };
 
 
@@ -2360,7 +2372,7 @@ anychart.core.ui.Legend.prototype.serialize = function() {
   json['padding'] = this.padding().serialize();
   json['background'] = this.background().serialize();
   json['title'] = this.title().serialize();
-  json['titleFormatter'] = this.titleFormatter();
+  json['titleFormat'] = this.titleFormat();
   json['titleSeparator'] = this.titleSeparator().serialize();
   json['paginator'] = this.paginator().serialize();
   json['tooltip'] = this.tooltip().serialize();
@@ -2404,7 +2416,9 @@ anychart.core.ui.Legend.prototype.setupByJSON = function(config, opt_default) {
   if ('margin' in config)
     this.margin(config['margin']);
 
-  this.titleFormatter(config['titleFormatter']);
+  this.titleFormat(config['titleFormat']);
+  if ('titleFormatter' in config)
+    this.titleFormatter(config['titleFormatter']);
   this.titleSeparator(config['titleSeparator']);
   this.paginator(config['paginator']);
 
@@ -2470,6 +2484,7 @@ anychart.core.ui.Legend.prototype.disposeInternal = function() {
   proto['background'] = proto.background;
   proto['title'] = proto.title;
   proto['titleFormatter'] = proto.titleFormatter;
+  proto['titleFormat'] = proto.titleFormat;
   proto['titleSeparator'] = proto.titleSeparator;
   proto['paginator'] = proto.paginator;
   proto['tooltip'] = proto.tooltip;
