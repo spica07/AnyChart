@@ -141,9 +141,8 @@ anychart.themes.merging.deepClone_ = function(obj) {
  * @param {Array.<string|number>} path Path parts.
  * @param {*} value
  * @return {*} Theme with the result.
- * @private
  */
-anychart.themes.merging.setThemePart_ = function(theme, path, value) {
+anychart.themes.merging.setThemePart = function(theme, path, value) {
   if (goog.isDef(value)) {
     var curr = goog.isObject(theme) ? theme : {};
     var result = curr;
@@ -205,7 +204,7 @@ anychart.themes.merging.removeThemePart_ = function(theme, path) {
  * @private
  */
 anychart.themes.merging.mergeThemePart_ = function(theme, targetPath, defaultPath) {
-  return anychart.themes.merging.setThemePart_(
+  return anychart.themes.merging.setThemePart(
       theme, targetPath,
       anychart.themes.merging.merge(
           anychart.themes.merging.getThemePart_(theme, targetPath),
@@ -223,7 +222,7 @@ anychart.themes.merging.mergeThemePart_ = function(theme, targetPath, defaultPat
  */
 anychart.themes.merging.replaceThemePart_ = function(theme, targetPath, defaultPath) {
   if (!goog.isDef(anychart.themes.merging.getThemePart_(theme, targetPath)))
-    return anychart.themes.merging.setThemePart_(theme, targetPath,
+    return anychart.themes.merging.setThemePart(theme, targetPath,
         anychart.themes.merging.getThemePart_(theme, defaultPath));
   return theme;
 };
