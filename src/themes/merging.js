@@ -698,7 +698,8 @@ anychart.themes.merging.mergingMap_ = [
   {
     defaultObj: 'markerPalette',
     targets: [
-      'chart.markerPalette'
+      'chart.markerPalette',
+      'stock.defaultPlotSettings.markerPalette'
     ]
   },
   {
