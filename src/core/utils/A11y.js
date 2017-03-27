@@ -197,7 +197,7 @@ anychart.core.utils.A11y.prototype.setupByJSON = function(json, opt_default) {
   anychart.core.utils.A11y.base(this, 'setupByJSON', json, opt_default);
   this.enabled('enabled' in json ? json['enabled'] : true);
   this.titleFormat(json['titleFormat']);
-  if ('titleFormat' in json)
+  if ('titleFormatter' in json)
     this.titleFormatter(json['titleFormatter']);
 };
 

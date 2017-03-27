@@ -315,18 +315,6 @@ anychart.core.ui.LabelsFactory.prototype.enabled = function(opt_value) {
 };
 
 
-/**
- * Gets or sets labels text formatter function.
- * @param {(Function|string)=} opt_value Labels text formatter function.
- * @return {Function|string|anychart.core.ui.LabelsFactory} Labels text formatter function or Labels instance for chaining
- * @deprecated Since 7.13.1. Use 'format' instead.
- */
-anychart.core.ui.LabelsFactory.prototype.textFormatter = function(opt_value) {
-  anychart.core.reporting.warning(anychart.enums.WarningCode.DEPRECATED, null, ['textFormatter()', 'format()'], true);
-  return this['format'](opt_value);
-};
-
-
 //----------------------------------------------------------------------------------------------------------------------
 //
 //  Background and Padding.
