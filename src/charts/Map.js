@@ -568,29 +568,30 @@ anychart.charts.Map.prototype.controlsInteractivity_ = function() {
     if (goog.userAgent.IE)
       container.style['-ms-touch-action'] = 'none';
 
-    this.mapTextarea = goog.dom.createDom('textarea');
-    this.mapTextarea.setAttribute('readonly', 'readonly');
-    goog.style.setStyle(this.mapTextarea, {
-      'border': 0,
-      'clip': 'rect(0 0 0 0)',
-      'height': '1px',
-      'margin': '-1px',
-      'overflow': 'hidden',
-      'padding': '0',
-      'position': 'absolute',
-      'left': 0,
-      'top': 0,
-      'width': '1px'
-    });
-    goog.dom.appendChild(container, this.mapTextarea);
-
+    if (!anychart.mapTextarea) {
+      anychart.mapTextarea = goog.dom.createDom('textarea');
+      anychart.mapTextarea.setAttribute('readonly', 'readonly');
+      goog.style.setStyle(anychart.mapTextarea, {
+        'border': 0,
+        'clip': 'rect(0 0 0 0)',
+        'height': '1px',
+        'margin': '-1px',
+        'overflow': 'hidden',
+        'padding': '0',
+        'position': 'absolute',
+        'left': 0,
+        'top': 0,
+        'width': '1px'
+      });
+      goog.dom.appendChild(document['body'], anychart.mapTextarea);
+    }
 
     this.listen('pointsselect', function(e) {
-      this.mapTextarea.innerHTML = this.interactivity().copyFormatter().call(e, e);
-      this.mapTextarea.select();
+      anychart.mapTextarea.innerHTML = this.interactivity().copyFormatter().call(e, e);
+      anychart.mapTextarea.select();
     }, false, this);
 
-    this.shortcutHandler = new goog.ui.KeyboardShortcutHandler(this.mapTextarea);
+    this.shortcutHandler = new goog.ui.KeyboardShortcutHandler(anychart.mapTextarea);
     var META = goog.ui.KeyboardShortcutHandler.Modifiers.META;
     var CTRL = goog.ui.KeyboardShortcutHandler.Modifiers.CTRL;
 
@@ -782,11 +783,11 @@ anychart.charts.Map.prototype.controlsInteractivity_ = function() {
           e.clientY <= bounds.top + containerPosition.y + bounds.height;
 
       if (insideBounds && this.isDesktop) {
-        var scrollEl = goog.dom.getDomHelper(this.mapTextarea).getDocumentScrollElement();
+        var scrollEl = goog.dom.getDomHelper(anychart.mapTextarea).getDocumentScrollElement();
         var scrollX = scrollEl.scrollLeft;
         var scrollY = scrollEl.scrollTop;
 
-        this.mapTextarea.focus();
+        anychart.mapTextarea.focus();
         if (goog.userAgent.GECKO) {
           var newScrollX = scrollEl.scrollLeft;
           var newScrollY = scrollEl.scrollTop;
@@ -970,6 +971,7 @@ anychart.charts.Map.prototype.tapHandler = function(event) {
     } else if (touchCount == 1) {
       this.tap = true;
       this.originEvent = event;
+      // this.touchStartEvent = originalTouchEvent;
       if (!this.tapTesting) {
         this.testTouchStartHandler = this.eventsHandler.listenOnce(this, acgraph.events.EventType.TOUCHSTART, function(e) {
           var originalTouchEvent = e.originalEvent.getOriginalEvent().getBrowserEvent();
@@ -1003,6 +1005,11 @@ anychart.charts.Map.prototype.tapHandler = function(event) {
       this.tap = false;
     }
     goog.events.listen(document, [goog.events.EventType.POINTERMOVE, goog.events.EventType.TOUCHMOVE], this.touchMoveHandler, false, this);
+    goog.events.listen(document['body'], [goog.events.EventType.POINTERMOVE, goog.events.EventType.TOUCHMOVE], function(e) {
+      var originalTouchEvent = e.getBrowserEvent();
+
+      return false;//or return e, doesn't matter
+    }, false, this);
   }
 };
 
@@ -1243,18 +1250,19 @@ anychart.charts.Map.prototype.touchMoveHandler = function(e) {
       var dx = e.clientX - scene.startTouchX;
       var dy = e.clientY - scene.startTouchY;
 
-      var boundsWithoutTx = mapLayer.getBoundsWithoutTransform();
-      var boundsWithTx = mapLayer.getBounds();
-      var dragRight = boundsWithTx.left > boundsWithoutTx.left && dx < 0;
-      var dragLeft = boundsWithTx.getRight() < boundsWithoutTx.getRight() && dx > 0;
-      var dragTop = boundsWithTx.top > boundsWithoutTx.top && dy < 0;
-      var dragBottom = boundsWithTx.getBottom() < boundsWithoutTx.getBottom() && dy > 0;
+      // var boundsWithoutTx = mapLayer.getBoundsWithoutTransform();
+      // var boundsWithTx = mapLayer.getBounds();
+      // var dragRight = boundsWithTx.left >= boundsWithoutTx.left && dx < 0;
+      // var dragLeft = boundsWithTx.getRight() <= boundsWithoutTx.getRight() && dx > 0;
+      // var dragTop = boundsWithTx.top >= boundsWithoutTx.top && dy < 0;
+      // var dragBottom = boundsWithTx.getBottom() <= boundsWithoutTx.getBottom() && dy > 0;
 
-      if (dragRight || dragLeft || dragTop || dragBottom) {
-        var ev = this.originEvent.originalEvent || this.originEvent;
-        var originalTouchEvent_ = ev.getOriginalEvent().getBrowserEvent();
-        originalTouchEvent_.preventDefault();
-      }
+      // if (dragRight || dragLeft || dragTop || dragBottom) {
+      //   if (this.touchStartEvent) {
+      //     originalTouchEvent.preventDefault();
+      //     this.touchStartEvent.preventDefault();
+      //   }
+      // }
 
       goog.style.setStyle(document['body'], 'cursor', acgraph.vector.Cursor.MOVE);
       scene.move(dx, dy);
@@ -5292,11 +5300,6 @@ anychart.charts.Map.prototype.disposeInternal = function() {
     if (this.mapTouchEndHandler_) goog.events.unlisten(container, goog.events.EventType.POINTERUP, this.mapTouchEndHandler_, false, this);
     if (this.mapTouchEndHandler_) goog.events.unlisten(container, goog.events.EventType.TOUCHEND, this.mapTouchEndHandler_, false, this);
     if (this.mapMouseLeaveHandler_) goog.events.unlisten(container, goog.events.EventType.MOUSELEAVE, this.mapMouseLeaveHandler_, false, this);
-  }
-
-  if (this.mapTextarea) {
-    goog.dom.removeNode(this.mapTextarea);
-    delete this.mapTextarea;
   }
 
   anychart.charts.Map.base(this, 'disposeInternal');
