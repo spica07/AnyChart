@@ -1312,6 +1312,7 @@
         <xsd:attribute name="allow_leave_stage" type="simple.Bool" default="false"/>
         <xsd:attribute name="allow_leave_screen" type="simple.Bool" default="false"/>
         <xsd:attribute name="title" type="simple.StringOrBoolOrNull" default="false"/>
+        <xsd:attribute name="format" type="xsd:string"/>
         <xsd:attribute name="separator" type="simple.BoolOrNull" default="false"/>
         <xsd:attribute name="background" type="simple.StringOrBoolOrNull" default="false"/>
         <xsd:attribute name="content" type="simple.StringOrBoolOrNull" default="true"/>

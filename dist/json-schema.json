@@ -4648,6 +4648,7 @@
             {"$ref": "#/definitions/anychart.core.ui.Title"}
           ]
         },
+        "format": {"type": ["string"]},
         "content": {
           "oneOf": [
             {"type": "string"},

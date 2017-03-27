@@ -931,7 +931,6 @@ goog.provide('anychart.themes.defaultTheme');
       'itemsSpacing': 15,
       'items': null,
       'itemsFormat': null,
-      'itemsFormat': null,
       'itemsSourceMode': 'default',
       'inverted': false,
       'hoverCursor': 'pointer',
