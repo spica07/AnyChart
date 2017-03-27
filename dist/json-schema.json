@@ -4527,7 +4527,7 @@
             "string"
           ]
         },
-        "textFormatter": {
+        "format": {
           "type": "string"
         }
       }
@@ -5542,7 +5542,7 @@
         "enabled": {
           "type": "boolean"
         },
-        "titleFormatter": {
+        "titleFormat": {
           "type": "string"
         },
         "mode": {
