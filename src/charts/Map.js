@@ -584,7 +584,7 @@ anychart.charts.Map.prototype.controlsInteractivity_ = function() {
 
 
     this.listen('pointsselect', function(e) {
-      this.mapTextarea.innerHTML = this.interactivity().copyFormatter().call(e, e);
+      this.mapTextarea.innerHTML = this.interactivity().copyFormat().call(e, e);
       this.mapTextarea.select();
     }, false, this);
 

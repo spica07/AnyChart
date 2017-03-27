@@ -617,7 +617,7 @@ goog.provide('anychart.themes.v6');
        * @this {*}
        * @return {*}
        */
-      'titleFormatter': function() {
+      'titleFormat': function() {
         return this['value'];
       },
       /**
@@ -873,7 +873,7 @@ goog.provide('anychart.themes.v6');
         'itemsSpacing': 15,
         'iconSize': 13,
         'items': null,
-        'itemsFormatter': null, // effectively equals current settings
+        'itemsFormat': null, // effectively equals current settings
         'itemsFormat': null,
         'itemsSourceMode': 'default',
         'inverted': false,
@@ -1077,7 +1077,7 @@ goog.provide('anychart.themes.v6');
          * @this {*}
          * @return {*}
          */
-        'titleFormatter': function() {
+        'titleFormat': function() {
           return 'Union Tooltip';
         },
         /**
@@ -1090,7 +1090,7 @@ goog.provide('anychart.themes.v6');
       },
       'a11y': {
         'enabled': true,
-        'titleFormatter': chartA11yTitleFormatter,
+        'titleFormat': chartA11yTitleFormatter,
         'mode': 'chartElements'
       },
       'defaultAnnotationSettings': {
@@ -1365,7 +1365,7 @@ goog.provide('anychart.themes.v6');
              * @this {*}
              * @return {*}
              */
-            'titleFormatter': function() {
+            'titleFormat': function() {
               return this['name'];
             },
             /**
@@ -1412,7 +1412,7 @@ goog.provide('anychart.themes.v6');
           'connectMissingPoints': false,
           'a11y': {
             'enabled': true,
-            'titleFormatter': 'Series named {%SeriesName} with {%SeriesPointsCount} points. Min value is {%SeriesYMin}, max value is {%SeriesYMax}'
+            'titleFormat': 'Series named {%SeriesName} with {%SeriesPointsCount} points. Min value is {%SeriesYMin}, max value is {%SeriesYMax}'
           }
         },
         'area': {
@@ -2381,7 +2381,7 @@ goog.provide('anychart.themes.v6');
         'zIndex': 35
       },
       'a11y': {
-        'titleFormatter': cartesianBaseA11yTitleFormatter
+        'titleFormat': cartesianBaseA11yTitleFormatter
       }
     },
 
@@ -2819,7 +2819,7 @@ goog.provide('anychart.themes.v6');
          * @this {*}
          * @return {*}
          */
-        'titleFormatter': function() {
+        'titleFormat': function() {
           return this['name'] || this['x'];
         },
         /**
@@ -3041,7 +3041,7 @@ goog.provide('anychart.themes.v6');
         'zIndex': 35
       },
       'a11y': {
-        'titleFormatter': chartA11yTitleFormatter
+        'titleFormat': chartA11yTitleFormatter
       }
     },
     'treeMap': {
@@ -3103,7 +3103,7 @@ goog.provide('anychart.themes.v6');
          * @this {*}
          * @return {*}
          */
-        'titleFormatter': returnName,
+        'titleFormat': returnName,
         /**
          * @this {*}
          * @return {*}
@@ -3300,7 +3300,7 @@ goog.provide('anychart.themes.v6');
              * @this {*}
              * @return {*}
              */
-            'titleFormatter': function() {
+            'titleFormat': function() {
               return this['name'];
             },
             /**
@@ -3428,7 +3428,7 @@ goog.provide('anychart.themes.v6');
         },
         'a11y': {
           'enabled': true,
-          'titleFormatter': 'Series named {%SeriesName} with {%SeriesPointsCount} points. Min value is {%SeriesYMin}, max value is {%SeriesYMax}'
+          'titleFormat': 'Series named {%SeriesName} with {%SeriesPointsCount} points. Min value is {%SeriesYMin}, max value is {%SeriesYMax}'
         }
       },
 
@@ -3703,7 +3703,7 @@ goog.provide('anychart.themes.v6');
         }
       },
       'a11y': {
-        'titleFormatter': scatterA11yTitleFormatter
+        'titleFormat': scatterA11yTitleFormatter
       }
     },
 
@@ -3804,7 +3804,7 @@ goog.provide('anychart.themes.v6');
         'rotation': 0
       },
       'a11y': {
-        'titleFormatter': bulletA11yTitleFormatter
+        'titleFormat': bulletA11yTitleFormatter
       }
     },
 
@@ -3904,7 +3904,7 @@ goog.provide('anychart.themes.v6');
          * @this {*}
          * @return {*}
          */
-        'titleFormatter': function() {
+        'titleFormat': function() {
           return this['name'] || this['x'];
         },
         /**
@@ -3943,7 +3943,7 @@ goog.provide('anychart.themes.v6');
         }
       },
       'a11y': {
-        'titleFormatter': pieA11yTitleFormatter
+        'titleFormat': pieA11yTitleFormatter
       }
     },
 
@@ -4143,7 +4143,7 @@ goog.provide('anychart.themes.v6');
          * @this {*}
          * @return {*}
          */
-        'titleFormatter': function() {
+        'titleFormat': function() {
           return this['name'] || this['x'];
         },
         /**
@@ -4274,7 +4274,7 @@ goog.provide('anychart.themes.v6');
              * @this {*}
              * @return {*}
              */
-            'titleFormatter': function() {
+            'titleFormat': function() {
               return this['name'];
             },
             /**
@@ -4375,7 +4375,7 @@ goog.provide('anychart.themes.v6');
         },
         'a11y': {
           'enabled': true,
-          'titleFormatter': 'Series named {%SeriesName} with {%SeriesPointsCount} points. Min value is {%SeriesYMin}, max value is {%SeriesYMax}'
+          'titleFormat': 'Series named {%SeriesName} with {%SeriesPointsCount} points. Min value is {%SeriesYMin}, max value is {%SeriesYMax}'
         }
       },
       'defaultGridSettings': {
@@ -4463,7 +4463,7 @@ goog.provide('anychart.themes.v6');
       'yScale': 1,
       'background': {'enabled': true, 'fill': {'keys': ['#fff', '#f3f3f3', '#fff'], 'angle': 90}, 'stroke': null},
       'a11y': {
-        'titleFormatter': scatterA11yTitleFormatter
+        'titleFormat': scatterA11yTitleFormatter
       }
     },
 
@@ -4545,7 +4545,7 @@ goog.provide('anychart.themes.v6');
              * @this {*}
              * @return {*}
              */
-            'titleFormatter': function() {
+            'titleFormat': function() {
               return this['name'];
             },
             /**
@@ -4745,7 +4745,7 @@ goog.provide('anychart.themes.v6');
       'yScale': 1,
       'background': {'enabled': true, 'fill': {'keys': ['#fff', '#f3f3f3', '#fff'], 'angle': 90}, 'stroke': null},
       'a11y': {
-        'titleFormatter': scatterA11yTitleFormatter
+        'titleFormat': scatterA11yTitleFormatter
       }
     },
 
@@ -4977,7 +4977,7 @@ goog.provide('anychart.themes.v6');
          * @this {*}
          * @return {*}
          */
-        'titleFormatter': function() {
+        'titleFormat': function() {
           return this['x'];
         },
         /**
@@ -4997,7 +4997,7 @@ goog.provide('anychart.themes.v6');
       'globalOffset': '0%',
       'layout': 'vertical',
       'tooltip': {
-        'titleFormatter': function() {
+        'titleFormat': function() {
           return this['name'];
         },
         'format': function() {
@@ -5290,7 +5290,7 @@ goog.provide('anychart.themes.v6');
          * @this {*}
          * @return {*}
          */
-        'titleFormatter': function() {
+        'titleFormat': function() {
           return this['value'];
         },
         /**
@@ -5393,7 +5393,7 @@ goog.provide('anychart.themes.v6');
              * @this {*}
              * @return {*}
              */
-            'titleFormatter': function() {
+            'titleFormat': function() {
               return this['name'];
             },
             /**
@@ -5411,7 +5411,7 @@ goog.provide('anychart.themes.v6');
         'choropleth': {},
         'bubble': {
           'a11y': {
-            'titleFormatter': chartA11yTitleFormatter
+            'titleFormat': chartA11yTitleFormatter
           },
           'displayNegative': false,
           /**
@@ -5492,7 +5492,7 @@ goog.provide('anychart.themes.v6');
              * @this {*}
              * @return {*}
              */
-            'titleFormatter': function() {
+            'titleFormat': function() {
               return this['name'] || this['getDataValue']('name');
             },
             /**
@@ -5746,7 +5746,7 @@ goog.provide('anychart.themes.v6');
       'minBubbleSize': '5%',
       'geoIdField': 'id',
       'interactivity': {
-        'copyFormatter': function() {
+        'copyFormat': function() {
           var ths = arguments[0];
           var seriesStatus = ths['seriesStatus'];
           var result = '';
@@ -6119,7 +6119,7 @@ goog.provide('anychart.themes.v6');
            * @this {*}
            * @return {string}
            */
-          'titleFormatter': function() {
+          'titleFormat': function() {
             return this['name'] || '';
           },
           /**
@@ -6141,7 +6141,7 @@ goog.provide('anychart.themes.v6');
            * @this {*}
            * @return {string}
            */
-          'titleFormatter': function() {
+          'titleFormat': function() {
             return this['name'] || '';
           },
           /**
@@ -6164,7 +6164,7 @@ goog.provide('anychart.themes.v6');
            * @this {*}
            * @return {string}
            */
-          'titleFormatter': function() {
+          'titleFormat': function() {
             return this['name'] || '';
           },
           /**
@@ -6194,7 +6194,7 @@ goog.provide('anychart.themes.v6');
            * @this {*}
            * @return {string}
            */
-          'titleFormatter': function() {
+          'titleFormat': function() {
             return this['name'] || '';
           },
           /**
@@ -6449,7 +6449,7 @@ goog.provide('anychart.themes.v6');
           'itemsSpacing': 15,
           'items': null,
           'iconSize': 13,
-          'itemsFormatter': null, // effectively equals current settings
+          'itemsFormat': null, // effectively equals current settings
           'itemsFormat': null,
           'itemsSourceMode': 'default',
           'inverted': false,
@@ -6462,7 +6462,7 @@ goog.provide('anychart.themes.v6');
            * @this {*}
            * @return {*}
            */
-          'titleFormatter': function() {
+          'titleFormat': function() {
             var date = /** @type {number} */(this['value']);
             switch (this['dataIntervalUnit']) {
               case 'year':
@@ -6790,7 +6790,7 @@ goog.provide('anychart.themes.v6');
          * @this {*}
          * @return {*}
          */
-        'titleFormatter': function() {
+        'titleFormat': function() {
           var date = /** @type {number} */(this['hoveredDate']);
           switch (this['dataIntervalUnit']) {
             case 'year':
@@ -6822,7 +6822,7 @@ goog.provide('anychart.themes.v6');
         }
       },
       'a11y': {
-        'titleFormatter': chartA11yTitleFormatter
+        'titleFormat': chartA11yTitleFormatter
       }
     },
 
@@ -6887,7 +6887,7 @@ goog.provide('anychart.themes.v6');
            * @this {*}
            * @return {*}
            */
-          'titleFormatter': function() {
+          'titleFormat': function() {
             if (this['creator']) {
               return 'Milestone - ' + this['index'];
             } else {
@@ -6992,7 +6992,7 @@ goog.provide('anychart.themes.v6');
            * @this {*}
            * @return {*}
            */
-          'titleFormatter': function() {
+          'titleFormat': function() {
             return this['name'];
           },
           /**
@@ -7047,7 +7047,7 @@ goog.provide('anychart.themes.v6');
              * @this {*}
              * @return {*}
              */
-            'titleFormatter': function() {
+            'titleFormat': function() {
               if (this['creator']) {
                 return 'Milestone - ' + this['index'];
               } else {
@@ -7152,7 +7152,7 @@ goog.provide('anychart.themes.v6');
              * @this {*}
              * @return {*}
              */
-            'titleFormatter': function() {
+            'titleFormat': function() {
               return this['name'];
             },
             /**
@@ -7551,7 +7551,7 @@ goog.provide('anychart.themes.v6');
         'inverted': false,
         'items': null,
         'itemsSourceMode': 'default',
-        'itemsFormatter': function(items) {
+        'itemsFormat': function(items) {
           return items;
         },
         'fontColor': '#232323',

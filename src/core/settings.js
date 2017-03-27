@@ -405,7 +405,7 @@ anychart.core.settings.simpleHandler = function(fieldName, normalizer, supportCh
  */
 anychart.core.settings.simpleDeprecatedHandler = function(fieldName, deprecatedFieldName, normalizer, supportCheck, consistencyState, signal, opt_value) {
   anychart.core.reporting.warning(anychart.enums.WarningCode.DEPRECATED, null, [deprecatedFieldName + '()', fieldName + '()'], true);
-  return anychart.core.settings.simpleHandler(fieldName, normalizer, supportCheck, consistencyState, signal, opt_value);
+  return anychart.core.settings.simpleHandler.call(this, fieldName, normalizer, supportCheck, consistencyState, signal, opt_value);
 };
 
 

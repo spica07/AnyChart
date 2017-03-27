@@ -1162,7 +1162,7 @@ anychart.core.ui.Tooltip.prototype.updatePosition = function(clientX, clientY) {
 anychart.core.ui.Tooltip.prototype.getFormattedTitle = function(contextProvider) {
   contextProvider = goog.object.clone(contextProvider);
   contextProvider['titleText'] = this.title_.getOption('text');
-  var formatter = this.getOption('titleFormatter');
+  var formatter = this.getOption('titleFormat');
   if (goog.isString(formatter))
     formatter = anychart.core.utils.TokenParser.getInstance().getFormat(formatter);
 
