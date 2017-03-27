@@ -877,6 +877,16 @@ anychart.core.series.Base.prototype.hasOwnLayer = function() {
 };
 
 
+/**
+ * If the series zero line is complex (not a straight line or single point).
+ * Needed in Area and PolarArea drawers.
+ * @return {boolean}
+ */
+anychart.core.series.Base.prototype.hasComplexZero = function() {
+  return this.planIsStacked();
+};
+
+
 //endregion
 //region --- Infrastructure
 //----------------------------------------------------------------------------------------------------------------------

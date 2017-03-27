@@ -4,6 +4,7 @@ goog.require('anychart.core.drawers.Line');
 goog.require('anychart.core.drawers.Marker');
 goog.require('anychart.core.series.Cartesian');
 goog.require('anychart.math');
+goog.require('anychart.utils');
 
 
 
@@ -42,12 +43,20 @@ anychart.core.series.Radar.prototype.cy;
 
 
 /** @inheritDoc */
+anychart.core.series.Radar.prototype.hasComplexZero = function() {
+  return !this.innerRadius || this.planIsStacked();
+};
+
+
+/** @inheritDoc */
 anychart.core.series.Radar.prototype.startDrawing = function() {
   var bounds = this.pixelBoundsCache;
+  var chart = (/** @type {anychart.core.RadarPolarChart} */(this.chart));
   this.radius = Math.min(bounds.width, bounds.height) / 2;
+  this.innerRadius = anychart.utils.normalizeSize(/** @type {number|string} */(chart.innerRadius()), this.radius);
   this.cx = Math.round(bounds.left + bounds.width / 2);
   this.cy = Math.round(bounds.top + bounds.height / 2);
-  if (this.needsZero()) {
+  if (this.needsZero() && !this.innerRadius) {
     var zero = this.ratiosToPixelPairs(0, [0]);
     this.zeroX = zero[0];
     this.zeroY = zero[1];
@@ -64,14 +73,14 @@ anychart.core.series.Radar.prototype.makeMissing = function(rowInfo, yNames, xRa
 
 /** @inheritDoc */
 anychart.core.series.Radar.prototype.makeZeroMeta = function(rowInfo, yNames, yColumns, pointMissing, xRatio) {
-  /* other interesting behavior
-  var zero = this.ratiosToPixelPairs(xRatio, [this.zeroYRatio]);
-  rowInfo.meta('zeroX', zero[0]);
-  rowInfo.meta('zero', zero[1]);
-  /*/
-  rowInfo.meta('zeroX', this.zeroX);
-  rowInfo.meta('zero', this.zeroY);
-  //*/
+  if (this.innerRadius) {
+    var zero = this.ratiosToPixelPairs(xRatio, [this.zeroYRatio]);
+    rowInfo.meta('zeroX', zero[0]);
+    rowInfo.meta('zero', zero[1]);
+  } else {
+    rowInfo.meta('zeroX', this.zeroX);
+    rowInfo.meta('zero', this.zeroY);
+  }
   rowInfo.meta('zeroMissing', false);
   return pointMissing;
 };
@@ -84,7 +93,7 @@ anychart.core.series.Radar.prototype.ratiosToPixelPairs = function(x, ys) {
   for (var i = 0; i < ys.length; i++) {
     var y = ys[i];
     var angle = anychart.math.round(goog.math.toRadians(goog.math.modulo(startAngle - 90 + 360 * x, 360)), 4);
-    var radius = this.radius * y;
+    var radius = this.innerRadius + (this.radius - this.innerRadius) * y;
     result.push(
         this.cx + radius * Math.cos(angle),
         this.cy + radius * Math.sin(angle)

@@ -2391,6 +2391,7 @@ goog.provide('anychart.themes.defaultTheme');
         'scale': 1
       },
       'startAngle': 0,
+      'innerRadius': 0,
       'grids': [{}, {'layout': 'circuit'}],
       'minorGrids': [],
       'scales': [
@@ -2439,6 +2440,7 @@ goog.provide('anychart.themes.defaultTheme');
         'scale': 1
       },
       'startAngle': 0,
+      'innerRadius': 0,
       'grids': [{}, {'layout': 'circuit'}],
       'minorGrids': [],
       'scales': [

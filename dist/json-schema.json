@@ -872,6 +872,12 @@
           "type": [
             "boolean"
           ]
+        },
+        "innerRadius": {
+          "type": [
+            "number",
+            "string"
+          ]
         }
       },
       "required": ["type"]
@@ -1024,6 +1030,12 @@
           ]
         },
         "startAngle": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "innerRadius": {
           "type": [
             "number",
             "string"

@@ -308,7 +308,7 @@ anychart.core.ChartWithOrthogonalScales.prototype.yScaleInvalidated = function(e
 
 
 /**
- * Invalidates all series that use this scale.
+ * Invalidates all series that use this scale. Null for all series.
  * @param {*} scale
  * @protected
  */
@@ -316,7 +316,7 @@ anychart.core.ChartWithOrthogonalScales.prototype.invalidateSeriesOfScale = func
   var foundOne = 0;
   for (var i = 0; i < this.seriesList.length; i++) {
     var series = this.seriesList[i];
-    if (series && series.enabled() && (series.getXScale() == scale || series.yScale() == scale)) {
+    if (series && series.enabled() && (!scale || series.getXScale() == scale || series.yScale() == scale)) {
       foundOne |= series.invalidate(anychart.ConsistencyState.SERIES_POINTS);
     }
   }

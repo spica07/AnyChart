@@ -118,7 +118,7 @@ anychart.core.axes.Polar.prototype.stroke_;
 
 
 /**
- * @type {anychart.scales.ScatterBase}
+ * @type {anychart.scales.Base}
  * @private
  */
 anychart.core.axes.Polar.prototype.scale_ = null;
