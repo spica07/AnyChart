@@ -74,7 +74,6 @@
             <!-- charts.Funnel and charts.Pyramid elements -->
             <xsd:element minOccurs="0" maxOccurs="1" name="hover_markers" type="core.MarkersFactory"/>
             <xsd:element minOccurs="0" maxOccurs="1" name="select_markers" type="core.MarkersFactory"/>
-            <xsd:element minOccurs="0" maxOccurs="1" name="select_labels" type="core.LabelsFactory"/>
             <xsd:element minOccurs="0" maxOccurs="1" name="select_fill" type="Fill"/>
             <xsd:element minOccurs="0" maxOccurs="1" name="select_stroke" type="Stroke"/>
             <xsd:element minOccurs="0" maxOccurs="1" name="select_hatch_fill" type="HatchFill"/>
