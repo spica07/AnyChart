@@ -3069,10 +3069,10 @@ anychart.charts.Map.prototype.calculate = function() {
 
         //----------------------------------calc statistics for series
         series.calculateStatistics();
-        max = Math.max(max, /** @type {number} */(series.statistics('seriesMax')));
-        min = Math.min(min, /** @type {number} */ (series.statistics('seriesMin')));
-        sum += /** @type {number} */(series.statistics('seriesSum'));
-        pointsCount += /** @type {number} */(series.statistics('seriesPointsCount'));
+        max = Math.max(max, /** @type {number} */(series.statistics(anychart.enums.StatisticsLowerCase.SERIES_MAX)));
+        min = Math.min(min, /** @type {number} */ (series.statistics(anychart.enums.StatisticsLowerCase.SERIES_MIN)));
+        sum += /** @type {number} */(series.statistics(anychart.enums.StatisticsLowerCase.SERIES_SUM));
+        pointsCount += /** @type {number} */(series.statistics(anychart.enums.StatisticsLowerCase.SERIES_POINTS_COUNT));
         //----------------------------------end calc statistics for series
         // series.calculate();
       }
@@ -3083,11 +3083,11 @@ anychart.charts.Map.prototype.calculate = function() {
       var average = sum / pointsCount;
       for (i = 0; i < this.seriesList.length; i++) {
         series = this.seriesList[i];
-        series.statistics('max', max);
-        series.statistics('min', min);
-        series.statistics('sum', sum);
-        series.statistics('average', average);
-        series.statistics('pointsCount', pointsCount);
+        series.statistics(anychart.enums.StatisticsLowerCase.MAX, max);
+        series.statistics(anychart.enums.StatisticsLowerCase.MIN, min);
+        series.statistics(anychart.enums.StatisticsLowerCase.SUM, sum);
+        series.statistics(anychart.enums.StatisticsLowerCase.AVERAGE, average);
+        series.statistics(anychart.enums.StatisticsLowerCase.POINTS_COUNT, pointsCount);
         var seriesStrokeThickness = acgraph.vector.getThickness(/** @type {acgraph.vector.Stroke} */(series.getOption('stroke')));
         if (seriesStrokeThickness > this.maxStrokeThickness_) {
           this.maxStrokeThickness_ = seriesStrokeThickness;

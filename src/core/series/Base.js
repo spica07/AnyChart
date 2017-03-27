@@ -4196,10 +4196,10 @@ anychart.core.settings.populate(anychart.core.series.Base, anychart.core.series.
 anychart.core.series.Base.prototype.statistics = function(opt_name, opt_value) {
   if (goog.isDef(opt_name)) {
     if (goog.isDef(opt_value)) {
-      this.statistics_[opt_name] = opt_value;
+      this.statistics_[opt_name.toLowerCase()] = opt_value;
       return this;
     } else {
-      return this.statistics_[opt_name];
+      return this.statistics_[opt_name.toLowerCase()];
     }
   } else {
     return this.statistics_;
@@ -4220,7 +4220,7 @@ anychart.core.series.Base.prototype.calculateStatistics = goog.nullFunction;
  */
 anychart.core.series.Base.prototype.getStat = function(key) {
   this.chart.ensureStatisticsReady();
-  return this.statistics_[key];
+  return this.statistics_[key.toLowerCase()];
 };
 
 

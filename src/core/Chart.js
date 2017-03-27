@@ -544,7 +544,7 @@ anychart.core.Chart.prototype.ensureStatisticsReady = function() {
  */
 anychart.core.Chart.prototype.getStat = function(key) {
   this.ensureStatisticsReady();
-  return this.statistics[key];
+  return this.statistics[key.toLowerCase()];
 };
 
 

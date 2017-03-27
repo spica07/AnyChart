@@ -1273,10 +1273,10 @@ anychart.charts.Sparkline.prototype.getFinalFill = function(usePointSettings) {
   } else if (!index && goog.isDef(this.firstFill())) {
     //first point
     finalFill = this.firstFill();
-  } else if (val == this.getStat(anychart.enums.Statistics.MAX) && goog.isDef(this.maxFill())) {
+  } else if (val == this.getStat(anychart.enums.StatisticsLowerCase.MAX) && goog.isDef(this.maxFill())) {
     //point have max value
     finalFill = this.maxFill();
-  } else if (val == this.getStat(anychart.enums.Statistics.MIN) && goog.isDef(this.minFill())) {
+  } else if (val == this.getStat(anychart.enums.StatisticsLowerCase.MIN) && goog.isDef(this.minFill())) {
     //point have min value
     finalFill = this.minFill();
   } else if (val < 0 && goog.isDef(this.negativeFill())) {
@@ -1528,10 +1528,10 @@ anychart.charts.Sparkline.prototype.getFinalHatchFill = function(usePointSetting
   } else if (!index && goog.isDef(this.firstHatchFill())) {
     //first point
     finalHatchFill = this.firstHatchFill();
-  } else if (val == this.getStat(anychart.enums.Statistics.MAX) && goog.isDef(this.maxHatchFill())) {
+  } else if (val == this.getStat(anychart.enums.StatisticsLowerCase.MAX) && goog.isDef(this.maxHatchFill())) {
     //point have max value
     finalHatchFill = this.maxHatchFill();
-  } else if (val == this.getStat(anychart.enums.Statistics.MIN) && goog.isDef(this.minHatchFill())) {
+  } else if (val == this.getStat(anychart.enums.StatisticsLowerCase.MIN) && goog.isDef(this.minHatchFill())) {
     //point have min value
     finalHatchFill = this.minHatchFill();
   } else if (val < 0 && goog.isDef(this.negativeHatchFill())) {
@@ -1785,11 +1785,11 @@ anychart.charts.Sparkline.prototype.getFinalMarker = function(usePointSettings) 
 
   var maxOrMinMarkers;
   var defaultMaxOrMinMarkers;
-  if (val == this.getStat(anychart.enums.Statistics.MAX)) {
+  if (val == this.getStat(anychart.enums.StatisticsLowerCase.MAX)) {
     //point have max value
     maxOrMinMarkers = this.maxMarkers();
     defaultMaxOrMinMarkers = this.seriesDefaults_['maxMarkers'];
-  } else if (val == this.getStat(anychart.enums.Statistics.MIN)) {
+  } else if (val == this.getStat(anychart.enums.StatisticsLowerCase.MIN)) {
     //point have min value
     maxOrMinMarkers = this.minMarkers();
     defaultMaxOrMinMarkers = this.seriesDefaults_['minMarkers'];
@@ -2032,11 +2032,11 @@ anychart.charts.Sparkline.prototype.getFinalLabel = function(usePointSettings) {
 
   var maxOrMinLabels;
   var defaultMaxOrMinLabels;
-  if (val == this.getStat(anychart.enums.Statistics.MAX)) {
+  if (val == this.getStat(anychart.enums.StatisticsLowerCase.MAX)) {
     //point have max value
     maxOrMinLabels = this.maxLabels();
     defaultMaxOrMinLabels = this.seriesDefaults_['maxLabels'];
-  } else if (val == this.getStat(anychart.enums.Statistics.MIN)) {
+  } else if (val == this.getStat(anychart.enums.StatisticsLowerCase.MIN)) {
     //point have min value
     maxOrMinLabels = this.minLabels();
     defaultMaxOrMinLabels = this.seriesDefaults_['minLabels'];
@@ -2163,11 +2163,11 @@ anychart.charts.Sparkline.prototype.calculate = function() {
     }
     var seriesAverage = seriesSum / seriesPointsCount;
 
-    this.statistics[anychart.enums.Statistics.MAX] = seriesMax;
-    this.statistics[anychart.enums.Statistics.MIN] = seriesMin;
-    this.statistics[anychart.enums.Statistics.SUM] = seriesSum;
-    this.statistics[anychart.enums.Statistics.AVERAGE] = seriesAverage;
-    this.statistics[anychart.enums.Statistics.POINTS_COUNT] = seriesPointsCount;
+    this.statistics[anychart.enums.StatisticsLowerCase.MAX] = seriesMax;
+    this.statistics[anychart.enums.StatisticsLowerCase.MIN] = seriesMin;
+    this.statistics[anychart.enums.StatisticsLowerCase.SUM] = seriesSum;
+    this.statistics[anychart.enums.StatisticsLowerCase.AVERAGE] = seriesAverage;
+    this.statistics[anychart.enums.StatisticsLowerCase.POINTS_COUNT] = seriesPointsCount;
 
     this.markConsistent(anychart.ConsistencyState.SPARK_SCALES);
   }

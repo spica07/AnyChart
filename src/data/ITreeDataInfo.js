@@ -57,9 +57,8 @@ anychart.data.ITreeDataInfo.prototype.get = function(var_args) {};
 
 
 /**
- * Gets value from meta by path specified.
- * Works totally the same way as get().
- * @param {...*} var_args - Arguments.
- * @return {*} - Value or undefined if path is invalid.
+ * Gets value from meta by name specified.
+ * @param {string} name - Meta name.
+ * @return {*} - Value.
  */
-anychart.data.ITreeDataInfo.prototype.getMeta = function(var_args) {};
+anychart.data.ITreeDataInfo.prototype.meta = function(name) {};

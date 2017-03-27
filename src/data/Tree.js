@@ -1443,7 +1443,10 @@ anychart.data.Tree.DataItem.prototype.meta = function(key, opt_value) {
 
 
 /**
- * @inheritDoc
+ * Gets value from meta by path specified.
+ * Works totally the same way as get().
+ * @param {...*} var_args - Arguments.
+ * @return {*} - Value or undefined if path is invalid.
  */
 anychart.data.Tree.DataItem.prototype.getMeta = function(var_args) {
   if (arguments.length) {

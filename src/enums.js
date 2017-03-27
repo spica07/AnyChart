@@ -5426,6 +5426,22 @@ anychart.enums.Statistics = {
 };
 
 
+/**
+ * Statistics enums lower case representation.
+ * NOTE: for internal usage only.
+ * @type {Object.<anychart.enums.Statistics>}
+ */
+anychart.enums.StatisticsLowerCase = {};
+
+
+(function() {
+  for (var key in anychart.enums.Statistics) {
+    if (anychart.enums.Statistics.hasOwnProperty(key))
+      anychart.enums.StatisticsLowerCase[key] = anychart.enums.Statistics[key].toLowerCase();
+  }
+}());
+
+
 //region General series related enums
 //----------------------------------------------------------------------------------------------------------------------
 //

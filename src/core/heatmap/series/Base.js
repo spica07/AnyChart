@@ -1212,16 +1212,16 @@ anychart.core.heatMap.series.Base.prototype.calculateStatistics = function() {
   }
   var average = sum / pointsCount;
 
-  this.statistics(anychart.enums.Statistics.MAX, max);
-  this.statistics(anychart.enums.Statistics.SERIES_MAX, max);
-  this.statistics(anychart.enums.Statistics.SERIES_Y_MAX, max);
-  this.statistics(anychart.enums.Statistics.MIN, min);
-  this.statistics(anychart.enums.Statistics.SERIES_MIN, min);
-  this.statistics(anychart.enums.Statistics.SERIES_Y_MIN, min);
-  this.statistics(anychart.enums.Statistics.SUM, sum);
-  this.statistics(anychart.enums.Statistics.AVERAGE, average);
-  this.statistics(anychart.enums.Statistics.POINTS_COUNT, pointsCount);
-  this.statistics(anychart.enums.Statistics.SERIES_POINTS_COUNT, pointsCount);
+  this.statistics(anychart.enums.StatisticsLowerCase.MAX, max);
+  this.statistics(anychart.enums.StatisticsLowerCase.SERIES_MAX, max);
+  this.statistics(anychart.enums.StatisticsLowerCase.SERIES_Y_MAX, max);
+  this.statistics(anychart.enums.StatisticsLowerCase.MIN, min);
+  this.statistics(anychart.enums.StatisticsLowerCase.SERIES_MIN, min);
+  this.statistics(anychart.enums.StatisticsLowerCase.SERIES_Y_MIN, min);
+  this.statistics(anychart.enums.StatisticsLowerCase.SUM, sum);
+  this.statistics(anychart.enums.StatisticsLowerCase.AVERAGE, average);
+  this.statistics(anychart.enums.StatisticsLowerCase.POINTS_COUNT, pointsCount);
+  this.statistics(anychart.enums.StatisticsLowerCase.SERIES_POINTS_COUNT, pointsCount);
 };
 
 

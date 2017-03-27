@@ -128,7 +128,8 @@ anychart.core.Point.prototype.exists = function() {
  * @return {*} - Statistics value.
  */
 anychart.core.Point.prototype.getStat = function(key) {
-  return goog.isDef(this.statistics[key]) ? this.statistics[key] : this.get(key);
+  var lowerKey = key.toLowerCase();
+  return goog.isDef(this.statistics[lowerKey]) ? this.statistics[lowerKey] : this.get(key);
 };
 
 

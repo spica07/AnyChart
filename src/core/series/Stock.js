@@ -113,14 +113,6 @@ anychart.core.series.Stock.prototype.getPoint = function(index) {
 };
 
 
-/**
- * @inheritDoc
- */
-anychart.core.series.Stock.prototype.supportsError = function() {
-  return false;
-};
-
-
 /** @inheritDoc */
 anychart.core.series.Stock.prototype.getPointOption = function(name) {
   return undefined;

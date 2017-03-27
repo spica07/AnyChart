@@ -73,7 +73,7 @@ anychart.core.FormatContext.prototype.getSeriesMeta = function(name) {
   anychart.core.reporting.warning(anychart.enums.WarningCode.DEPRECATED, null,
       ['getSeriesMeta()', 'this[\'series\'].meta', ', works if context contains \'series\' field'], true);
   var values = this.values();
-  return (values && values['series']) ? values['series'].meta(name) : void 0;
+  return (values && values['series']) ? values['series'].value.meta(name) : void 0;
 };
 
 

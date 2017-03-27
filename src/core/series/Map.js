@@ -561,12 +561,12 @@ anychart.core.series.Map.prototype.calculateStatistics = function() {
   }
   var seriesAverage = seriesSum / seriesPointsCount;
 
-  this.statistics(anychart.enums.Statistics.SERIES_MAX, seriesMax);
-  this.statistics(anychart.enums.Statistics.SERIES_MIN, seriesMin);
-  this.statistics(anychart.enums.Statistics.SERIES_SUM, seriesSum);
-  this.statistics(anychart.enums.Statistics.SERIES_AVERAGE, seriesAverage);
-  this.statistics(anychart.enums.Statistics.SERIES_POINTS_COUNT, seriesPointsCount);
-  this.statistics(anychart.enums.Statistics.SERIES_POINT_COUNT, seriesPointsCount);
+  this.statistics(anychart.enums.StatisticsLowerCase.SERIES_MAX, seriesMax);
+  this.statistics(anychart.enums.StatisticsLowerCase.SERIES_MIN, seriesMin);
+  this.statistics(anychart.enums.StatisticsLowerCase.SERIES_SUM, seriesSum);
+  this.statistics(anychart.enums.StatisticsLowerCase.SERIES_AVERAGE, seriesAverage);
+  this.statistics(anychart.enums.StatisticsLowerCase.SERIES_POINTS_COUNT, seriesPointsCount);
+  this.statistics(anychart.enums.StatisticsLowerCase.SERIES_POINT_COUNT, seriesPointsCount);
 };
 
 

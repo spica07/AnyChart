@@ -1149,7 +1149,7 @@ anychart.core.PyramidFunnelBase.prototype.drawContent = function(bounds) {
     var value;
     var isMissing;
 
-    var countMissing = iterator.getRowsCount() - anychart.utils.toNumber(this.statistics[anychart.enums.Statistics.COUNT]);
+    var countMissing = iterator.getRowsCount() - anychart.utils.toNumber(this.statistics[anychart.enums.StatisticsLowerCase.COUNT]);
     var paddingPercent = anychart.math.round(this.pointsPaddingValue_ / bounds.height * 100, 2);
 
     iterator.reset();
@@ -1158,7 +1158,7 @@ anychart.core.PyramidFunnelBase.prototype.drawContent = function(bounds) {
       isMissing = this.isMissing_(value);
       value = this.handleValue_(value);
 
-      var percent = anychart.math.round(value / anychart.utils.toNumber(this.statistics[anychart.enums.Statistics.SUM]) * 100, 2);
+      var percent = anychart.math.round(value / anychart.utils.toNumber(this.statistics[anychart.enums.StatisticsLowerCase.SUM]) * 100, 2);
       if (isMissing) {
         percent = paddingPercent;
       }
@@ -1734,9 +1734,9 @@ anychart.core.PyramidFunnelBase.prototype.getPoint = function(index) {
   if (iter.select(index) &&
       point.exists() && !this.isMissing_(value = /** @type {number} */(point.get('value')))) {
 
-    point.statistics[anychart.enums.Statistics.PERCENT_VALUE] =
-        point.statistics[anychart.enums.Statistics.Y_PERCENT_OF_TOTAL] =
-            value / /** @type {number} */(this.getStat(anychart.enums.Statistics.SUM)) * 100;
+    point.statistics[anychart.enums.StatisticsLowerCase.PERCENT_VALUE] =
+        point.statistics[anychart.enums.StatisticsLowerCase.Y_PERCENT_OF_TOTAL] =
+            value / /** @type {number} */(this.getStat(anychart.enums.StatisticsLowerCase.SUM)) * 100;
   }
 
   return point;
@@ -3582,11 +3582,11 @@ anychart.core.PyramidFunnelBase.prototype.calculate = function() {
     var avg;
     if (!count) min = max = sum = avg = undefined;
     else avg = sum / count;
-    this.statistics[anychart.enums.Statistics.COUNT] = count;
-    this.statistics[anychart.enums.Statistics.MIN] = min;
-    this.statistics[anychart.enums.Statistics.MAX] = max;
-    this.statistics[anychart.enums.Statistics.SUM] = sum;
-    this.statistics[anychart.enums.Statistics.AVERAGE] = avg;
+    this.statistics[anychart.enums.StatisticsLowerCase.COUNT] = count;
+    this.statistics[anychart.enums.StatisticsLowerCase.MIN] = min;
+    this.statistics[anychart.enums.StatisticsLowerCase.MAX] = max;
+    this.statistics[anychart.enums.StatisticsLowerCase.SUM] = sum;
+    this.statistics[anychart.enums.StatisticsLowerCase.AVERAGE] = avg;
 
     this.markConsistent(anychart.ConsistencyState.PYRAMID_FUNNEL_DATA);
   }
