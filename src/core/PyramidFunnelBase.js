@@ -1149,7 +1149,7 @@ anychart.core.PyramidFunnelBase.prototype.drawContent = function(bounds) {
     var value;
     var isMissing;
 
-    var countMissing = iterator.getRowsCount() - anychart.utils.toNumber(this.statistics[anychart.enums.Statistics.COUNT]);
+    var countMissing = iterator.getRowsCount() - anychart.utils.toNumber(this.statistics(anychart.enums.Statistics.COUNT));
     var paddingPercent = anychart.math.round(this.pointsPaddingValue_ / bounds.height * 100, 2);
 
     iterator.reset();
@@ -1158,7 +1158,7 @@ anychart.core.PyramidFunnelBase.prototype.drawContent = function(bounds) {
       isMissing = this.isMissing_(value);
       value = this.handleValue_(value);
 
-      var percent = anychart.math.round(value / anychart.utils.toNumber(this.statistics[anychart.enums.Statistics.SUM]) * 100, 2);
+      var percent = anychart.math.round(value / anychart.utils.toNumber(this.statistics(anychart.enums.Statistics.SUM)) * 100, 2);
       if (isMissing) {
         percent = paddingPercent;
       }
