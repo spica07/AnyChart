@@ -909,7 +909,7 @@ anychart.core.heatMap.series.Base.prototype.createFormatProvider = function(opt_
     'x': {value: iterator.get('x'), type: anychart.enums.TokenType.STRING},
     'y': {value: iterator.get('y'), type: anychart.enums.TokenType.NUMBER},
     'heat': {value: iterator.get('heat'), type: anychart.enums.TokenType.NUMBER},
-    'seriesName': {value: this.name() || 'Series ' + this.getIndex(), type: anychart.enums.TokenType.STRING}
+    'seriesName': {value: this.name(), type: anychart.enums.TokenType.STRING}
   };
 
   var colorScale = this.getChart().colorScale();

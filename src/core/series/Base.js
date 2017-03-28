@@ -3468,10 +3468,10 @@ anychart.core.series.Base.prototype.updateFormatContext = function(provider, opt
   var values = {
     'chart': {value: this.getChart(), type: anychart.enums.TokenType.UNKNOWN},
     'series': {value: this, type: anychart.enums.TokenType.UNKNOWN},
-    'scale': {value: this.getXScale(), type: anychart.enums.TokenType.UNKNOWN},
+    'xScale': {value: this.getXScale(), type: anychart.enums.TokenType.UNKNOWN},
     'index': {value: rowInfo.getIndex(), type: anychart.enums.TokenType.NUMBER},
     'x': {value: rowInfo.get('x'), type: anychart.enums.TokenType.STRING},
-    'seriesName': {value: this.name() || 'Series ' + this.getIndex(), type: anychart.enums.TokenType.STRING}
+    'seriesName': {value: this.name(), type: anychart.enums.TokenType.STRING}
   };
 
   if (this.isSizeBased())

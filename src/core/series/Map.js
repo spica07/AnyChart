@@ -1035,7 +1035,7 @@ anychart.core.series.Map.prototype.getLegendItemData = function(itemsTextFormatt
     itemText = itemsTextFormatter.call(format, format);
   }
   if (!goog.isString(itemText))
-    itemText = goog.isDef(this.name()) ? this.name() : 'Series: ' + this.index();
+    itemText = this.name();
 
   if (json['iconType'] == anychart.enums.LegendItemIconType.MARKER && this.supportsMarkers()) {
     json['iconFill'] = this.markers().fill();
@@ -1068,7 +1068,7 @@ anychart.core.series.Map.prototype.updateFormatContext = function(provider, opt_
     'series': {value: this, type: anychart.enums.TokenType.UNKNOWN},
     'scale': {value: this.getXScale(), type: anychart.enums.TokenType.UNKNOWN},
     'index': {value: rowInfo.getIndex(), type: anychart.enums.TokenType.NUMBER},
-    'seriesName': {value: this.name() || 'Series: ' + this.getIndex(), type: anychart.enums.TokenType.STRING}
+    'seriesName': {value: this.name(), type: anychart.enums.TokenType.STRING}
   };
 
   var i;

@@ -715,7 +715,7 @@ anychart.core.SeriesBase.prototype.getLegendItemData = function(itemsTextFormatt
     itemText = itemsTextFormatter.call(format, format);
   }
   if (!goog.isString(itemText))
-    itemText = goog.isDef(this.name()) ? this.name() : 'Series: ' + this.index();
+    itemText = this.name();
 
   this.updateLegendItemMarker(json);
 
