@@ -338,17 +338,17 @@ anychart.core.contexts.FormatContext.prototype.getTokenTypeInternal = function(n
       case anychart.enums.StatisticsLowerCase.DATA_PLOT_POINT_COUNT:
       case anychart.enums.StatisticsLowerCase.DATA_PLOT_SERIES_COUNT:
 
-      case anychart.enums.Statistics.BUBBLE_SIZE_PERCENT_OF_CATEGORY:
-      case anychart.enums.Statistics.BUBBLE_SIZE_PERCENT_OF_SERIES:
-      case anychart.enums.Statistics.BUBBLE_SIZE_PERCENT_OF_TOTAL:
-      case anychart.enums.Statistics.CATEGORY_Y_PERCENT_OF_TOTAL:
-      case anychart.enums.Statistics.CATEGORY_Y_RANGE_PERCENT_OF_TOTAL:
-      case anychart.enums.Statistics.Y_PERCENT_OF_CATEGORY:
-      case anychart.enums.Statistics.Y_PERCENT_OF_SERIES:
-      case anychart.enums.Statistics.Y_PERCENT_OF_TOTAL:
-      case anychart.enums.Statistics.X_PERCENT_OF_SERIES:
-      case anychart.enums.Statistics.X_PERCENT_OF_TOTAL:
-      case anychart.enums.Statistics.PERCENT_VALUE:
+      case anychart.enums.StatisticsLowerCase.BUBBLE_SIZE_PERCENT_OF_CATEGORY:
+      case anychart.enums.StatisticsLowerCase.BUBBLE_SIZE_PERCENT_OF_SERIES:
+      case anychart.enums.StatisticsLowerCase.BUBBLE_SIZE_PERCENT_OF_TOTAL:
+      case anychart.enums.StatisticsLowerCase.CATEGORY_Y_PERCENT_OF_TOTAL:
+      case anychart.enums.StatisticsLowerCase.CATEGORY_Y_RANGE_PERCENT_OF_TOTAL:
+      case anychart.enums.StatisticsLowerCase.Y_PERCENT_OF_CATEGORY:
+      case anychart.enums.StatisticsLowerCase.Y_PERCENT_OF_SERIES:
+      case anychart.enums.StatisticsLowerCase.Y_PERCENT_OF_TOTAL:
+      case anychart.enums.StatisticsLowerCase.X_PERCENT_OF_SERIES:
+      case anychart.enums.StatisticsLowerCase.X_PERCENT_OF_TOTAL:
+      case anychart.enums.StatisticsLowerCase.PERCENT_VALUE:
         type = anychart.enums.TokenType.NUMBER;
     }
     // case anychart.enums.Statistics.NAME:
