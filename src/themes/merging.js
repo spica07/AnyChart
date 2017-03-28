@@ -17,7 +17,7 @@ anychart.themes.merging.compileTheme = function(theme, path, themeIndex) {
     anychart.themes.merging.mergingMapInverse_[rootParts[0]] = {requires: [], compiledIn: themeIndex, mergedIn: 0};
     return true;
   }
-  var needsCompilation = !!(descriptor && descriptor.compiledIn <= themeIndex);
+  var needsCompilation = descriptor.compiledIn <= themeIndex;
   if (needsCompilation) {
     descriptor.compiledIn = themeIndex + 1;
     var requires = descriptor.requires;
