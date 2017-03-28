@@ -2780,9 +2780,8 @@ anychart.core.series.Base.prototype.draw = function() {
 
   // preparing to draw different series parts
   if (this.hasInvalidationState(COMMON_STATES)) {
-    this.categoryWidthCache = this.getCategoryWidth();
-    this.pointWidthCache = this.getPixelPointWidth();
     this.prepareRootLayer();
+    this.prepareAdditional();
     // we do not mark any states consistent here - we do it later.
   }
 
@@ -2983,6 +2982,16 @@ anychart.core.series.Base.prototype.prepareRootLayer = function() {
     this.shapeManager.clearShapes();
 
   this.shapeManager.setContainer(this.rootLayer);
+};
+
+
+/**
+ * Prepares additional properties.
+ * @protected
+ */
+anychart.core.series.Base.prototype.prepareAdditional = function() {
+  this.categoryWidthCache = this.getCategoryWidth();
+  this.pointWidthCache = this.getPixelPointWidth();
 };
 
 
@@ -3509,60 +3518,87 @@ anychart.core.series.Base.prototype.createLegendContextProvider = function() {
 
 
 /**
+ * Creates position provider based on point geometry.
+ * @param {anychart.enums.Anchor} anchor
+ * @return {Object}
+ * @protected
+ */
+anychart.core.series.Base.prototype.createPositionProviderByGeometry = function(anchor) {
+  var iterator = this.getIterator();
+  var x = /** @type {number} */(iterator.meta('x'));
+  var top = /** @type {number} */(iterator.meta(this.config.anchoredPositionTop));
+  var bottom = /** @type {number} */(iterator.meta(this.config.anchoredPositionBottom));
+  var bounds = new anychart.math.Rect(x, Math.min(top, bottom), 0, Math.abs(bottom - top));
+  if (this.isWidthBased()) {
+    bounds.left -= this.pointWidthCache / 2;
+    bounds.width += this.pointWidthCache;
+  }
+  if (this.isSizeBased()) {
+    var size = /** @type {number} */(iterator.meta('size'));
+    bounds.left -= size;
+    bounds.top -= size;
+    bounds.width += size + size;
+    bounds.height += size + size;
+  }
+  if (/** @type {boolean} */(this.getOption('isVertical'))) {
+    var tmp = bounds.left;
+    bounds.left = bounds.top;
+    bounds.top = tmp;
+    tmp = bounds.height;
+    bounds.height = bounds.width;
+    bounds.width = tmp;
+  }
+  return anychart.utils.getCoordinateByAnchor(bounds, /** @type {anychart.enums.Anchor} */(anchor));
+};
+
+
+/**
+ * Creates position provider based on data value.
+ * @param {string} position
+ * @return {Object}
+ * @protected
+ */
+anychart.core.series.Base.prototype.createPositionProviderByData = function(position) {
+  var iterator = this.getIterator();
+  var x = iterator.meta('x');
+  var val = iterator.meta(position);
+  if (!goog.isDef(val)) {
+    val = iterator.get(position);
+    if (goog.isDef(val)) {
+      if (this.planIsStacked()) {
+        val += iterator.meta('stackedZero');
+      }
+      val = this.transformY(val);
+    } else {
+      val = NaN;
+    }
+  }
+  var point;
+  if (/** @type {boolean} */(this.getOption('isVertical')))
+    point = {'x': val, 'y': x};
+  else
+    point = {'x': x, 'y': val};
+  return point;
+};
+
+
+
+/**
  * Create series position provider.
  * @param {string} position Understands anychart.enums.Position and some additional values.
  * @param {boolean=} opt_shift3D If true, adds a 3D shift if possible.
  * @return {Object} Object with info for labels formatting.
  */
 anychart.core.series.Base.prototype.createPositionProvider = function(position, opt_shift3D) {
-  var iterator = this.getIterator();
   var point;
-  if (iterator.meta('missing')) {
+  if (this.getIterator().meta('missing')) {
     point = {'x': NaN, 'y': NaN};
   } else {
-    var x = /** @type {number} */(iterator.meta('x'));
     var anchor = anychart.enums.normalizeAnchor(position, null);
     if (anchor) {
-      var top = /** @type {number} */(iterator.meta(this.config.anchoredPositionTop));
-      var bottom = /** @type {number} */(iterator.meta(this.config.anchoredPositionBottom));
-      var bounds = new anychart.math.Rect(x, Math.min(top, bottom), 0, Math.abs(bottom - top));
-      if (this.isWidthBased()) {
-        bounds.left -= this.pointWidthCache / 2;
-        bounds.width += this.pointWidthCache;
-      }
-      if (this.isSizeBased()) {
-        var size = /** @type {number} */(iterator.meta('size'));
-        bounds.left -= size;
-        bounds.top -= size;
-        bounds.width += size + size;
-        bounds.height += size + size;
-      }
-      if (/** @type {boolean} */(this.getOption('isVertical'))) {
-        var tmp = bounds.left;
-        bounds.left = bounds.top;
-        bounds.top = tmp;
-        tmp = bounds.height;
-        bounds.height = bounds.width;
-        bounds.width = tmp;
-      }
-      point = anychart.utils.getCoordinateByAnchor(bounds, /** @type {anychart.enums.Anchor} */(anchor));
+      point = this.createPositionProviderByGeometry(anchor);
     } else {
-      var val = iterator.meta(position);
-      if (!goog.isDef(val)) {
-        val = iterator.get(position);
-        if (goog.isDef(val)) {
-          if (this.planIsStacked()) {
-            val += iterator.meta('stackedZero');
-          }
-          val = this.transformY(val);
-        } else {
-          val = NaN;
-        }
-      }
-      if (/** @type {boolean} */(this.getOption('isVertical')))
-        point = {'x': val, 'y': x};
-      else
-        point = {'x': x, 'y': val};
+      point = this.createPositionProviderByData(position);
     }
 
     if (opt_shift3D && this.check(anychart.core.drawers.Capabilities.IS_3D_BASED)) {

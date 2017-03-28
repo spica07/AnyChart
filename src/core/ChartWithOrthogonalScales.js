@@ -984,7 +984,11 @@ anychart.core.ChartWithOrthogonalScales.prototype.calculateXYScales = function()
       if (!series || !series.enabled()) continue;
       xScale = /** @type {anychart.scales.Base} */(series.xScale());
       yScale = /** @type {anychart.scales.Base} */(series.yScale());
-      drawingPlan = series.getScatterDrawingPlan(false, xScale instanceof anychart.scales.DateTime);
+      if (xScale instanceof anychart.scales.Ordinal) {
+        drawingPlan = series.getOrdinalDrawingPlan({}, [], false, undefined, true);
+      } else {
+        drawingPlan = series.getScatterDrawingPlan(false, xScale instanceof anychart.scales.DateTime);
+      }
       series = /** @type {anychart.core.series.Cartesian} */(drawingPlan.series);
       var seriesExcludes = series.getExcludedIndexesInternal();
       if (seriesExcludes.length) {

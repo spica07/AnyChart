@@ -55,6 +55,19 @@ anychart.charts.Polar.prototype.seriesConfig = (function() {
     anchoredPositionTop: 'value',
     anchoredPositionBottom: 'zero'
   };
+  res[anychart.enums.PolarSeriesType.COLUMN] = {
+    drawerType: anychart.enums.SeriesDrawerTypes.POLAR_COLUMN,
+    shapeManagerType: anychart.enums.ShapeManagerTypes.PER_POINT,
+    shapesConfig: [
+      anychart.core.shapeManagers.pathFillStrokeConfig,
+      anychart.core.shapeManagers.pathHatchConfig
+    ],
+    secondaryShapesConfig: null,
+    postProcessor: null,
+    capabilities: capabilities,
+    anchoredPositionTop: 'value',
+    anchoredPositionBottom: 'zero'
+  };
   res[anychart.enums.PolarSeriesType.LINE] = {
     drawerType: anychart.enums.SeriesDrawerTypes.POLAR_LINE,
     shapeManagerType: anychart.enums.ShapeManagerTypes.PER_SERIES,
@@ -92,6 +105,19 @@ anychart.charts.Polar.prototype.seriesConfig = (function() {
     capabilities: capabilities,
     anchoredPositionTop: 'value',
     anchoredPositionBottom: 'value'
+  };
+  res[anychart.enums.PolarSeriesType.RANGE_COLUMN] = {
+    drawerType: anychart.enums.SeriesDrawerTypes.POLAR_RANGE_COLUMN,
+    shapeManagerType: anychart.enums.ShapeManagerTypes.PER_POINT,
+    shapesConfig: [
+      anychart.core.shapeManagers.pathFillStrokeConfig,
+      anychart.core.shapeManagers.pathHatchConfig
+    ],
+    secondaryShapesConfig: null,
+    postProcessor: null,
+    capabilities: capabilities,
+    anchoredPositionTop: 'high',
+    anchoredPositionBottom: 'low'
   };
   res[anychart.enums.PolarSeriesType.MARKER] = {
     drawerType: anychart.enums.SeriesDrawerTypes.MARKER,
@@ -209,6 +235,8 @@ anychart.charts.Polar.prototype.createSeriesInstance = function(type, config) {
 anychart.charts.Polar.prototype.setupByJSONWithScales = function(config, scalesInstances) {
   anychart.charts.Polar.base(this, 'setupByJSONWithScales', config, scalesInstances);
   this.sortPointsByX(config['sortPointsByX']);
+  this.barGroupsPadding(config['barGroupsPadding']);
+  this.barsPadding(config['barsPadding']);
 };
 
 
@@ -216,6 +244,8 @@ anychart.charts.Polar.prototype.setupByJSONWithScales = function(config, scalesI
 anychart.charts.Polar.prototype.serializeWithScales = function(json, scales, scaleIds) {
   anychart.charts.Polar.base(this, 'serializeWithScales', json, scales, scaleIds);
   json['sortPointsByX'] = this.sortPointsByX();
+  json['barGroupsPadding'] = this.barGroupsPadding();
+  json['barsPadding'] = this.barsPadding();
 };
 
 

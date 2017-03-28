@@ -2418,7 +2418,9 @@ goog.provide('anychart.themes.defaultTheme');
         },
         'area': {},
         'line': {},
-        'marker': {}
+        'marker': {},
+        'column': {},
+        'rangeColumn': {}
       },
       'xAxis': {
         'scale': 0,
@@ -2441,6 +2443,7 @@ goog.provide('anychart.themes.defaultTheme');
       },
       'startAngle': 0,
       'innerRadius': 0,
+      'sortPointsByX': false,
       'grids': [{}, {'layout': 'circuit'}],
       'minorGrids': [],
       'scales': [
@@ -2453,6 +2456,8 @@ goog.provide('anychart.themes.defaultTheme');
       ],
       'xScale': 0,
       'yScale': 1,
+      'barsPadding': 0,
+      'barGroupsPadding': 0,
       'a11y': {
         'titleFormatter': scatterA11yTitleFormatter
       }

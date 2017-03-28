@@ -878,6 +878,16 @@
             "number",
             "string"
           ]
+        },
+        "barGroupsPadding": {
+          "type": [
+            "number"
+          ]
+        },
+        "barsPadding": {
+          "type": [
+            "number"
+          ]
         }
       },
       "required": ["type"]

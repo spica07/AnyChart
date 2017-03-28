@@ -351,6 +351,7 @@ anychart.core.RadarPolarChart.prototype.setupSeriesBeforeDraw = function(series,
 
 /** @inheritDoc */
 anychart.core.RadarPolarChart.prototype.beforeSeriesDraw = function() {
+  this.distributeSeries();
 };
 
 

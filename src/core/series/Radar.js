@@ -48,8 +48,77 @@ anychart.core.series.Radar.prototype.hasComplexZero = function() {
 };
 
 
+/**
+ * Calculates position on the line.
+ * @param {anychart.enums.Anchor} anchor
+ * @param {number} topX
+ * @param {number} top
+ * @param {number} bottomX
+ * @param {number} bottom
+ * @return {Object}
+ * @protected
+ */
+anychart.core.series.Radar.prototype.calcPositionByLine = function(anchor, topX, top, bottomX, bottom) {
+  var x, y;
+  switch (anchor) {
+    case anychart.enums.Anchor.LEFT_CENTER:
+    case anychart.enums.Anchor.CENTER:
+    case anychart.enums.Anchor.RIGHT_CENTER:
+      x = (topX + bottomX) / 2;
+      y = (top + bottom) / 2;
+      break;
+    case anychart.enums.Anchor.LEFT_BOTTOM:
+    case anychart.enums.Anchor.CENTER_BOTTOM:
+    case anychart.enums.Anchor.RIGHT_BOTTOM:
+      x = bottomX;
+      y = bottom;
+      break;
+    default:
+      x = topX;
+      y = top;
+      break;
+  }
+  return {'x': x, 'y': y};
+};
+
+
 /** @inheritDoc */
-anychart.core.series.Radar.prototype.startDrawing = function() {
+anychart.core.series.Radar.prototype.createPositionProviderByGeometry = function(anchor) {
+  var iterator = this.getIterator();
+  var top = /** @type {number} */(iterator.meta(this.config.anchoredPositionTop));
+  var topX = /** @type {number} */(iterator.meta(this.config.anchoredPositionTop + 'X'));
+  var bottom = /** @type {number} */(iterator.meta(this.config.anchoredPositionBottom));
+  var bottomX = /** @type {number} */(iterator.meta(this.config.anchoredPositionBottom + 'X'));
+  return this.calcPositionByLine(anchor, topX, top, bottomX, bottom);
+};
+
+
+/** @inheritDoc */
+anychart.core.series.Radar.prototype.createPositionProviderByData = function(position) {
+  var iterator = this.getIterator();
+  var val = iterator.meta(position);
+  var x = iterator.meta(position + 'X');
+  var point;
+  if (!goog.isDef(val) || !goog.isDef(x)) {
+    x = iterator.meta('x');
+    val = iterator.get(position);
+    if (goog.isDef(val)) {
+      if (this.planIsStacked()) {
+        val += iterator.meta('stackedZero');
+      }
+      point = this.transformXY(x, val);
+    } else {
+      x = val = NaN;
+    }
+  }
+  if (!point)
+    point = {'x': x, 'y': val};
+  return point;
+};
+
+
+/** @inheritDoc */
+anychart.core.series.Radar.prototype.prepareAdditional = function() {
   var bounds = this.pixelBoundsCache;
   var chart = (/** @type {anychart.core.RadarPolarChart} */(this.chart));
   this.radius = Math.min(bounds.width, bounds.height) / 2;
@@ -61,7 +130,7 @@ anychart.core.series.Radar.prototype.startDrawing = function() {
     this.zeroX = zero[0];
     this.zeroY = zero[1];
   }
-  anychart.core.series.Radar.base(this, 'startDrawing');
+  anychart.core.series.Radar.base(this, 'prepareAdditional');
 };
 
 

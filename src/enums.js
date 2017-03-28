@@ -2911,7 +2911,9 @@ anychart.enums.PolarSeriesType = {
   LINE: 'line',
   MARKER: 'marker',
   POLYGON: 'polygon',
-  POLYLINE: 'polyline'
+  POLYLINE: 'polyline',
+  COLUMN: 'column',
+  RANGE_COLUMN: 'rangeColumn'
 };
 
 
@@ -2934,6 +2936,10 @@ anychart.enums.normalizePolarSeriesType = function(value, opt_default) {
       return anychart.enums.PolarSeriesType.POLYLINE;
     case 'marker':
       return anychart.enums.PolarSeriesType.MARKER;
+    case 'column':
+      return anychart.enums.PolarSeriesType.COLUMN;
+    case 'rangecolumn':
+      return anychart.enums.PolarSeriesType.RANGE_COLUMN;
   }
   return opt_default || anychart.enums.PolarSeriesType.LINE;
 };

@@ -570,11 +570,12 @@ anychart.math.clipSegmentByRect = function(x1, y1, x2, y2, rect) {
  * @param {number} cx
  * @param {number} cy
  * @param {number} radius
+ * @param {number} innerRadius
  * @param {number} zeroAngle
  * @param {boolean} counterClockwise
  * @return {Array.<number>}
  */
-anychart.math.getPolarLineParams = function(fromX, fromY, fromXRatio, fromYRatio, toX, toY, toXRatio, toYRatio, cx, cy, radius, zeroAngle, counterClockwise) {
+anychart.math.getPolarLineParams = function(fromX, fromY, fromXRatio, fromYRatio, toX, toY, toXRatio, toYRatio, cx, cy, radius, innerRadius, zeroAngle, counterClockwise) {
   var quarterStep;
   if (counterClockwise) {
     if (fromXRatio < toXRatio) {
@@ -599,18 +600,18 @@ anychart.math.getPolarLineParams = function(fromX, fromY, fromXRatio, fromYRatio
   for (var ratio = startQuarter; (ratio - endQuarter) * quarterStep <= 0; ratio += quarterStep) {
     var angle = anychart.math.round(zeroAngle + ratio * Math.PI * 2, 4);
     var rRatio = (ratio - fromXRatio) / yRatioDivider + fromYRatio;
-    var r = radius * rRatio;
+    var r = innerRadius + (radius - innerRadius) * rRatio;
     var x = cx + r * Math.cos(angle);
     var y = cy + r * Math.sin(angle);
-    result.push((fromXRatio % 1) ? 0 : 1);
-    anychart.math.getPolarLineParams_(fromX, fromY, fromXRatio, fromYRatio, x, y, ratio, rRatio, cx, cy, radius, zeroAngle, result);
+    result.push(fromXRatio % 1 == 0 ? 1 : 0);
+    anychart.math.getPolarLineParams_(fromX, fromY, fromXRatio, fromYRatio, x, y, ratio, rRatio, cx, cy, radius, innerRadius, zeroAngle, result);
     fromX = x;
     fromY = y;
     fromXRatio = ratio;
     fromYRatio = rRatio;
   }
-  result.push((fromXRatio % 1) ? 0 : 1);
-  anychart.math.getPolarLineParams_(fromX, fromY, fromXRatio, fromYRatio, toX, toY, toXRatio, toYRatio, cx, cy, radius, zeroAngle, result);
+  result.push(fromXRatio % 1 == 0 ? 1 : 0);
+  anychart.math.getPolarLineParams_(fromX, fromY, fromXRatio, fromYRatio, toX, toY, toXRatio, toYRatio, cx, cy, radius, innerRadius, zeroAngle, result);
   return result;
 };
 
@@ -629,11 +630,12 @@ anychart.math.getPolarLineParams = function(fromX, fromY, fromXRatio, fromYRatio
  * @param {number} cx
  * @param {number} cy
  * @param {number} radius
+ * @param {number} innerRadius
  * @param {number} zeroAngle
  * @param {boolean} counterClockwise
  * @return {Array.<number>}
  */
-anychart.math.getPolarLineParamsSimple = function(fromX, fromY, fromXRatio, fromYRatio, toX, toY, toXRatio, toYRatio, cx, cy, radius, zeroAngle, counterClockwise) {
+anychart.math.getPolarLineParamsSimple = function(fromX, fromY, fromXRatio, fromYRatio, toX, toY, toXRatio, toYRatio, cx, cy, radius, innerRadius, zeroAngle, counterClockwise) {
   var quarterStep;
   if (counterClockwise) {
     if (fromXRatio < toXRatio) {
@@ -651,16 +653,16 @@ anychart.math.getPolarLineParamsSimple = function(fromX, fromY, fromXRatio, from
   for (var ratio = fromXRatio + quarterStep; (ratio - toXRatio) * quarterStep < 0; ratio += quarterStep) {
     var angle = anychart.math.round(zeroAngle + ratio * Math.PI * 2, 4);
     var rRatio = (ratio - fromXRatio) / yRatioDivider + fromYRatio;
-    var r = radius * rRatio;
+    var r = innerRadius + (radius - innerRadius) * rRatio;
     var x = cx + r * Math.cos(angle);
     var y = cy + r * Math.sin(angle);
-    anychart.math.getPolarLineParams_(fromX, fromY, fromXRatio, fromYRatio, x, y, ratio, rRatio, cx, cy, radius, zeroAngle, result);
+    anychart.math.getPolarLineParams_(fromX, fromY, fromXRatio, fromYRatio, x, y, ratio, rRatio, cx, cy, radius, innerRadius, zeroAngle, result);
     fromX = x;
     fromY = y;
     fromXRatio = ratio;
     fromYRatio = rRatio;
   }
-  anychart.math.getPolarLineParams_(fromX, fromY, fromXRatio, fromYRatio, toX, toY, toXRatio, toYRatio, cx, cy, radius, zeroAngle, result);
+  anychart.math.getPolarLineParams_(fromX, fromY, fromXRatio, fromYRatio, toX, toY, toXRatio, toYRatio, cx, cy, radius, innerRadius, zeroAngle, result);
   return result;
 };
 
@@ -677,19 +679,20 @@ anychart.math.getPolarLineParamsSimple = function(fromX, fromY, fromXRatio, from
  * @param {number} cx
  * @param {number} cy
  * @param {number} radius
+ * @param {number} innerRadius
  * @param {number} zeroAngle
  * @param {Array.<number>} result
  * @private
  */
-anychart.math.getPolarLineParams_ = function(aX, aY, aXRatio, aYRatio, dX, dY, dXRatio, dYRatio, cx, cy, radius, zeroAngle, result) {
+anychart.math.getPolarLineParams_ = function(aX, aY, aXRatio, aYRatio, dX, dY, dXRatio, dYRatio, cx, cy, radius, innerRadius, zeroAngle, result) {
   var aAngle = anychart.math.round(zeroAngle + aXRatio * Math.PI * 2, 4);
   var dAngle = anychart.math.round(zeroAngle + dXRatio * Math.PI * 2, 4);
   var stepAngle = (dAngle - aAngle) / 3;
   var bAngle = anychart.math.round(aAngle + stepAngle, 4);
   var cAngle = anychart.math.round(dAngle - stepAngle, 4);
   var stepYRatio = (dYRatio - aYRatio) / 3;
-  var bRadius = (aYRatio + stepYRatio) * radius;
-  var cRadius = (dYRatio - stepYRatio) * radius;
+  var bRadius = innerRadius + (aYRatio + stepYRatio) * (radius - innerRadius);
+  var cRadius = innerRadius + (dYRatio - stepYRatio) * (radius - innerRadius);
   var bX = cx + bRadius * Math.cos(bAngle);
   var bY = cy + bRadius * Math.sin(bAngle);
   var cX = cx + cRadius * Math.cos(cAngle);
