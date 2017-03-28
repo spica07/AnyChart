@@ -4229,7 +4229,7 @@ anychart.core.series.Base.prototype.calculateStatistics = goog.nullFunction;
  */
 anychart.core.series.Base.prototype.getStat = function(key) {
   this.chart.ensureStatisticsReady();
-  return this.statistics_[key.toLowerCase()];
+  return this.statistics(key);
 };
 
 

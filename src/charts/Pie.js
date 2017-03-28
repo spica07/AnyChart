@@ -956,7 +956,7 @@ anychart.charts.Pie.prototype.labels = function(opt_value) {
   if (!this.labels_) {
     this.labels_ = new anychart.core.ui.CircularLabelsFactory();
     this.labels_.textFormatter(function() {
-      return (this['value'] * 100 / this.getStat(anychart.enums.StatisticsLowerCase.SUM)).toFixed(1) + '%';
+      return (this['value'] * 100 / this.getStat(anychart.enums.Statistics.SUM)).toFixed(1) + '%';
     });
     this.labels_.positionFormatter(function() {
       return this['value'];
@@ -1565,7 +1565,7 @@ anychart.charts.Pie.prototype.drawContent = function(bounds) {
         continue;
       }
       value = +value;
-      sweep = value / /** @type {number} */ (this.getStat(anychart.enums.StatisticsLowerCase.SUM)) * 360;
+      sweep = value / /** @type {number} */ (this.getStat(anychart.enums.Statistics.SUM)) * 360;
 
       iterator.meta('start', start).meta('sweep', sweep);
       if (!goog.isDef(exploded = iterator.meta('exploded'))) {
@@ -3271,9 +3271,9 @@ anychart.charts.Pie.prototype.getPoint = function(index) {
   if (iter.select(index) &&
       point.exists() && !this.isMissing_(value = /** @type {number} */(point.get('value')))) {
 
-    point.statistics[anychart.enums.StatisticsLowerCase.PERCENT_VALUE] =
-        point.statistics[anychart.enums.StatisticsLowerCase.Y_PERCENT_OF_TOTAL] =
-            value / /** @type {number} */(this.getStat(anychart.enums.StatisticsLowerCase.SUM)) * 100;
+    var val = value / /** @type {number} */(this.getStat(anychart.enums.Statistics.SUM)) * 100;
+    point.statistics(anychart.enums.Statistics.PERCENT_VALUE, val);
+    point.statistics(anychart.enums.Statistics.Y_PERCENT_OF_TOTAL, val);
   }
 
   return point;
@@ -3657,7 +3657,7 @@ anychart.charts.Pie.prototype.hideTooltip = function() {
  */
 anychart.charts.Pie.prototype.calculate = function() {
   if (this.hasInvalidationState(anychart.ConsistencyState.PIE_DATA)) {
-    this.statistics = {};
+    this.resetStatistics();
 
     var iterator = this.data().getIterator();
     var value;
@@ -3682,11 +3682,11 @@ anychart.charts.Pie.prototype.calculate = function() {
     var avg;
     if (!count) min = max = sum = avg = undefined;
     else avg = sum / count;
-    this.statistics[anychart.enums.StatisticsLowerCase.COUNT] = count;
-    this.statistics[anychart.enums.StatisticsLowerCase.MIN] = min;
-    this.statistics[anychart.enums.StatisticsLowerCase.MAX] = max;
-    this.statistics[anychart.enums.StatisticsLowerCase.SUM] = sum;
-    this.statistics[anychart.enums.StatisticsLowerCase.AVERAGE] = avg;
+    this.statistics(anychart.enums.Statistics.COUNT, count);
+    this.statistics(anychart.enums.Statistics.MIN, min);
+    this.statistics(anychart.enums.Statistics.MAX, max);
+    this.statistics(anychart.enums.Statistics.SUM, sum);
+    this.statistics(anychart.enums.Statistics.AVERAGE, avg);
 
     this.markConsistent(anychart.ConsistencyState.PIE_DATA);
   }

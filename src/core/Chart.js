@@ -144,8 +144,9 @@ anychart.core.Chart = function() {
   /**
    * Statistics object.
    * @type {Object}
+   * @private
    */
-  this.statistics = {};
+  this.statistics_ = {};
 
   /**
    * @type {anychart.core.ui.ChartCredits}
@@ -538,13 +539,43 @@ anychart.core.Chart.prototype.ensureStatisticsReady = function() {
 
 
 /**
+ * Chart statistics getter/setter for internal usage. Turns names to lower case and asks values as lower case.
+ * @param {string=} opt_name Statistics parameter name.
+ * @param {*=} opt_value Statistics parameter value.
+ * @return {anychart.core.Chart|*}
+ */
+anychart.core.Chart.prototype.statistics = function(opt_name, opt_value) {
+  if (goog.isDef(opt_name)) {
+    if (goog.isDef(opt_value)) {
+      this.statistics_[opt_name.toLowerCase()] = opt_value;
+      return this;
+    } else {
+      return this.statistics_[opt_name.toLowerCase()];
+    }
+  } else {
+    return this.statistics_;
+  }
+};
+
+
+/**
+ * Resets statistics
+ * @return {anychart.core.Chart} - Itself.
+ */
+anychart.core.Chart.prototype.resetStatistics = function() {
+  this.statistics_ = {};
+  return this;
+};
+
+
+/**
  * Gets statistics value by key.
  * @param {string} key - Key.
  * @return {*} - Statistics value.
  */
 anychart.core.Chart.prototype.getStat = function(key) {
   this.ensureStatisticsReady();
-  return this.statistics[key.toLowerCase()];
+  return this.statistics(key);
 };
 
 

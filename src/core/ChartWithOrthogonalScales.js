@@ -1056,7 +1056,8 @@ anychart.core.ChartWithOrthogonalScales.prototype.calculateStatistics = function
   if (this.hasInvalidationState(anychart.ConsistencyState.SCALE_CHART_STATISTICS)) {
     anychart.performance.start('Statistics calculation');
 
-    this.statistics = {};
+    this.resetStatistics();
+
     //category statistics calculation.
     var totalPointsCount = 0;
     var totalYSum = 0;
@@ -1213,57 +1214,57 @@ anychart.core.ChartWithOrthogonalScales.prototype.calculateStatistics = function
         }
 
         var avg = pointsCount ? seriesYSum / pointsCount : 0;
-        ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_SUM, seriesYSum);
-        ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_MIN, seriesYMin);
-        ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_MAX, seriesYMax);
-        ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_AVERAGE, avg);
-        ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_POINTS_COUNT, pointsCount);
-        ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_POINT_COUNT, pointsCount);
+        ser.statistics(anychart.enums.Statistics.SERIES_SUM, seriesYSum);
+        ser.statistics(anychart.enums.Statistics.SERIES_MIN, seriesYMin);
+        ser.statistics(anychart.enums.Statistics.SERIES_MAX, seriesYMax);
+        ser.statistics(anychart.enums.Statistics.SERIES_AVERAGE, avg);
+        ser.statistics(anychart.enums.Statistics.SERIES_POINTS_COUNT, pointsCount);
+        ser.statistics(anychart.enums.Statistics.SERIES_POINT_COUNT, pointsCount);
 
-        ser.statistics(anychart.enums.StatisticsLowerCase.SUM, seriesYSum);
-        ser.statistics(anychart.enums.StatisticsLowerCase.MAX, seriesYMax);
-        ser.statistics(anychart.enums.StatisticsLowerCase.MIN, seriesYMin);
-        ser.statistics(anychart.enums.StatisticsLowerCase.AVERAGE, avg);
-        ser.statistics(anychart.enums.StatisticsLowerCase.POINTS_COUNT, pointsCount);
+        ser.statistics(anychart.enums.Statistics.SUM, seriesYSum);
+        ser.statistics(anychart.enums.Statistics.MAX, seriesYMax);
+        ser.statistics(anychart.enums.Statistics.MIN, seriesYMin);
+        ser.statistics(anychart.enums.Statistics.AVERAGE, avg);
+        ser.statistics(anychart.enums.Statistics.POINTS_COUNT, pointsCount);
 
         if (isRangeSeries) {
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_Y_RANGE_MAX, seriesRangeMax);
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_Y_RANGE_MIN, seriesRangeMin);
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_Y_RANGE_SUM, seriesYSum);
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_Y_RANGE_AVERAGE, avg);
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_Y_RANGE_MODE, anychart.math.mode(seriesValues));
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_Y_RANGE_MEDIAN, anychart.math.median(seriesValues));
+          ser.statistics(anychart.enums.Statistics.SERIES_Y_RANGE_MAX, seriesRangeMax);
+          ser.statistics(anychart.enums.Statistics.SERIES_Y_RANGE_MIN, seriesRangeMin);
+          ser.statistics(anychart.enums.Statistics.SERIES_Y_RANGE_SUM, seriesYSum);
+          ser.statistics(anychart.enums.Statistics.SERIES_Y_RANGE_AVERAGE, avg);
+          ser.statistics(anychart.enums.Statistics.SERIES_Y_RANGE_MODE, anychart.math.mode(seriesValues));
+          ser.statistics(anychart.enums.Statistics.SERIES_Y_RANGE_MEDIAN, anychart.math.median(seriesValues));
         } else {
           if (isBubbleSeries) {
-            ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_BUBBLE_MAX_SIZE, seriesSizeMax);
-            ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_BUBBLE_MIN_SIZE, seriesSizeMin);
-            ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_BUBBLE_SIZE_SUM, seriesSizeSum);
-            ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_BUBBLE_SIZE_AVERAGE, pointsCount ? seriesSizeSum / pointsCount : 0);
-            ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_BUBBLE_SIZE_MODE, anychart.math.mode(seriesSizes));
-            ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_BUBBLE_SIZE_MEDIAN, anychart.math.median(seriesSizes));
+            ser.statistics(anychart.enums.Statistics.SERIES_BUBBLE_MAX_SIZE, seriesSizeMax);
+            ser.statistics(anychart.enums.Statistics.SERIES_BUBBLE_MIN_SIZE, seriesSizeMin);
+            ser.statistics(anychart.enums.Statistics.SERIES_BUBBLE_SIZE_SUM, seriesSizeSum);
+            ser.statistics(anychart.enums.Statistics.SERIES_BUBBLE_SIZE_AVERAGE, pointsCount ? seriesSizeSum / pointsCount : 0);
+            ser.statistics(anychart.enums.Statistics.SERIES_BUBBLE_SIZE_MODE, anychart.math.mode(seriesSizes));
+            ser.statistics(anychart.enums.Statistics.SERIES_BUBBLE_SIZE_MEDIAN, anychart.math.median(seriesSizes));
             totalSizeSum += seriesSizeSum;
             totalSizeMax = Math.max(totalSizeMax, seriesSizeMax);
             totalSizeMin = Math.min(totalSizeMin, seriesSizeMin);
           }
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_Y_MAX, seriesYMax);
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_Y_MIN, seriesYMin);
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_Y_SUM, seriesYSum);
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_FIRST_Y_VALUE, seriesValues[0]);
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_LAST_Y_VALUE, seriesValues[seriesValues.length - 1]);
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_Y_AVERAGE, avg);
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_Y_MODE, anychart.math.mode(seriesValues));
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_Y_MEDIAN, anychart.math.median(seriesValues));
+          ser.statistics(anychart.enums.Statistics.SERIES_Y_MAX, seriesYMax);
+          ser.statistics(anychart.enums.Statistics.SERIES_Y_MIN, seriesYMin);
+          ser.statistics(anychart.enums.Statistics.SERIES_Y_SUM, seriesYSum);
+          ser.statistics(anychart.enums.Statistics.SERIES_FIRST_Y_VALUE, seriesValues[0]);
+          ser.statistics(anychart.enums.Statistics.SERIES_LAST_Y_VALUE, seriesValues[seriesValues.length - 1]);
+          ser.statistics(anychart.enums.Statistics.SERIES_Y_AVERAGE, avg);
+          ser.statistics(anychart.enums.Statistics.SERIES_Y_MODE, anychart.math.mode(seriesValues));
+          ser.statistics(anychart.enums.Statistics.SERIES_Y_MEDIAN, anychart.math.median(seriesValues));
         }
 
         if (!this.categorizeData) {
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_X_MAX, seriesXMax);
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_X_MIN, seriesXMin);
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_X_SUM, seriesXSum);
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_FIRST_X_VALUE, seriesXes[0]);
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_LAST_X_VALUE, seriesXes[seriesValues.length - 1]);
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_X_AVERAGE, pointsCount ? seriesXSum / pointsCount : 0);
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_X_MODE, anychart.math.mode(seriesXes));
-          ser.statistics(anychart.enums.StatisticsLowerCase.SERIES_X_MEDIAN, anychart.math.median(seriesXes));
+          ser.statistics(anychart.enums.Statistics.SERIES_X_MAX, seriesXMax);
+          ser.statistics(anychart.enums.Statistics.SERIES_X_MIN, seriesXMin);
+          ser.statistics(anychart.enums.Statistics.SERIES_X_SUM, seriesXSum);
+          ser.statistics(anychart.enums.Statistics.SERIES_FIRST_X_VALUE, seriesXes[0]);
+          ser.statistics(anychart.enums.Statistics.SERIES_LAST_X_VALUE, seriesXes[seriesValues.length - 1]);
+          ser.statistics(anychart.enums.Statistics.SERIES_X_AVERAGE, pointsCount ? seriesXSum / pointsCount : 0);
+          ser.statistics(anychart.enums.Statistics.SERIES_X_MODE, anychart.math.mode(seriesXes));
+          ser.statistics(anychart.enums.Statistics.SERIES_X_MEDIAN, anychart.math.median(seriesXes));
         }
       }
 
@@ -1305,53 +1306,53 @@ anychart.core.ChartWithOrthogonalScales.prototype.calculateStatistics = function
           isRangeSeries = ser.check(anychart.core.drawers.Capabilities.IS_RANGE_BASED | anychart.core.drawers.Capabilities.IS_OHLC_BASED);
 
           if (isRangeSeries) {
-            ser.statistics(anychart.enums.StatisticsLowerCase.CATEGORY_Y_RANGE_SUM_ARR_, catSumArr);
-            ser.statistics(anychart.enums.StatisticsLowerCase.CATEGORY_Y_RANGE_MIN_ARR_, catYMinArr);
-            ser.statistics(anychart.enums.StatisticsLowerCase.CATEGORY_Y_RANGE_MAX_ARR_, catYMaxArr);
-            ser.statistics(anychart.enums.StatisticsLowerCase.CATEGORY_Y_RANGE_AVG_ARR_, catYAvgArr);
-            ser.statistics(anychart.enums.StatisticsLowerCase.CATEGORY_Y_RANGE_MEDIAN_ARR_, catYMedArr);
-            ser.statistics(anychart.enums.StatisticsLowerCase.CATEGORY_Y_RANGE_MODE_ARR_, catYModArr);
+            ser.statistics(anychart.enums.Statistics.CATEGORY_Y_RANGE_SUM_ARR_, catSumArr);
+            ser.statistics(anychart.enums.Statistics.CATEGORY_Y_RANGE_MIN_ARR_, catYMinArr);
+            ser.statistics(anychart.enums.Statistics.CATEGORY_Y_RANGE_MAX_ARR_, catYMaxArr);
+            ser.statistics(anychart.enums.Statistics.CATEGORY_Y_RANGE_AVG_ARR_, catYAvgArr);
+            ser.statistics(anychart.enums.Statistics.CATEGORY_Y_RANGE_MEDIAN_ARR_, catYMedArr);
+            ser.statistics(anychart.enums.Statistics.CATEGORY_Y_RANGE_MODE_ARR_, catYModArr);
           } else {
-            ser.statistics(anychart.enums.StatisticsLowerCase.CATEGORY_Y_SUM_ARR_, catSumArr);
-            ser.statistics(anychart.enums.StatisticsLowerCase.CATEGORY_Y_MIN_ARR_, catYMinArr);
-            ser.statistics(anychart.enums.StatisticsLowerCase.CATEGORY_Y_MAX_ARR_, catYMaxArr);
-            ser.statistics(anychart.enums.StatisticsLowerCase.CATEGORY_Y_AVG_ARR_, catYAvgArr);
-            ser.statistics(anychart.enums.StatisticsLowerCase.CATEGORY_Y_MEDIAN_ARR_, catYMedArr);
-            ser.statistics(anychart.enums.StatisticsLowerCase.CATEGORY_Y_MODE_ARR_, catYModArr);
+            ser.statistics(anychart.enums.Statistics.CATEGORY_Y_SUM_ARR_, catSumArr);
+            ser.statistics(anychart.enums.Statistics.CATEGORY_Y_MIN_ARR_, catYMinArr);
+            ser.statistics(anychart.enums.Statistics.CATEGORY_Y_MAX_ARR_, catYMaxArr);
+            ser.statistics(anychart.enums.Statistics.CATEGORY_Y_AVG_ARR_, catYAvgArr);
+            ser.statistics(anychart.enums.Statistics.CATEGORY_Y_MEDIAN_ARR_, catYMedArr);
+            ser.statistics(anychart.enums.Statistics.CATEGORY_Y_MODE_ARR_, catYModArr);
           }
         }
       }
       anychart.performance.end('Statistics categorize cycle');
     }
 
-    this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_Y_SUM] = totalYSum;
-    this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_Y_RANGE_SUM] = totalYSum;
-    this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_Y_MAX] = totalYMax;
-    this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_Y_RANGE_MAX] = totalYMax;
-    this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_Y_MIN] = totalYMin;
-    this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_Y_RANGE_MIN] = totalYMin;
-    this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_Y_AVERAGE] = totalPointsCount ? totalYSum / totalPointsCount : 0;
-    this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_SERIES_COUNT] = this.drawingPlans_.length;
-    this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_POINT_COUNT] = totalPointsCount;
-    this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_MAX_Y_VALUE_POINT_SERIES_NAME] = maxYSeriesName;
-    this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_MIN_Y_VALUE_POINT_SERIES_NAME] = minYSeriesName;
-    this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_MAX_Y_SUM_SERIES_NAME] = maxYSumSeriesName;
-    this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_MIN_Y_SUM_SERIES_NAME] = minYSumSeriesName;
+    this.statistics(anychart.enums.Statistics.DATA_PLOT_Y_SUM, totalYSum);
+    this.statistics(anychart.enums.Statistics.DATA_PLOT_Y_RANGE_SUM, totalYSum);
+    this.statistics(anychart.enums.Statistics.DATA_PLOT_Y_MAX, totalYMax);
+    this.statistics(anychart.enums.Statistics.DATA_PLOT_Y_RANGE_MAX, totalYMax);
+    this.statistics(anychart.enums.Statistics.DATA_PLOT_Y_MIN, totalYMin);
+    this.statistics(anychart.enums.Statistics.DATA_PLOT_Y_RANGE_MIN, totalYMin);
+    this.statistics(anychart.enums.Statistics.DATA_PLOT_Y_AVERAGE, totalPointsCount ? totalYSum / totalPointsCount : 0);
+    this.statistics(anychart.enums.Statistics.DATA_PLOT_SERIES_COUNT, this.drawingPlans_.length);
+    this.statistics(anychart.enums.Statistics.DATA_PLOT_POINT_COUNT, totalPointsCount);
+    this.statistics(anychart.enums.Statistics.DATA_PLOT_MAX_Y_VALUE_POINT_SERIES_NAME, maxYSeriesName);
+    this.statistics(anychart.enums.Statistics.DATA_PLOT_MIN_Y_VALUE_POINT_SERIES_NAME, minYSeriesName);
+    this.statistics(anychart.enums.Statistics.DATA_PLOT_MAX_Y_SUM_SERIES_NAME, maxYSumSeriesName);
+    this.statistics(anychart.enums.Statistics.DATA_PLOT_MIN_Y_SUM_SERIES_NAME, minYSumSeriesName);
     if (hasBubbleSeries) {
-      this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_BUBBLE_SIZE_SUM] = totalSizeSum;
-      this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_BUBBLE_MIN_SIZE] = totalSizeMin;
-      this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_BUBBLE_MAX_SIZE] = totalSizeMax;
-      this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_BUBBLE_SIZE_AVERAGE] = totalPointsCount ? totalSizeSum / totalPointsCount : 0;
+      this.statistics(anychart.enums.Statistics.DATA_PLOT_BUBBLE_SIZE_SUM, totalSizeSum);
+      this.statistics(anychart.enums.Statistics.DATA_PLOT_BUBBLE_MIN_SIZE, totalSizeMin);
+      this.statistics(anychart.enums.Statistics.DATA_PLOT_BUBBLE_MAX_SIZE, totalSizeMax);
+      this.statistics(anychart.enums.Statistics.DATA_PLOT_BUBBLE_SIZE_AVERAGE, totalPointsCount ? totalSizeSum / totalPointsCount : 0);
     }
     if (!this.categorizeData) {
-      this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_X_SUM] = totalXSum;
-      this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_X_MAX] = totalXMax;
-      this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_X_MIN] = totalXMin;
-      this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_X_AVERAGE] = totalPointsCount ? totalXSum / totalPointsCount : 0;
-      this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_MAX_X_VALUE_POINT_SERIES_NAME] = maxXSeriesName;
-      this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_MIN_X_VALUE_POINT_SERIES_NAME] = minXSeriesName;
-      this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_MAX_X_SUM_SERIES_NAME] = maxXSumSeriesName;
-      this.statistics[anychart.enums.StatisticsLowerCase.DATA_PLOT_MIN_X_SUM_SERIES_NAME] = minXSumSeriesName;
+      this.statistics(anychart.enums.Statistics.DATA_PLOT_X_SUM, totalXSum);
+      this.statistics(anychart.enums.Statistics.DATA_PLOT_X_MAX, totalXMax);
+      this.statistics(anychart.enums.Statistics.DATA_PLOT_X_MIN, totalXMin);
+      this.statistics(anychart.enums.Statistics.DATA_PLOT_X_AVERAGE, totalPointsCount ? totalXSum / totalPointsCount : 0);
+      this.statistics(anychart.enums.Statistics.DATA_PLOT_MAX_X_VALUE_POINT_SERIES_NAME, maxXSeriesName);
+      this.statistics(anychart.enums.Statistics.DATA_PLOT_MIN_X_VALUE_POINT_SERIES_NAME, minXSeriesName);
+      this.statistics(anychart.enums.Statistics.DATA_PLOT_MAX_X_SUM_SERIES_NAME, maxXSumSeriesName);
+      this.statistics(anychart.enums.Statistics.DATA_PLOT_MIN_X_SUM_SERIES_NAME, minXSumSeriesName);
     }
 
     this.markConsistent(anychart.ConsistencyState.SCALE_CHART_STATISTICS);

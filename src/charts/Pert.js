@@ -1200,7 +1200,7 @@ anychart.charts.Pert.prototype.calculateActivities_ = function() {
     var act = this.activitiesMap_[key];
     if (!act.slack) sum += act.variance;
   }
-  this.statistics[anychart.enums.StatisticsLowerCase.PERT_CHART_CRITICAL_PATH_STANDARD_DEVIATION] = Math.sqrt(sum);
+  this.statistics(anychart.enums.Statistics.PERT_CHART_CRITICAL_PATH_STANDARD_DEVIATION, Math.sqrt(sum));
 
   this.markConsistent(anychart.ConsistencyState.PERT_CALCULATIONS);
 };
@@ -1276,7 +1276,7 @@ anychart.charts.Pert.prototype.calculateActivity_ = function(id) {
         var finActivityEF = this.activitiesMap_[finId].earliestFinish;
         val = Math.max(val, finActivityEF);
       }
-      this.statistics[anychart.enums.StatisticsLowerCase.PERT_CHART_PROJECT_DURATION] = val;
+      this.statistics(anychart.enums.Statistics.PERT_CHART_PROJECT_DURATION, val);
     }
     activity.latestFinish = anychart.math.round(val, 3);
     activity.latestStart = anychart.math.round(val - duration, 3);

@@ -185,13 +185,15 @@ anychart.core.contexts.FormatContext.prototype.getMeta = function(name) {
  */
 anychart.core.contexts.FormatContext.prototype.getStat = function(name) {
   var result = void 0;
-  for (var i = 0; i < this.storage_.statisticsSources.length; i++) {
-    var source = this.storage_.statisticsSources[i];
+  if (name) {
+    for (var i = 0; i < this.storage_.statisticsSources.length; i++) {
+      var source = this.storage_.statisticsSources[i];
 
-    //TODO (A.Kudryavtsev): Yes, there are cases when statistics source still don't have getStat() method. Theoretically, it must be fixed.
-    result = (source && source.getStat) ? source.getStat(name.toLowerCase()) : void 0;
-    if (goog.isDef(result))
-      return result;
+      //TODO (A.Kudryavtsev): Yes, there are cases when statistics source still don't have getStat() method. Theoretically, it must be fixed.
+      result = (source && source.getStat) ? source.getStat(name.toLowerCase()) : void 0;
+      if (goog.isDef(result))
+        return result;
+    }
   }
   return result;
 };
@@ -336,31 +338,31 @@ anychart.core.contexts.FormatContext.prototype.getTokenTypeInternal = function(n
       case anychart.enums.StatisticsLowerCase.DATA_PLOT_POINT_COUNT:
       case anychart.enums.StatisticsLowerCase.DATA_PLOT_SERIES_COUNT:
 
-      case anychart.enums.StatisticsLowerCase.BUBBLE_SIZE_PERCENT_OF_CATEGORY:
-      case anychart.enums.StatisticsLowerCase.BUBBLE_SIZE_PERCENT_OF_SERIES:
-      case anychart.enums.StatisticsLowerCase.BUBBLE_SIZE_PERCENT_OF_TOTAL:
-      case anychart.enums.StatisticsLowerCase.CATEGORY_Y_PERCENT_OF_TOTAL:
-      case anychart.enums.StatisticsLowerCase.CATEGORY_Y_RANGE_PERCENT_OF_TOTAL:
-      case anychart.enums.StatisticsLowerCase.Y_PERCENT_OF_CATEGORY:
-      case anychart.enums.StatisticsLowerCase.Y_PERCENT_OF_SERIES:
-      case anychart.enums.StatisticsLowerCase.Y_PERCENT_OF_TOTAL:
-      case anychart.enums.StatisticsLowerCase.X_PERCENT_OF_SERIES:
-      case anychart.enums.StatisticsLowerCase.X_PERCENT_OF_TOTAL:
-      case anychart.enums.StatisticsLowerCase.PERCENT_VALUE:
+      case anychart.enums.Statistics.BUBBLE_SIZE_PERCENT_OF_CATEGORY:
+      case anychart.enums.Statistics.BUBBLE_SIZE_PERCENT_OF_SERIES:
+      case anychart.enums.Statistics.BUBBLE_SIZE_PERCENT_OF_TOTAL:
+      case anychart.enums.Statistics.CATEGORY_Y_PERCENT_OF_TOTAL:
+      case anychart.enums.Statistics.CATEGORY_Y_RANGE_PERCENT_OF_TOTAL:
+      case anychart.enums.Statistics.Y_PERCENT_OF_CATEGORY:
+      case anychart.enums.Statistics.Y_PERCENT_OF_SERIES:
+      case anychart.enums.Statistics.Y_PERCENT_OF_TOTAL:
+      case anychart.enums.Statistics.X_PERCENT_OF_SERIES:
+      case anychart.enums.Statistics.X_PERCENT_OF_TOTAL:
+      case anychart.enums.Statistics.PERCENT_VALUE:
         type = anychart.enums.TokenType.NUMBER;
     }
-    // case anychart.enums.StatisticsLowerCase.NAME:
-    // case anychart.enums.StatisticsLowerCase.SERIES_NAME:
-    // case anychart.enums.StatisticsLowerCase.DATA_PLOT_MAX_Y_VALUE_POINT_NAME:
-    // case anychart.enums.StatisticsLowerCase.DATA_PLOT_MIN_Y_VALUE_POINT_NAME:
-    // case anychart.enums.StatisticsLowerCase.DATA_PLOT_MAX_Y_VALUE_POINT_SERIES_NAME:
-    // case anychart.enums.StatisticsLowerCase.DATA_PLOT_MIN_Y_VALUE_POINT_SERIES_NAME:
-    // case anychart.enums.StatisticsLowerCase.DATA_PLOT_MAX_Y_SUM_SERIES_NAME:
-    // case anychart.enums.StatisticsLowerCase.DATA_PLOT_MIN_Y_SUM_SERIES_NAME:
-    // case anychart.enums.StatisticsLowerCase.SERIES_Y_AXIS_NAME:
-    // case anychart.enums.StatisticsLowerCase.SERIES_X_AXIS_NAME:
-    // case anychart.enums.StatisticsLowerCase.CATEGORY_NAME:
-    // case anychart.enums.StatisticsLowerCase.AXIS_NAME:
+    // case anychart.enums.Statistics.NAME:
+    // case anychart.enums.Statistics.SERIES_NAME:
+    // case anychart.enums.Statistics.DATA_PLOT_MAX_Y_VALUE_POINT_NAME:
+    // case anychart.enums.Statistics.DATA_PLOT_MIN_Y_VALUE_POINT_NAME:
+    // case anychart.enums.Statistics.DATA_PLOT_MAX_Y_VALUE_POINT_SERIES_NAME:
+    // case anychart.enums.Statistics.DATA_PLOT_MIN_Y_VALUE_POINT_SERIES_NAME:
+    // case anychart.enums.Statistics.DATA_PLOT_MAX_Y_SUM_SERIES_NAME:
+    // case anychart.enums.Statistics.DATA_PLOT_MIN_Y_SUM_SERIES_NAME:
+    // case anychart.enums.Statistics.SERIES_Y_AXIS_NAME:
+    // case anychart.enums.Statistics.SERIES_X_AXIS_NAME:
+    // case anychart.enums.Statistics.CATEGORY_NAME:
+    // case anychart.enums.Statistics.AXIS_NAME:
     //   res = anychart.enums.TokenType.STRING;
   }
   return type;
