@@ -598,6 +598,14 @@ anychart.themeClones_ = [];
 
 
 /**
+ * Merged clones of themes.
+ * @type {Array.<!Object>}
+ * @private
+ */
+anychart.mergedThemeClones_ = [];
+
+
+/**
  * Sets the theme/themes for anychart globally or gets current theme/themes.
  * @param {?(string|Object|Array<string|Object>)=} opt_value Object/name of a theme or array of objects/names of the themes.
  * @return {string|Object|Array<string|Object>}
@@ -606,6 +614,7 @@ anychart.theme = function(opt_value) {
   if (goog.isDef(opt_value)) {
     anychart.themes_ = opt_value ? (goog.isArray(opt_value) ? opt_value : [opt_value]) : [];
     anychart.themeClones_.length = 0;
+    anychart.mergedThemeClones_.length = 0;
     anychart.themes.merging.clearCache();
   }
   return anychart.themes_;
@@ -632,11 +641,13 @@ anychart.getFullTheme = function(root) {
   var i;
   if (!anychart.themeClones_.length) {
     anychart.themeClones_.push(goog.global['anychart']['themes'][anychart.DEFAULT_THEME] || {});
+    anychart.mergedThemeClones_.push(anychart.themeClones_[0]);
   }
   for (i = anychart.themeClones_.length - 1; i < anychart.themes_.length; i++) {
     var themeToMerge = anychart.themes_[i];
     var clone = anychart.utils.recursiveClone(goog.isString(themeToMerge) ? goog.global['anychart']['themes'][themeToMerge] : themeToMerge);
     anychart.themeClones_.push(goog.isObject(clone) ? clone : {});
+    anychart.mergedThemeClones_.push({});
   }
 
   var startMergeAt = Infinity;
@@ -645,14 +656,19 @@ anychart.getFullTheme = function(root) {
       startMergeAt = Math.min(startMergeAt, i);
   }
 
-  for (i = Math.max(1, startMergeAt); i < anychart.themeClones_.length; i++) {
-    anychart.themes.merging.setThemePart(anychart.themeClones_[i], [root],
+  for (i = Math.max(1, startMergeAt); i < anychart.mergedThemeClones_.length; i++) {
+    anychart.themes.merging.setThemePart(
+        anychart.mergedThemeClones_[i],
+        root,
         anychart.themes.merging.merge(
-            anychart.themes.merging.getThemePart(anychart.themeClones_[i], root),
-            anychart.themes.merging.getThemePart(anychart.themeClones_[i - 1], root)));
+            anychart.utils.recursiveClone(anychart.themes.merging.getThemePart(anychart.themeClones_[i], root)),
+            anychart.themes.merging.getThemePart(anychart.mergedThemeClones_[i - 1], root)));
+
+    anychart.themes.merging.markMergedDescriptor(root, i);
   }
   anychart.performance.end('Theme compilation');
-  return anychart.themes.merging.getThemePart(anychart.themeClones_[anychart.themeClones_.length - 1], root);
+
+  return anychart.themes.merging.getThemePart(anychart.mergedThemeClones_[anychart.mergedThemeClones_.length - 1], root);
 };
 
 

@@ -13,9 +13,13 @@ goog.require('anychart.color');
 anychart.themes.merging.compileTheme = function(theme, path, themeIndex) {
   var rootParts = path.split('.');
   var descriptor = anychart.themes.merging.mergingMapInverse_[rootParts[0]];
-  var needsCompilation = !!(descriptor && descriptor.mergedIn <= themeIndex);
+  if (!descriptor) {
+    anychart.themes.merging.mergingMapInverse_[rootParts[0]] = {requires: [], compiledIn: themeIndex, mergedIn: 0};
+    return true;
+  }
+  var needsCompilation = !!(descriptor && descriptor.compiledIn <= themeIndex);
   if (needsCompilation) {
-    descriptor.mergedIn = themeIndex + 1;
+    descriptor.compiledIn = themeIndex + 1;
     var requires = descriptor.requires;
     for (var i = 0; i < requires.length; i++) {
       var req = requires[i];
@@ -29,7 +33,21 @@ anychart.themes.merging.compileTheme = function(theme, path, themeIndex) {
       }
     }
   }
-  return needsCompilation;
+  return needsCompilation || descriptor.mergedIn < themeIndex;
+};
+
+
+/**
+ * @param {string} path
+ * @param {number} themeIndex
+ */
+anychart.themes.merging.markMergedDescriptor = function(path, themeIndex) {
+  var rootParts = path.split('.');
+  var descriptor = anychart.themes.merging.mergingMapInverse_[rootParts[0]];
+  if (!descriptor) {
+    anychart.themes.merging.mergingMapInverse_[rootParts[0]] = {requires: [], mergedIn: 0, compiledIn: 0};
+  }
+  descriptor.mergedIn = themeIndex;
 };
 
 
@@ -40,7 +58,8 @@ anychart.themes.merging.clearCache = function() {
   for (var i in anychart.themes.merging.mergingMapInverse_) {
     var descriptor = anychart.themes.merging.mergingMapInverse_[i];
     // we want to keep default theme cache
-    descriptor.mergedIn = Math.min(descriptor.mergedIn, 1);
+    descriptor.compiledIn = Math.min(descriptor.compiledIn, 1);
+    descriptor.mergedIn = 0;
   }
 };
 
@@ -138,12 +157,13 @@ anychart.themes.merging.deepClone_ = function(obj) {
  * Brutally puts value to the specified path in theme. If any intermediate steps are not objects, they will be forced
  * to become. If passed value is undefined - does nothing.
  * @param {*} theme
- * @param {Array.<string|number>} path Path parts.
+ * @param {(Array.<string|number>|string)} path Path parts.
  * @param {*} value
  * @return {*} Theme with the result.
  */
 anychart.themes.merging.setThemePart = function(theme, path, value) {
   if (goog.isDef(value)) {
+    path = goog.isArray(path) ? path : path.split('.');
     var curr = goog.isObject(theme) ? theme : {};
     var result = curr;
     for (var i = 0; i < path.length - 1; i++) {
@@ -1307,6 +1327,7 @@ anychart.themes.merging.mergingMap_ = [
  *        defaultObj:string,
  *        targets:Array.<string>
  *    }>,
+ *    compiledIn: number,
  *    mergedIn: number
  * }>>}
  * @private
@@ -1325,6 +1346,7 @@ anychart.themes.merging.mergingMapInverse_ = (function() {
       if (!obj) {
         res[root] = obj = {
           requires: [],
+          compiledIn: 0,
           mergedIn: 0
         };
       }
