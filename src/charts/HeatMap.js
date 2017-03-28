@@ -1678,10 +1678,10 @@ anychart.charts.HeatMap.prototype.drawSeries_ = function() {
   hoverAdjustFontSize = hoverLabels['adjustFontSize']();
   selectAdjustFontSize = selectLabels['adjustFontSize']();
 
-  var normalAdjustFontSizeSetting = (adjustFontSize['width'] || adjustFontSize['height']);
+  var normalAdjustFontSizeSetting = (!!adjustFontSize && (adjustFontSize['width'] || adjustFontSize['height']));
   needAdjustFontSize = normalAdjustFontSizeSetting && labels.enabled();
-  hoverNeedAdjustFontSize = (normalAdjustFontSizeSetting || hoverAdjustFontSize['width'] || hoverAdjustFontSize['height']) && (labels.enabled() || hoverLabels.enabled());
-  selectNeedAdjustFontSize = (normalAdjustFontSizeSetting || selectAdjustFontSize['width'] || selectAdjustFontSize['height']) && (labels.enabled() || selectLabels.enabled());
+  hoverNeedAdjustFontSize = (normalAdjustFontSizeSetting || (hoverAdjustFontSize && (hoverAdjustFontSize['width'] || hoverAdjustFontSize['height']))) && (labels.enabled() || hoverLabels.enabled());
+  selectNeedAdjustFontSize = (normalAdjustFontSizeSetting || (selectAdjustFontSize && (selectAdjustFontSize['width'] || selectAdjustFontSize['height']))) && (labels.enabled() || selectLabels.enabled());
 
   iterator = series.getResetIterator();
   var minFontSize, hoverMinFontSize, selectMinFontSize;

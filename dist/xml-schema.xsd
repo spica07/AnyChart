@@ -1141,6 +1141,7 @@
             <xsd:element minOccurs="0" maxOccurs="1" name="adjust_font_size" type="utils.AdjustFontSizeObj"/>
             <xsd:element minOccurs="0" maxOccurs="1" name="format" type="simple.Text"/>
             <xsd:element minOccurs="0" maxOccurs="1" name="connector_stroke" type="Stroke"/>
+            <xsd:element minOccurs="0" maxOccurs="1" name="clip" type="utils.Rect"/>
         </xsd:all>
         <xsd:attribute name="background" type="simple.StringOrBoolOrNull" default="false"/>
         <xsd:attribute name="position" type="xsd:string"/>
@@ -1157,6 +1158,7 @@
         <xsd:attribute name="format" type="xsd:string" />
         <!-- Because Pie uses circular labels factory, but described as Funnel and Pyramid. -->
         <xsd:attribute name="auto_rotate" type="xsd:boolean" use="optional"/>
+        <xsd:attribute name="clip" type="simple.BoolOrNull" default="true"/>
         <xsd:attributeGroup ref="attrs.TextSettings"/>
         <xsd:attributeGroup ref="attrs.VisualBase"/>
     </xsd:complexType>
