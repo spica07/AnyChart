@@ -190,7 +190,7 @@ anychart.core.contexts.FormatContext.prototype.getStat = function(name) {
       var source = this.storage_.statisticsSources[i];
 
       //TODO (A.Kudryavtsev): Yes, there are cases when statistics source still don't have getStat() method. Theoretically, it must be fixed.
-      result = (source && source.getStat) ? source.getStat(name.toLowerCase()) : void 0;
+      result = (source && source.getStat) ? source.getStat(name) : void 0;
       if (goog.isDef(result))
         return result;
     }
@@ -232,7 +232,7 @@ anychart.core.contexts.FormatContext.prototype.propagate = function(opt_values) 
 anychart.core.contexts.FormatContext.prototype.getTokenValueInternal = function(name) {
   var origName = name.charAt(0) == '%' ? name.substr(1) : name;
   var lowerCaseName = origName.toLowerCase();
-  var aliasName = (name in this.storage_.tokenAliases) ? this.storage_.tokenAliases[name] : origName;
+  var aliasName = this.storage_.tokenAliases[name];
 
   var valueSource = this.storage_.tokenCustomValues[aliasName] || this.storage_.values[aliasName] ||
       this.storage_.tokenCustomValues[name] || this.storage_.values[name] ||
@@ -245,7 +245,7 @@ anychart.core.contexts.FormatContext.prototype.getTokenValueInternal = function(
   if (goog.isDef(caseInsensitiveResult))
     return caseInsensitiveResult;
 
-  var dataValue = this.getData(aliasName) || this.getData(origName) || this.getData(lowerCaseName);
+  var dataValue = aliasName ? this.getData(aliasName) || this.getData(origName) : this.getData(origName);
   if (goog.isDef(dataValue))
     return dataValue;
 
@@ -261,7 +261,7 @@ anychart.core.contexts.FormatContext.prototype.getTokenValueInternal = function(
 anychart.core.contexts.FormatContext.prototype.getTokenTypeInternal = function(name) {
   var origName = name.charAt(0) == '%' ? name.substr(1) : name;
   var lowerCaseName = origName.toLowerCase();
-  var aliasName = (name in this.storage_.tokenAliases) ? this.storage_.tokenAliases[name] : origName;
+  var aliasName = this.storage_.tokenAliases[name];
 
   var typeSource = this.storage_.tokenCustomValues[aliasName] || this.storage_.values[aliasName] ||
       this.storage_.tokenCustomValues[name] || this.storage_.values[name] ||
